@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/bleFragment">
+
+    <fragment
+        android:id="@+id/bleFragment"
+        android:name="com.example.bledot.Ble.BleFragment"
+        android:label="fragment_ble"
+        tools:layout="@layout/fragment_ble" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.bledot.Detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" />
+    <fragment
+        android:id="@+id/recordFragment"
+        android:name="com.example.bledot.Record.RecordFragment"
+        android:label="fragment_record"
+        tools:layout="@layout/fragment_record" />
+    <fragment
+        android:id="@+id/realtimeFragment"
+        android:name="com.example.bledot.Realtime.RealtimeFragment"
+        android:label="fragment_realtime"
+        tools:layout="@layout/fragment_realtime" />
+</navigation>
