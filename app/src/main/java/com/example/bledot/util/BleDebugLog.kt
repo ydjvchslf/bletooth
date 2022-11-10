@@ -1,7 +1,7 @@
-package com.example.bledot.Util
+package com.example.bledot.util
 
 import android.util.Log
-import androidx.databinding.ktx.BuildConfig
+import com.example.bledot.BuildConfig
 import org.json.JSONArray
 import org.json.JSONObject
 
