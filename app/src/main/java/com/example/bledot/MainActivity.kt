@@ -1,23 +1,19 @@
 package com.example.bledot
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
-import android.util.Log
-import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.example.bledot.Util.BleDebugLog
+import com.example.bledot.util.BleDebugLog
 import com.example.bledot.databinding.ActivityMainBinding
+import com.xsens.dot.android.sdk.XsensDotSdk
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
@@ -55,6 +51,9 @@ class MainActivity : AppCompatActivity() {
 
         // 권한
         checkPermissions(requiredPermissionArray)
+
+        // 센서 재연결 시 SDK 자동 재시작
+        XsensDotSdk.setReconnectEnabled(true)
     }
 
     private fun checkPermissions(permissions: Array<String>){

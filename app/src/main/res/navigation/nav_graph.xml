@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/bleFragment"
-        android:name="com.example.bledot.Ble.BleFragment"
+        android:name="com.example.bledot.ble.BleFragment"
         android:label="fragment_ble"
         tools:layout="@layout/fragment_ble" />
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.bledot.Detail.DetailFragment"
+        android:name="com.example.bledot.detail.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" />
     <fragment
         android:id="@+id/recordFragment"
-        android:name="com.example.bledot.Record.RecordFragment"
+        android:name="com.example.bledot.record.RecordFragment"
         android:label="fragment_record"
         tools:layout="@layout/fragment_record" />
     <fragment
         android:id="@+id/realtimeFragment"
-        android:name="com.example.bledot.Realtime.RealtimeFragment"
+        android:name="com.example.bledot.realtime.RealtimeFragment"
         android:label="fragment_realtime"
         tools:layout="@layout/fragment_realtime" />
 </navigation>

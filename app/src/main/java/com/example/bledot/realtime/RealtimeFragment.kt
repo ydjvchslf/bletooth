@@ -1,15 +1,15 @@
-package com.example.bledot.Record
+package com.example.bledot.realtime
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.bledot.databinding.FragmentRecordBinding
+import com.example.bledot.databinding.FragmentRealtimeBinding
 
-class RecordFragment : Fragment() {
+class RealtimeFragment : Fragment() {
 
-    private var mBinding: FragmentRecordBinding? = null
+    private var mBinding: FragmentRealtimeBinding? = null
     private val binding get() = mBinding!!
 
     override fun onCreateView(
@@ -17,7 +17,7 @@ class RecordFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = FragmentRecordBinding.inflate(inflater, container, false)
+        mBinding = FragmentRealtimeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
