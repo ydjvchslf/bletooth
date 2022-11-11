@@ -1,15 +1,12 @@
 package com.example.bledot.ble
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanSettings
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,6 +15,7 @@ import com.example.bledot.databinding.FragmentBleBinding
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.btScanningStatus
 import com.xsens.dot.android.sdk.interfaces.XsensDotScannerCallback
+import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.utils.XsensDotScanner
 
 
@@ -81,11 +79,31 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
     @SuppressLint("MissingPermission")
     override fun onXsensDotScanned(device: BluetoothDevice, p1: Int) {
         BleDebugLog.i(logTag, "onXsensDotScanned-()")
-        device
-        val name = device.name
-        val address = device.address
-        val uuids = device.uuids
-        BleDebugLog.d(logTag, "name: $name, address: $address, uuid: $uuids")
+        BleDebugLog.d(logTag, "name: ${device.name}, address: ${device.address}")
+
+        // 스캔된 센서 중복 체크하여 센서리스트 담기
+        val mScannedSensorList = ArrayList<HashMap<String, Any>>()
+
+        device.let { device ->
+            // Use the mac address as UID to filter the same scan result.
+            var isExist = false
+            for (map in mScannedSensorList) {
+                if ((map["device"] as BluetoothDevice).address == device.address) isExist = true
+            }
+
+            if (!isExist) {
+                // The original connection state is Disconnected.
+                // Also set tag, battery state, battery percentage to default value.
+                val map = HashMap<String, Any>()
+                map["KEY_DEVICE"] = device
+                map["KEY_CONNECTION_STATE"] = XsensDotDevice.CONN_STATE_DISCONNECTED
+                map["KEY_TAG"] = ""
+                map["KEY_BATTERY_STATE"] = -1
+                map["KEY_BATTERY_PERCENTAGE"] = -1
+                mScannedSensorList.add(map)
+            }
+        }
+        BleDebugLog.d(logTag, "mScannedSensorList.size: ${mScannedSensorList.size}")
     }
 
     private fun stopXsScanner() {
