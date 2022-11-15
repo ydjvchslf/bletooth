@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_realtime.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_record.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/layout_ble_item.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
       </map>
     </option>
