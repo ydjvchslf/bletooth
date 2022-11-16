@@ -14,10 +14,21 @@ class BleAdapter: RecyclerView.Adapter<BleViewHolder>() {
     private val logTag = BleAdapter::class.simpleName
     private var deviceList = arrayListOf<BleDevice>()
 
+    var listener : ((BleDevice) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BleViewHolder {
         // 연결할 레이아웃 설정
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_ble_item, parent, false)
-        return BleViewHolder(LayoutBleItemBinding.bind(view))
+        val item = LayoutInflater.from(parent.context).inflate(R.layout.layout_ble_item, parent, false)
+        val bleViewHolder = BleViewHolder(LayoutBleItemBinding.bind(item))
+
+        // 리스너 콜백 등록
+        item.setOnClickListener {
+            val position = bleViewHolder.absoluteAdapterPosition
+            BleDebugLog.i(logTag, "position: $position")
+            listener?.invoke(deviceList[position])
+        }
+
+        return bleViewHolder
     }
 
     override fun onBindViewHolder(holder: BleViewHolder, position: Int) {

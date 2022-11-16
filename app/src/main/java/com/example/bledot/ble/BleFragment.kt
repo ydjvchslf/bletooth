@@ -127,6 +127,11 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
             // 어답터 장착
             adapter = bleAdapter
         }
+
+        bleAdapter.listener = { device ->
+            BleDebugLog.d(logTag, "device clicked-()")
+            BleDebugLog.d(logTag, "device : $device")
+        }
     }
 
     private fun stopXsScanner() {
