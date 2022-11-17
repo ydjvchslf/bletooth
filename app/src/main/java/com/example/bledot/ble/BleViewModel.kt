@@ -12,15 +12,13 @@ import com.xsens.dot.android.sdk.interfaces.XsensDotScannerCallback
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.utils.XsensDotScanner
 
-class BleViewModel : ViewModel(), XsensDotScannerCallback {
+class BleViewModel: ViewModel(), XsensDotScannerCallback {
 
     private val logTag = BleViewModel::class.simpleName
 
     private var mXsScanner: XsensDotScanner? = null
     // 중복 체크되어 담긴 센서리스트
     private val mScannedSensorList = ArrayList<HashMap<String, Any>>()
-    // 센서 데이터 담을 그릇, 즉 배열
-    var mDeviceList = arrayListOf<BleDevice>()
     // 사용할 리사이클러뷰 생성
     var bleAdapter = BleAdapter()
 
