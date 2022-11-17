@@ -1,5 +1,6 @@
 package com.example.bledot.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -41,9 +42,11 @@ class BleAdapter: RecyclerView.Adapter<BleViewHolder>() {
     }
 
     // 외부데이터 넘기기 -> adapter에서 갖고 있는 deviceList 와 외부에서 들어온 deviceList 를 연결해주는 함수
+    @SuppressLint("NotifyDataSetChanged")
     fun submitList(deviceList: ArrayList<BleDevice>){
         this.deviceList = deviceList // 외부데이터를 adapter 데이터로 할당
         BleDebugLog.d(logTag, "this.deviceList: ${this.deviceList}")
+        notifyDataSetChanged()
     }
 
 }
