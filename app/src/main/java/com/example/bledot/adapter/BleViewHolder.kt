@@ -16,6 +16,7 @@ class BleViewHolder(binding: LayoutBleItemBinding): RecyclerView.ViewHolder(bind
 
     private var nameTextView = binding.name
     private var addressTextView = binding.address
+    private var state = binding.state
 
     init {
         BleDebugLog.d(logTag, "init-()")
@@ -27,5 +28,6 @@ class BleViewHolder(binding: LayoutBleItemBinding): RecyclerView.ViewHolder(bind
         BleDebugLog.d(logTag, "bleDevice: $bleDevice")
         nameTextView.text = bleDevice.name
         addressTextView.text = bleDevice.macAddress
+        state.text = bleDevice.connectState.toString()
     }
 }
