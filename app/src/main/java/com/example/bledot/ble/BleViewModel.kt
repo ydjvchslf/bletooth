@@ -15,17 +15,14 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback {
     private val logTag = BleViewModel::class.simpleName
     // 중복 체크되어 담긴 센서리스트
     var mScannedSensorList = ArrayList<HashMap<String, Any>>()
+    // 연결 상태 바뀐 센서리스트
+    var mSensorList = MutableLiveData<ArrayList<XsensDotDevice>>() // 초기값 null
     // A variable to notify the connection state
     var mConnectionState = MutableLiveData(0) // 0 미연결, 2 연결
-    var mConnectedXsDevice = MutableLiveData<XsensDotDevice>() // 초기값 null
-    var mConnectedIndex = MutableLiveData(-1)
+    var mConnectedXsDevice = MutableLiveData<XsensDotDevice?>() // 선택된 device
+    var mConnectedIndex = -1 // 리스트 index
     // KEY
     val KEY_DEVICE = "KEY_DEVICE"
-    val KEY_NAME = "KEY_NAME"
-    val KEY_CONNECTION_STATE = "KEY_CONNECTION_STATE"
-    val KEY_TAG = "KEY_TAG"
-    val KEY_BATTERY_STATE = "KEY_BATTERY_STATE"
-    val KEY_BATTERY_PERCENTAGE = "KEY_BATTERY_PERCENTAGE"
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -44,10 +41,44 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback {
 
     fun connectSensor(xsDevice: XsensDotDevice?) {
         BleDebugLog.i(logTag, "connectSensor-()")
+        addDevice(xsDevice)
         xsDevice?.connect()
     }
 
-    override fun onXsensDotConnectionChanged(p0: String?, p1: Int) {
+    fun disconnectAllSensor() {
+        BleDebugLog.i(logTag, "disconnectSensor-()")
+        if (mSensorList.value != null) {
+            for (device in mSensorList.value!!) {
+                if (device.address == mConnectedXsDevice.value?.address) {
+                    device.disconnect()
+                    break
+                }
+            }
+        }
+        mSensorList.value?.clear()
+        mConnectionState.value = 0
+        mConnectedXsDevice.value = null
+    }
+
+    fun addDevice(xsDevice: XsensDotDevice?) {
+        BleDebugLog.i(logTag, "addDevice-()") // var mSensorList = MutableLiveData<ArrayList<XsensDotDevice>>()
+        if (mSensorList.value == null) mSensorList.value = ArrayList() // mSensorList = ArrayList<XsensDotDevice>()
+
+        val devices = mSensorList.value // val devices = ArrayList<XsensDotDevice>()
+        var isExist = false
+
+        for (_xsDevice in devices!!) {
+            if (xsDevice!!.address == _xsDevice.address) {
+                isExist = true
+                break
+            }
+        }
+
+        if (!isExist) devices.add(xsDevice!!) // val devices = [XsensDotDevice, XsensDotDevice ...]
+        BleDebugLog.d(logTag, "devices.size: ${devices.size}")
+    }
+
+    override fun onXsensDotConnectionChanged(address: String?, p1: Int) {
         BleDebugLog.i(logTag, "onXsensDotConnectionChanged-()")
     }
 
@@ -73,14 +104,10 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback {
 
     override fun onXsensDotInitDone(p0: String?) {
         BleDebugLog.i(logTag, "onXsensDotInitDone-()")
-        mConnectionState.value = mConnectedXsDevice.value?.connectionState
+        mConnectionState.value = mConnectedXsDevice.value!!.connectionState
         BleDebugLog.d(logTag, "mConnectionState.value: ${mConnectionState.value}")
-        BleDebugLog.d(logTag, "mConnectedIndex.value : ${mConnectedIndex.value}")
+        BleDebugLog.d(logTag, "mConnectedIndex : $mConnectedIndex")
         BleDebugLog.d(logTag, "mConnectedXsDevice.value?.connectionState: ${mConnectedXsDevice.value?.connectionState}")
-    //        if (connectState == 2) { // 블투 최종 연결
-//            mConnectionState.value = 2
-//            BleDebugLog.d(logTag, "mConnectionState.value: ${mConnectionState.value}")
-//        }
     }
 
     override fun onXsensDotButtonClicked(p0: String?, p1: Long) {
