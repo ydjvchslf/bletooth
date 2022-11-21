@@ -1,9 +1,11 @@
 package com.example.bledot.data
 
+import com.xsens.dot.android.sdk.models.XsensDotDevice
+
 data class BleDevice (
     val name: String,
     val macAddress: String,
-    val connectState: Int,
+    var connectState: Int,
     val tag: String,
     val batteryState: Int,
     val batteryPercent: Int
@@ -20,6 +22,17 @@ data class BleDevice (
                     batteryPercent = sensorMap["KEY_BATTERY_PERCENTAGE"] as Int,
                 )
             }
+
+        fun fromXsDeviceToBleDevice(xsDevice: XsensDotDevice): BleDevice {
+            return BleDevice (
+                        name = xsDevice.name,
+                        macAddress = xsDevice.address,
+                        connectState = xsDevice.connectionState,
+                        tag = xsDevice.tag,
+                        batteryState = xsDevice.batteryState,
+                        batteryPercent = xsDevice.batteryPercentage
+            )
+        }
     }
 
     override fun toString(): String {

@@ -13,9 +13,9 @@ import com.example.bledot.util.BleDebugLog
 class BleAdapter: RecyclerView.Adapter<BleViewHolder>() {
 
     private val logTag = BleAdapter::class.simpleName
-    private var deviceList = arrayListOf<BleDevice>()
+    private var deviceList = ArrayList<BleDevice>()
 
-    var listener : ((BleDevice) -> Unit)? = null
+    var clickListener : ((BleDevice, Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BleViewHolder {
         // 연결할 레이아웃 설정
@@ -26,7 +26,7 @@ class BleAdapter: RecyclerView.Adapter<BleViewHolder>() {
         item.setOnClickListener {
             val position = bleViewHolder.absoluteAdapterPosition
             BleDebugLog.i(logTag, "position: $position")
-            listener?.invoke(deviceList[position])
+            clickListener?.invoke(deviceList[position], position)
         }
 
         return bleViewHolder
@@ -46,6 +46,13 @@ class BleAdapter: RecyclerView.Adapter<BleViewHolder>() {
     fun submitList(deviceList: ArrayList<BleDevice>){
         this.deviceList = deviceList // 외부데이터를 adapter 데이터로 할당
         BleDebugLog.d(logTag, "this.deviceList: ${this.deviceList}")
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateConnectState(bleDevice: BleDevice, index: Int) {
+        deviceList.removeAt(index)
+        deviceList.add(index, bleDevice)
         notifyDataSetChanged()
     }
 

@@ -1,77 +1,117 @@
 package com.example.bledot.ble
 
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.le.ScanSettings
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.bledot.adapter.BleAdapter
-import com.example.bledot.data.BleDevice
 import com.example.bledot.util.BleDebugLog
-import com.xsens.dot.android.sdk.interfaces.XsensDotScannerCallback
+import com.xsens.dot.android.sdk.events.XsensDotData
+import com.xsens.dot.android.sdk.interfaces.XsensDotDeviceCallback
+import com.xsens.dot.android.sdk.models.FilterProfileInfo
 import com.xsens.dot.android.sdk.models.XsensDotDevice
-import com.xsens.dot.android.sdk.utils.XsensDotScanner
 
-class BleViewModel: ViewModel(), XsensDotScannerCallback {
+class BleViewModel: ViewModel(), XsensDotDeviceCallback {
 
     private val logTag = BleViewModel::class.simpleName
-
-    private var mXsScanner: XsensDotScanner? = null
     // 중복 체크되어 담긴 센서리스트
-    private val mScannedSensorList = ArrayList<HashMap<String, Any>>()
-    // 사용할 리사이클러뷰 생성
-    var bleAdapter = BleAdapter()
+    var mScannedSensorList = ArrayList<HashMap<String, Any>>()
+    // A variable to notify the connection state
+    var mConnectionState = MutableLiveData(0) // 0 미연결, 2 연결
+    var mConnectedXsDevice = MutableLiveData<XsensDotDevice>() // 초기값 null
+    var mConnectedIndex = MutableLiveData(-1)
+    // KEY
+    val KEY_DEVICE = "KEY_DEVICE"
+    val KEY_NAME = "KEY_NAME"
+    val KEY_CONNECTION_STATE = "KEY_CONNECTION_STATE"
+    val KEY_TAG = "KEY_TAG"
+    val KEY_BATTERY_STATE = "KEY_BATTERY_STATE"
+    val KEY_BATTERY_PERCENTAGE = "KEY_BATTERY_PERCENTAGE"
 
     init {
         BleDebugLog.i(logTag, "init-()")
     }
 
-    fun initXsScanner(context: Context) {
-        BleDebugLog.i(logTag, "initXsScanner-()")
-        mXsScanner = XsensDotScanner(context, this)
-        mXsScanner?.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-        mXsScanner?.startScan()
+    fun getBleFromSensorList(index: Int): BluetoothDevice {
+        BleDebugLog.i(logTag, "getBleFromSensorList-()")
+        return mScannedSensorList[index][KEY_DEVICE] as BluetoothDevice
     }
 
-    fun stopXsScanner() {
-        mXsScanner?.stopScan()
+    fun makeBleToXsDevice(context: Context, device: BluetoothDevice) : XsensDotDevice? {
+        BleDebugLog.i(logTag, "makeBleToXsDevice-()")
+        mConnectedXsDevice.value = XsensDotDevice(context, device, this)
+        return mConnectedXsDevice.value
     }
 
-    @SuppressLint("MissingPermission")
-    override fun onXsensDotScanned(device: BluetoothDevice, p1: Int) {
-        BleDebugLog.i(logTag, "onXsensDotScanned-()")
-        BleDebugLog.d(logTag, "name: ${device.name}, address: ${device.address}")
-
-        device.let { device ->
-            // Use the mac address as UID to filter the same scan result.
-            var isExist = false
-            for (map in mScannedSensorList) {
-                if ((map["KEY_DEVICE"] as BluetoothDevice).address == device.address) isExist = true
-            }
-
-            if (!isExist) {
-                // The original connection state is Disconnected.
-                // Also set tag, battery state, battery percentage to default value.
-                val map = HashMap<String, Any>()
-                map["KEY_DEVICE"] = device
-                map["KEY_NAME"] = device.name
-                map["KEY_CONNECTION_STATE"] = XsensDotDevice.CONN_STATE_DISCONNECTED
-                map["KEY_TAG"] = ""
-                map["KEY_BATTERY_STATE"] = -1
-                map["KEY_BATTERY_PERCENTAGE"] = -1
-                mScannedSensorList.add(map)
-            }
-        }
-        val list = BleDevice.fromHashMapList(mScannedSensorList) as ArrayList
-
-        // 어답터
-        bleAdapter.submitList(list) // 데이터 주입
-
-
-
-        bleAdapter.listener = { device ->
-            BleDebugLog.d(logTag, "device clicked-()")
-            BleDebugLog.d(logTag, "device : $device")
-        }
+    fun connectSensor(xsDevice: XsensDotDevice?) {
+        BleDebugLog.i(logTag, "connectSensor-()")
+        xsDevice?.connect()
     }
+
+    override fun onXsensDotConnectionChanged(p0: String?, p1: Int) {
+        BleDebugLog.i(logTag, "onXsensDotConnectionChanged-()")
+    }
+
+    override fun onXsensDotServicesDiscovered(p0: String?, p1: Int) {
+        BleDebugLog.i(logTag, "onXsensDotServicesDiscovered-()")
+    }
+
+    override fun onXsensDotFirmwareVersionRead(p0: String?, p1: String?) {
+        BleDebugLog.i(logTag, "onXsensDotFirmwareVersionRead-()")
+    }
+
+    override fun onXsensDotTagChanged(p0: String?, p1: String?) {
+        BleDebugLog.i(logTag, "onXsensDotTagChanged-()")
+    }
+
+    override fun onXsensDotBatteryChanged(p0: String?, p1: Int, p2: Int) {
+        BleDebugLog.i(logTag, "onXsensDotBatteryChanged-()")
+    }
+
+    override fun onXsensDotDataChanged(p0: String?, p1: XsensDotData?) {
+        BleDebugLog.i(logTag, "onXsensDotDataChanged-()")
+    }
+
+    override fun onXsensDotInitDone(p0: String?) {
+        BleDebugLog.i(logTag, "onXsensDotInitDone-()")
+        mConnectionState.value = mConnectedXsDevice.value?.connectionState
+        BleDebugLog.d(logTag, "mConnectionState.value: ${mConnectionState.value}")
+        BleDebugLog.d(logTag, "mConnectedIndex.value : ${mConnectedIndex.value}")
+        BleDebugLog.d(logTag, "mConnectedXsDevice.value?.connectionState: ${mConnectedXsDevice.value?.connectionState}")
+    //        if (connectState == 2) { // 블투 최종 연결
+//            mConnectionState.value = 2
+//            BleDebugLog.d(logTag, "mConnectionState.value: ${mConnectionState.value}")
+//        }
+    }
+
+    override fun onXsensDotButtonClicked(p0: String?, p1: Long) {
+        BleDebugLog.i(logTag, "onXsensDotButtonClicked-()")
+    }
+
+    override fun onXsensDotPowerSavingTriggered(p0: String?) {
+        BleDebugLog.i(logTag, "onXsensDotPowerSavingTriggered-()")
+    }
+
+    override fun onReadRemoteRssi(p0: String?, p1: Int) {
+        BleDebugLog.i(logTag, "onReadRemoteRssi-()")
+    }
+
+    override fun onXsensDotOutputRateUpdate(p0: String?, p1: Int) {
+        BleDebugLog.i(logTag, "onXsensDotOutputRateUpdate-()")
+    }
+
+    override fun onXsensDotFilterProfileUpdate(p0: String?, p1: Int) {
+        BleDebugLog.i(logTag, "onXsensDotFilterProfileUpdate-()")
+    }
+
+    override fun onXsensDotGetFilterProfileInfo(
+        p0: String?,
+        p1: java.util.ArrayList<FilterProfileInfo>?
+    ) {
+        BleDebugLog.i(logTag, "onXsensDotGetFilterProfileInfo-()")
+    }
+
+    override fun onSyncStatusUpdate(p0: String?, p1: Boolean) {
+        BleDebugLog.i(logTag, "onSyncStatusUpdate-()")
+    }
+
 }
