@@ -56,4 +56,10 @@ class BleAdapter: RecyclerView.Adapter<BleViewHolder>() {
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun clear() {
+        deviceList.clear()
+        notifyDataSetChanged()
+    }
+
 }

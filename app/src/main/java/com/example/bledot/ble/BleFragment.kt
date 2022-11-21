@@ -31,7 +31,7 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
 
     private var mXsScanner: XsensDotScanner? = null
     // 중복 체크되어 담긴 센서리스트
-    private val mScannedSensorList = ArrayList<HashMap<String, Any>>()
+    private var mScannedSensorList = ArrayList<HashMap<String, Any>>()
     // 사용할 리사이클러뷰 생성
     var bleAdapter = BleAdapter()
 
@@ -52,7 +52,7 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         BleDebugLog.i(logTag, "onViewCreated-()")
         super.onViewCreated(view, savedInstanceState)
-        // 스캔 상태 체크
+        // 스캔 상태 체크 -> 버튼 문구 표시
         btScanningStatus.observe(viewLifecycleOwner) { btStatus ->
             if (btStatus) {
                 BleDebugLog.d(logTag, "btStatus: $btStatus")
@@ -69,22 +69,42 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
             BleDebugLog.d(logTag, "버튼 클릭 후 btStatus: ${btScanningStatus.value}")
             if (btScanningStatus.value == true) {
                 // 스캔 시작
+                bleAdapter.clear()
+                bleViewModel.disconnectAllSensor()
+                bleViewModel.mSensorList.value?.clear()
+                mScannedSensorList.clear()
                 initXsScanner(requireContext())
             } else { // 스캔 중단
                 stopXsScanner()
             }
         }
 
+        // 어답터
+        binding.recyclerView.apply {
+            adapter = bleAdapter
+        }
+
+        if (bleViewModel.mSensorList.value != null) {
+            val list = BleDevice.fromHashMapList(bleViewModel.mScannedSensorList) as ArrayList // 스캔된 데이터 리스트
+            bleAdapter.submitList(list) // 데이터 주입
+        }
+
         // 클릭리스너 (연결/해제) 활용
         bleAdapter.clickListener = { _, index ->
-            bleViewModel.mConnectedIndex.value = index
+            // 스캔 중단 &
+            stopXsScanner()
+            btScanningStatus.value = false
+
+            bleViewModel.mConnectedIndex = index
             val clickedBleDevice = bleViewModel.getBleFromSensorList(index)
             val xsDevice = bleViewModel.makeBleToXsDevice(requireContext(), clickedBleDevice)
             //bleViewModel.makeBleToXsDevice(requireContext(), bleViewModel.getXsDeviceFromSensorList(index))
-            if (bleViewModel.mConnectedXsDevice.value != null) { // 아예 비연결 상태 -> 연결 시작
+            if (bleViewModel.mConnectionState.value == 0) { // 아예 비연결 상태 -> 연결 시작
+                BleDebugLog.d(logTag, "=====연결시작")
                 bleViewModel.connectSensor(xsDevice)
             } else { // 선택된 device 연결상태 or 다른 것이 연결 상태 -> 연결 끊기
-
+                BleDebugLog.d(logTag, "=====연결끊기")
+                bleViewModel.disconnectAllSensor()
             }
         }
 
@@ -93,8 +113,12 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
             if (connectState == 2) {
                 bleAdapter.updateConnectState(
                     fromXsDeviceToBleDevice(bleViewModel.mConnectedXsDevice.value!!),
-                    bleViewModel.mConnectedIndex.value!!
+                    bleViewModel.mConnectedIndex
                 )
+            } else if (connectState == 0) {
+                BleDebugLog.d(logTag, "=====connectState: 0")
+                val list = BleDevice.fromHashMapList(this.mScannedSensorList) as ArrayList // 스캔된 데이터 리스트
+                bleAdapter.submitList(list)
             }
         }
     }
@@ -134,14 +158,9 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
                 map["KEY_BATTERY_PERCENTAGE"] = -1
                 mScannedSensorList.add(map)
                 bleViewModel.mScannedSensorList = this.mScannedSensorList
+                val list = BleDevice.fromHashMapList(this.mScannedSensorList) as ArrayList // 스캔된 데이터 리스트
+                bleAdapter.submitList(list)
             }
         }
-        val list = BleDevice.fromHashMapList(mScannedSensorList) as ArrayList // 스캔된 데이터 리스트
-
-        // 어답터
-        binding.recyclerView.apply {
-            adapter = bleAdapter
-        }
-        bleAdapter.submitList(list) // 데이터 주입
     }
 }
