@@ -9,6 +9,7 @@ import com.xsens.dot.android.sdk.events.XsensDotData
 import com.xsens.dot.android.sdk.interfaces.XsensDotDeviceCallback
 import com.xsens.dot.android.sdk.models.FilterProfileInfo
 import com.xsens.dot.android.sdk.models.XsensDotDevice
+import com.xsens.dot.android.sdk.models.XsensDotPayload
 
 class BleViewModel: ViewModel(), XsensDotDeviceCallback {
 
@@ -26,6 +27,17 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback {
 
     init {
         BleDebugLog.i(logTag, "init-()")
+    }
+
+    fun startMeasure(device: XsensDotDevice) {
+        BleDebugLog.i(logTag, "setMode-()")
+        BleDebugLog.d(logTag, "${device.batteryPercentage}")
+        device.measurementMode = XsensDotPayload.PAYLOAD_TYPE_COMPLETE_EULER
+        device.startMeasuring()
+    }
+
+    fun stopMeasure(device: XsensDotDevice) {
+        device.stopMeasuring()
     }
 
     fun getBleFromSensorList(index: Int): BluetoothDevice {
@@ -98,8 +110,14 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback {
         BleDebugLog.i(logTag, "onXsensDotBatteryChanged-()")
     }
 
-    override fun onXsensDotDataChanged(p0: String?, p1: XsensDotData?) {
+    override fun onXsensDotDataChanged(p0: String?, xsData: XsensDotData?) {
         BleDebugLog.i(logTag, "onXsensDotDataChanged-()")
+        val eulerAngles = xsData?.euler
+        if (eulerAngles != null) {
+            val eulerAnglesStr = String.format("%.6f", eulerAngles[0]) + ", "+ String.format("%.6f", eulerAngles[1]) + ", " + String.format("%.6f", eulerAngles[2])
+            BleDebugLog.d(logTag, "eulerAnglesStr: $eulerAnglesStr")
+            BleDebugLog.d(logTag, "sampleTimeFine: ${xsData.sampleTimeFine}")
+        }
     }
 
     override fun onXsensDotInitDone(p0: String?) {
