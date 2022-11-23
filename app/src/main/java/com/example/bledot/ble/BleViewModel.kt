@@ -7,11 +7,12 @@ import androidx.lifecycle.ViewModel
 import com.example.bledot.util.BleDebugLog
 import com.xsens.dot.android.sdk.events.XsensDotData
 import com.xsens.dot.android.sdk.interfaces.XsensDotDeviceCallback
+import com.xsens.dot.android.sdk.interfaces.XsensDotMeasurementCallback
 import com.xsens.dot.android.sdk.models.FilterProfileInfo
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
 
-class BleViewModel: ViewModel(), XsensDotDeviceCallback {
+class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCallback {
 
     private val logTag = BleViewModel::class.simpleName
     // 중복 체크되어 담긴 센서리스트
@@ -157,6 +158,21 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback {
 
     override fun onSyncStatusUpdate(p0: String?, p1: Boolean) {
         BleDebugLog.i(logTag, "onSyncStatusUpdate-()")
+    }
+
+    fun makeResetZero(xsDevice: XsensDotDevice) {
+        BleDebugLog.i(logTag, "makeResetZero-()")
+        xsDevice.setXsensDotMeasurementCallback(this)
+        xsDevice.resetHeading()
+    }
+
+    // 센서 zero 인터페이스
+    override fun onXsensDotHeadingChanged(p0: String?, p1: Int, p2: Int) {
+        BleDebugLog.i(logTag, "onXsensDotHeadingChanged-()")
+    }
+    // 센서 zero 인터페이스
+    override fun onXsensDotRotLocalRead(p0: String?, p1: FloatArray?) {
+        BleDebugLog.i(logTag, "onXsensDotRotLocalRead-()")
     }
 
 }
