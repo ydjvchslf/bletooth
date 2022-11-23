@@ -4,25 +4,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.example.bledot.R
 import com.example.bledot.databinding.FragmentRealtimeBinding
+import com.example.bledot.util.BleDebugLog
 
 class RealtimeFragment : Fragment() {
 
-    private var mBinding: FragmentRealtimeBinding? = null
-    private val binding get() = mBinding!!
+    private val logTag = RealtimeFragment::class.simpleName
+    private lateinit var binding: FragmentRealtimeBinding
+    private val realtimeViewModel: RealtimeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = FragmentRealtimeBinding.inflate(inflater, container, false)
+        BleDebugLog.i(logTag, "onCreateView-()")
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_realtime, container, false)
+        with(binding) {
+            viewModel = realtimeViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
         return binding.root
     }
 
-    override fun onDestroyView() {
-        mBinding = null
-        super.onDestroyView()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        BleDebugLog.i(logTag, "onViewCreated-()")
     }
 }
