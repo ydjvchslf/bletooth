@@ -46,7 +46,7 @@ class RealtimeFragment : Fragment() {
                     Toast.makeText(App.context(), "기기 먼저 연결하세요", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-
+                    bleViewModel.makeResetZero(bleViewModel.mConnectedXsDevice.value!!)
                 }
             }
         }
@@ -61,7 +61,7 @@ class RealtimeFragment : Fragment() {
                 }
             }
         }
-        // 기록 stop
+        // realtime stop
         binding.stop.setOnClickListener {
             when (bleViewModel.mConnectedXsDevice.value) {
                 null -> {
