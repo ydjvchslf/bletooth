@@ -82,11 +82,11 @@
             app:layout_constraintTop_toBottomOf="@id/Rc_start"/>
 
         <Button
-            android:id="@+id/export"
+            android:id="@+id/select_file_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:text="export"
+            android:text="select file"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/internal_erase"/>
 

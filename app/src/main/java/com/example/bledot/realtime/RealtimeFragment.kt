@@ -88,9 +88,9 @@ class RealtimeFragment : Fragment() {
         binding.internalErase.setOnClickListener {
             realtimeViewModel.eraseInternal()
         }
-        // export start
-        binding.export.setOnClickListener {
-
+        // Select internal file
+        binding.selectFileBtn.setOnClickListener {
+            realtimeViewModel.selectInternalFile()
         }
     }
 }

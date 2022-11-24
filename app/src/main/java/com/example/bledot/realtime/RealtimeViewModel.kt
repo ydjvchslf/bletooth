@@ -44,7 +44,6 @@ class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
         // get usedFlashSpace & totalFlashSpace, if the available flash space <= 10%, it cannot start recording
     }
 
-    // requestRecordingState()
     override fun onXsensDotRecordingAck(
         address: String?,
         recordingId: Int,
@@ -62,7 +61,7 @@ class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
             BleDebugLog.d(logTag, "isRecordingStop: $isSuccess")
             terminateRecord()
         }
-
+        // requestRecordingState()
         if (recordingId == XsensDotRecordingManager.RECORDING_ID_GET_STATE) {
             if (recordingState == XsensDotRecordingState.onErasing // 48
                 || recordingState == XsensDotRecordingState.onExportFlashInfo // 80
@@ -70,7 +69,7 @@ class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
                 || recordingState == XsensDotRecordingState.onExportRecordingFileInfo // 96
                 || recordingState == XsensDotRecordingState.onExportRecordingFileData // 112
             ) {
-                BleDebugLog.d(logTag, "recordingState: $recordingState")
+                BleDebugLog.d(logTag, "recordingState: $recordingState") // onRecording
                 mManager?.requestRecordingTime()
             }
         }
@@ -83,15 +82,19 @@ class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
         remainingRecordingSeconds: Int
     ) {
         BleDebugLog.i(logTag, "onXsensDotGetRecordingTime-()")
-        BleDebugLog.d(logTag, "totalRecordingSeconds: $totalRecordingSeconds, remainingRecordingSeconds: $remainingRecordingSeconds")
     }
 
     override fun onXsensDotRequestFileInfoDone(
-        p0: String?,
-        p1: ArrayList<XsensDotRecordingFileInfo>?,
-        p2: Boolean
+        address: String?,
+        list: ArrayList<XsensDotRecordingFileInfo>?,
+        isSuccess: Boolean
     ) {
         BleDebugLog.i(logTag, "onXsensDotRequestFileInfoDone-()")
+        // A list of file information can be obtained, one message contains: fileId, fileName, dataSize
+        BleDebugLog.d(logTag, "fileList: ${list?.size}")
+        list?.forEachIndexed { index, fileInfo ->
+            BleDebugLog.d(logTag, "index: [$index]번째, fileId: ${fileInfo.fileId}, fileName: ${fileInfo.fileName}, dataSize: ${fileInfo.dataSize}, ")
+        }
     }
 
     override fun onXsensDotDataExported(
@@ -134,4 +137,9 @@ class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
         mManager?.clear()
         mManager = null
     }
+
+    fun selectInternalFile() {
+        mManager?.requestFileInfo()
+    }
+
 }
