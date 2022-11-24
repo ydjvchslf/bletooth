@@ -1,81 +1,137 @@
 package com.example.bledot.realtime
 
 import androidx.lifecycle.ViewModel
+import com.example.bledot.App
 import com.example.bledot.util.BleDebugLog
 import com.xsens.dot.android.sdk.events.XsensDotData
 import com.xsens.dot.android.sdk.interfaces.XsensDotDeviceCallback
-import com.xsens.dot.android.sdk.models.FilterProfileInfo
-import com.xsens.dot.android.sdk.models.XsensDotDevice
-import com.xsens.dot.android.sdk.models.XsensDotPayload
+import com.xsens.dot.android.sdk.interfaces.XsensDotRecordingCallback
+import com.xsens.dot.android.sdk.models.*
+import com.xsens.dot.android.sdk.recording.XsensDotRecordingManager
 import java.util.ArrayList
 
-class RealtimeViewModel: ViewModel() {
+class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
 
     private val logTag = RealtimeViewModel::class.simpleName
+    private var mManager: XsensDotRecordingManager? = null
 
     init {
         BleDebugLog.i(logTag, "init-()")
     }
 
+    fun initRecord(xsDevice: XsensDotDevice) {
+        BleDebugLog.i(logTag, "initRecord-()")
+        mManager = XsensDotRecordingManager(App.context(), xsDevice, this)
+        mManager?.enableDataRecordingNotification()
+    }
 
-//
-//    override fun onXsensDotConnectionChanged(p0: String?, p1: Int) {
-//        BleDebugLog.i(logTag, "onXsensDotConnectionChanged-()")
-//    }
-//
-//    override fun onXsensDotServicesDiscovered(p0: String?, p1: Int) {
-//        BleDebugLog.i(logTag, "onXsensDotServicesDiscovered-()")
-//    }
-//
-//    override fun onXsensDotFirmwareVersionRead(p0: String?, p1: String?) {
-//        BleDebugLog.i(logTag, "onXsensDotFirmwareVersionRead-()")
-//    }
-//
-//    override fun onXsensDotTagChanged(p0: String?, p1: String?) {
-//        BleDebugLog.i(logTag, "onXsensDotTagChanged-()")
-//    }
-//
-//    override fun onXsensDotBatteryChanged(p0: String?, p1: Int, p2: Int) {
-//        BleDebugLog.i(logTag, "inonXsensDotBatteryChangedt-()")
-//    }
-//
-//    // 여기 안타고 BleViewModel 에서 탐
-//    override fun onXsensDotDataChanged(p0: String?, data: XsensDotData?) {
-//        BleDebugLog.i(logTag, "onXsensDotDataChanged-()")
-//        val xsData = data?.euler
-//        BleDebugLog.d(logTag, "data: ${xsData.toString()}")
-//    }
-//
-//    override fun onXsensDotInitDone(p0: String?) {
-//        BleDebugLog.i(logTag, "onXsensDotInitDone-()")
-//    }
-//
-//    override fun onXsensDotButtonClicked(p0: String?, p1: Long) {
-//        BleDebugLog.i(logTag, "onXsensDotButtonClicked-()")
-//    }
-//
-//    override fun onXsensDotPowerSavingTriggered(p0: String?) {
-//        BleDebugLog.i(logTag, "onXsensDotPowerSavingTriggered-()")
-//    }
-//
-//    override fun onReadRemoteRssi(p0: String?, p1: Int) {
-//        BleDebugLog.i(logTag, "onReadRemoteRssi-()")
-//    }
-//
-//    override fun onXsensDotOutputRateUpdate(p0: String?, p1: Int) {
-//        BleDebugLog.i(logTag, "onXsensDotOutputRateUpdate-()")
-//    }
-//
-//    override fun onXsensDotFilterProfileUpdate(p0: String?, p1: Int) {
-//        BleDebugLog.i(logTag, "onXsensDotFilterProfileUpdate-()")
-//    }
-//
-//    override fun onXsensDotGetFilterProfileInfo(p0: String?, p1: ArrayList<FilterProfileInfo>?) {
-//        BleDebugLog.i(logTag, "onXsensDotGetFilterProfileInfo-()")
-//    }
-//
-//    override fun onSyncStatusUpdate(p0: String?, p1: Boolean) {
-//        BleDebugLog.i(logTag, "onSyncStatusUpdate-()")
-//    }
+    override fun onXsensDotRecordingNotification(address: String?, isEnabled: Boolean) {
+        BleDebugLog.i(logTag, "onXsensDotRecordingNotification-()")
+        BleDebugLog.d(logTag, "isEnabled: $isEnabled")
+        if (isEnabled) { mManager?.requestFlashInfo() }
+    }
 
+    //storage space is insufficient, clear flash storage
+    override fun onXsensDotEraseDone(address: String?, isSuccess: Boolean) {
+        BleDebugLog.i(logTag, "onXsensDotEraseDone-()")
+        // 내부저장소 clear 완료 후, 뒤늦게 불림
+        // UI 변경 및 알림 줄거면 isSuccess 받아서 할 것
+    }
+
+    override fun onXsensDotRequestFlashInfoDone(address: String?, usedFlashSpace: Int, totalFlashSpace: Int) {
+        BleDebugLog.i(logTag, "onXsensDotRequestFlashInfoDone-()")
+        BleDebugLog.d(logTag, "usedFlashSpace: $usedFlashSpace, totalFlashSpace: $totalFlashSpace")
+        // get usedFlashSpace & totalFlashSpace, if the available flash space <= 10%, it cannot start recording
+    }
+
+    // requestRecordingState()
+    override fun onXsensDotRecordingAck(
+        address: String?,
+        recordingId: Int,
+        isSuccess: Boolean,
+        recordingState: XsensDotRecordingState?
+    ) {
+        BleDebugLog.i(logTag, "onXsensDotRecordingAck-()")
+        if (recordingId == XsensDotRecordingManager.RECORDING_ID_START_RECORDING) {
+        // start recording result, check recordingState, it should be success or fail.
+            BleDebugLog.d(logTag, "isRecordingStart: $isSuccess")
+            mManager?.requestRecordingState()
+        } else if (recordingId ==
+            XsensDotRecordingManager.RECORDING_ID_STOP_RECORDING) {
+            // stop recording result, check recordingState, it should be success or fail.
+            BleDebugLog.d(logTag, "isRecordingStop: $isSuccess")
+            terminateRecord()
+        }
+
+        if (recordingId == XsensDotRecordingManager.RECORDING_ID_GET_STATE) {
+            if (recordingState == XsensDotRecordingState.onErasing // 48
+                || recordingState == XsensDotRecordingState.onExportFlashInfo // 80
+                || recordingState == XsensDotRecordingState.onRecording // 64
+                || recordingState == XsensDotRecordingState.onExportRecordingFileInfo // 96
+                || recordingState == XsensDotRecordingState.onExportRecordingFileData // 112
+            ) {
+                BleDebugLog.d(logTag, "recordingState: $recordingState")
+                mManager?.requestRecordingTime()
+            }
+        }
+    }
+    // mManager.requestRecordingTime()
+    override fun onXsensDotGetRecordingTime(
+        address: String?,
+        startUTCSeconds: Int,
+        totalRecordingSeconds: Int,
+        remainingRecordingSeconds: Int
+    ) {
+        BleDebugLog.i(logTag, "onXsensDotGetRecordingTime-()")
+        BleDebugLog.d(logTag, "totalRecordingSeconds: $totalRecordingSeconds, remainingRecordingSeconds: $remainingRecordingSeconds")
+    }
+
+    override fun onXsensDotRequestFileInfoDone(
+        p0: String?,
+        p1: ArrayList<XsensDotRecordingFileInfo>?,
+        p2: Boolean
+    ) {
+        BleDebugLog.i(logTag, "onXsensDotRequestFileInfoDone-()")
+    }
+
+    override fun onXsensDotDataExported(
+        p0: String?,
+        p1: XsensDotRecordingFileInfo?,
+        p2: XsensDotData?
+    ) {
+        BleDebugLog.i(logTag, "onXsensDotDataExported-()")
+    }
+
+    override fun onXsensDotDataExported(p0: String?, p1: XsensDotRecordingFileInfo?) {
+        BleDebugLog.i(logTag, "onXsensDotDataExported-()")
+    }
+
+    override fun onXsensDotAllDataExported(p0: String?) {
+        BleDebugLog.i(logTag, "onXsensDotAllDataExported-()")
+    }
+
+    override fun onXsensDotStopExportingData(p0: String?) {
+        BleDebugLog.i(logTag, "onXsensDotStopExportingData-()")
+    }
+
+    fun eraseInternal() {
+        BleDebugLog.i(logTag, "eraseInternal-()")
+        mManager?.eraseRecordingData()
+    }
+
+    fun startRecording() {
+        BleDebugLog.i(logTag, "startRecording-()")
+        mManager?.startRecording()
+    }
+
+    fun stopRecording() {
+        BleDebugLog.i(logTag, "stopRecording-()")
+        mManager?.stopRecording()
+    }
+
+    private fun terminateRecord() { // recording 콜백 삭제
+        BleDebugLog.i(logTag, "terminateRecord-()")
+        mManager?.clear()
+        mManager = null
+    }
 }

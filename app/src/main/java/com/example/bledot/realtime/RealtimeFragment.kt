@@ -72,5 +72,25 @@ class RealtimeFragment : Fragment() {
                 }
             }
         }
+        // init
+        binding.init.setOnClickListener {
+            realtimeViewModel.initRecord(bleViewModel.mConnectedXsDevice.value!!)
+        }
+        // RC start
+        binding.RcStart.setOnClickListener {
+            realtimeViewModel.startRecording()
+        }
+        // RC stop
+        binding.RcStop.setOnClickListener {
+            realtimeViewModel.stopRecording()
+        }
+        // Internal erase
+        binding.internalErase.setOnClickListener {
+            realtimeViewModel.eraseInternal()
+        }
+        // export start
+        binding.export.setOnClickListener {
+
+        }
     }
 }
