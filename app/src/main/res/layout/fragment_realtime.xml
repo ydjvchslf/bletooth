@@ -90,6 +90,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/internal_erase"/>
 
+        <Button
+            android:id="@+id/export_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="export file"
+            app:layout_constraintTop_toBottomOf="@id/internal_erase"
+            app:layout_constraintStart_toEndOf="@id/select_file_btn"/>
+
+        <Button
+            android:id="@+id/logger_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="logger"
+            app:layout_constraintTop_toBottomOf="@id/select_file_btn"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/file_save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="create file"
+            app:layout_constraintTop_toBottomOf="@id/logger_btn"
+            app:layout_constraintStart_toStartOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
