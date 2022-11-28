@@ -92,5 +92,16 @@ class RealtimeFragment : Fragment() {
         binding.selectFileBtn.setOnClickListener {
             realtimeViewModel.selectInternalFile()
         }
+        // Export btn
+        binding.exportBtn.setOnClickListener {
+            realtimeViewModel.exportFile()
+        }
+        // Logger btn // TODO:: 수정 필요
+        binding.loggerBtn.setOnClickListener {
+            realtimeViewModel.createLogger()
+        }
+        binding.fileSaveBtn.setOnClickListener {
+            realtimeViewModel.createFile(bleViewModel.mConnectedXsDevice.value!!)
+        }
     }
 }
