@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.example.bledot.App
 import com.example.bledot.BuildConfig
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.KEY_LOGGER
+import com.example.bledot.util.mLoggerList
 import com.xsens.dot.android.sdk.events.XsensDotData
 import com.xsens.dot.android.sdk.interfaces.XsensDotRecordingCallback
 import com.xsens.dot.android.sdk.models.XsensDotDevice
@@ -18,6 +20,8 @@ import java.io.File
 import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
 
@@ -28,13 +32,13 @@ class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
     private var xsLogger: XsensDotLogger? = null
     // A list contains tag and data from each sensor
     private var mDataList: ArrayList<HashMap<String?, Any>>? = null
-    // A list contains mac address and XsensDotLogger object
-    private var mLoggerList: ArrayList<HashMap<String, Any>>? = null
+    // A list contains mac address and XsensDotLogger object -> 전역변수로 이동
+    //private var mLoggerList: ArrayList<HashMap<String, Any>>? = null
 
     init {
         BleDebugLog.i(logTag, "init-()")
         // Remove XsensDotLogger objects from list before start data logging.
-        mLoggerList?.clear()
+        mLoggerList?.value?.clear()
     }
 
     fun initRecord(xsDevice: XsensDotDevice) {
@@ -212,7 +216,7 @@ class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
     fun createFile(xsDevice: XsensDotDevice) {
         BleDebugLog.i(logTag, "createFile-()")
         // Remove XsensDotLogger objects from list before start data logging.
-        mLoggerList?.clear()
+        mLoggerList.value?.clear()
 
         val appVersion = BuildConfig.VERSION_NAME
         val fwVersion = xsDevice.firmwareVersion
@@ -250,7 +254,25 @@ class RealtimeViewModel: ViewModel(), XsensDotRecordingCallback {
         val map = HashMap<String, Any>()
         map["KEY_ADDRESS"] = address
         map["KEY_LOGGER"] = logger
-        mLoggerList?.add(map)
+        val postLoggerList = ArrayList<HashMap<String, Any>>()
+        postLoggerList.add(map)
+        mLoggerList.value = postLoggerList
+        BleDebugLog.d(logTag, "${mLoggerList.value}")
+        BleDebugLog.d(logTag, "${mLoggerList.value?.size}")
+    }
 
+    /**
+     * Close the data output stream.
+     */
+    fun closeFiles() {
+        BleDebugLog.i(logTag, "closeFiles-()")
+        for (map in mLoggerList.value!!) {
+            // Call stop() function to flush and close the output stream.
+            // Data is kept in the stream buffer and write to file when the buffer is full.
+            // Call this function to write data to file whether the buffer is full or not.
+            val logger =
+                map[KEY_LOGGER] as XsensDotLogger
+            logger.stop()
+        }
     }
 }
