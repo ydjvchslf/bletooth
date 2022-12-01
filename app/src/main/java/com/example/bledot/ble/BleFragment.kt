@@ -109,13 +109,6 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
             }
         }
 
-        // 실시간 data 리스너
-        bleViewModel.dataListener = { x, y ->
-            BleDebugLog.d(logTag, "x값: [$x], y값: [$y]")
-
-        }
-
-
         // 연결 UI 업데이트
         bleViewModel.mConnectionState.observe(viewLifecycleOwner) { connectState ->
             if (connectState == 2) {

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
 import com.example.bledot.App
 import com.example.bledot.R
 import com.example.bledot.WebAppInterface
@@ -22,6 +23,7 @@ class RealtimeFragment : Fragment() {
     private lateinit var binding: FragmentRealtimeBinding
     private val realtimeViewModel: RealtimeViewModel by activityViewModels()
     private val bleViewModel: BleViewModel by activityViewModels()
+    private var xyAxis = MutableLiveData<ArrayList<Double>>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -109,11 +111,25 @@ class RealtimeFragment : Fragment() {
         binding.fileCloseBtn.setOnClickListener {
             realtimeViewModel.closeFiles()
         }
-
+        // 웹뷰 js 인터페이스 연결
         binding.realWebView.apply {
             settings.javaScriptEnabled = true
             addJavascriptInterface(WebAppInterface(App.context()), "Android") // Android란 이름으로 js 인터페이스 설정
             loadUrl("file:///android_asset/sample.html")
+        }
+        // 실시간 data 리스너
+        bleViewModel.dataListener = { x, y ->
+            BleDebugLog.d(logTag, "x값: [$x], y값: [$y]")
+            val arrayDouble = ArrayList<Double>()
+            arrayDouble.add(x)
+            arrayDouble.add(y)
+            xyAxis.postValue(arrayDouble)
+        }
+
+        xyAxis.observe(viewLifecycleOwner) {
+            BleDebugLog.i(logTag, "xyAxis?.observe-()")
+            BleDebugLog.d(logTag, "감지중!!!!! x: ${it[0]}, y: ${it[1]}")
+            binding.realWebView.loadUrl("javascript:addData(${it[0]}, ${it[1]})")
         }
     }
 }
