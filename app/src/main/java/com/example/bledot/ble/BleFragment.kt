@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -107,6 +108,13 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
                 bleViewModel.disconnectAllSensor()
             }
         }
+
+        // 실시간 data 리스너
+        bleViewModel.dataListener = { x, y ->
+            BleDebugLog.d(logTag, "x값: [$x], y값: [$y]")
+
+        }
+
 
         // 연결 UI 업데이트
         bleViewModel.mConnectionState.observe(viewLifecycleOwner) { connectState ->

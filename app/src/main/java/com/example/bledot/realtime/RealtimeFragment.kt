@@ -1,5 +1,6 @@
 package com.example.bledot.realtime
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.bledot.App
 import com.example.bledot.R
+import com.example.bledot.WebAppInterface
 import com.example.bledot.ble.BleViewModel
 import com.example.bledot.databinding.FragmentRealtimeBinding
 import com.example.bledot.util.BleDebugLog
@@ -35,6 +37,7 @@ class RealtimeFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
@@ -96,7 +99,7 @@ class RealtimeFragment : Fragment() {
         binding.exportBtn.setOnClickListener {
             realtimeViewModel.exportFile()
         }
-        // Logger btn // TODO:: 수정 필요
+        // Logger btn
         binding.loggerBtn.setOnClickListener {
             realtimeViewModel.createLogger()
         }
@@ -105,6 +108,12 @@ class RealtimeFragment : Fragment() {
         }
         binding.fileCloseBtn.setOnClickListener {
             realtimeViewModel.closeFiles()
+        }
+
+        binding.realWebView.apply {
+            settings.javaScriptEnabled = true
+            addJavascriptInterface(WebAppInterface(App.context()), "Android") // Android란 이름으로 js 인터페이스 설정
+            loadUrl("file:///android_asset/sample.html")
         }
     }
 }

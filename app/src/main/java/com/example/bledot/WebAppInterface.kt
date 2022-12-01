@@ -10,13 +10,6 @@ class WebAppInterface(private val mContext: Context) {
 
     private val logTag = WebAppInterface::class.java.simpleName
 
-    /** Show a toast from the web page  */
-    @JavascriptInterface
-    fun showToast(message: String) {
-        BleDebugLog.i(logTag, "showToast-()")
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
-    }
-
     @JavascriptInterface
     fun getXYData(x: Double, y: Double) {
         BleDebugLog.i(logTag, "getXYData-()")
