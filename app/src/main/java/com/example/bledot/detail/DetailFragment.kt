@@ -30,8 +30,6 @@ class DetailFragment : Fragment() {
     private val detailViewModel: DetailViewModel by activityViewModels()
     private var timer: Timer? = null
 
-    private var xyAxis = MutableLiveData<ArrayList<Int>>()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,17 +56,11 @@ class DetailFragment : Fragment() {
         }
 
         binding.startBtn.setOnClickListener {
-            startTime()
+            //startTime()
         }
 
         binding.stopBtn.setOnClickListener {
-            stopTime()
-        }
-
-        xyAxis.observe(viewLifecycleOwner) {
-            BleDebugLog.i(logTag, "xyAxis?.observe-()")
-            BleDebugLog.d(logTag, "감지중!!!!! x: ${it[0]}, y: ${it[1]}")
-            binding.webView.loadUrl("javascript:addData(${it[0]}, ${it[1]})")
+            //stopTime()
         }
     }
 
@@ -77,10 +69,10 @@ class DetailFragment : Fragment() {
         timer = Timer()
         timer?.scheduleAtFixedRate(0, 1000) {
             //BleDebugLog.d(logTag, "${LocalDateTime.now()}")
-            val arrayInt = createNum()
-            BleDebugLog.d(logTag, "x=> ${arrayInt[0]}, y=> ${arrayInt[1]}")
-            xyAxis.postValue(arrayInt)
-            BleDebugLog.d(logTag, "xyAxis=> ${xyAxis.value}")
+//            val arrayInt = createNum()
+//            BleDebugLog.d(logTag, "x=> ${arrayInt[0]}, y=> ${arrayInt[1]}")
+//            xyAxis.postValue(arrayInt)
+//            BleDebugLog.d(logTag, "xyAxis=> ${xyAxis.value}")
         }
     }
 
