@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.bledot.data.BleDevice
 import com.example.bledot.util.*
 import com.xsens.dot.android.sdk.events.XsensDotData
 import com.xsens.dot.android.sdk.interfaces.XsensDotDeviceCallback
@@ -26,6 +27,8 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
     var mConnectedIndex = -1 // 리스트 index
     // KEY
     val KEY_DEVICE = "KEY_DEVICE"
+    // data 리스너
+    var dataListener : ((Double, Double) -> Unit)? = null
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -120,6 +123,12 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
         if (eulerAngles != null) {
             val eulerAnglesStr = String.format("%.6f", eulerAngles[0]) + ", "+ String.format("%.6f", eulerAngles[1]) + ", " + String.format("%.6f", eulerAngles[2])
             BleDebugLog.d(logTag, "eulerAnglesStr: $eulerAnglesStr")
+
+            val xEuler = String.format("%.6f", eulerAngles[0]).toDouble()
+            val yEuler = String.format("%.6f", eulerAngles[1]).toDouble()
+
+            dataListener?.invoke(xEuler, yEuler)
+
             BleDebugLog.d(logTag, "sampleTimeFine: ${xsData.sampleTimeFine}")
             // data 파일에 업데이트
             updateFiles(address!!, xsData)
