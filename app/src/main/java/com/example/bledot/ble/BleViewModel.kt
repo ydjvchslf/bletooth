@@ -4,13 +4,14 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.*
 import com.xsens.dot.android.sdk.events.XsensDotData
 import com.xsens.dot.android.sdk.interfaces.XsensDotDeviceCallback
 import com.xsens.dot.android.sdk.interfaces.XsensDotMeasurementCallback
 import com.xsens.dot.android.sdk.models.FilterProfileInfo
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
+import com.xsens.dot.android.sdk.utils.XsensDotLogger
 
 class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCallback {
 
@@ -39,6 +40,7 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
 
     fun stopMeasure(device: XsensDotDevice) {
         device.stopMeasuring()
+        //closeFiles()
     }
 
     fun getBleFromSensorList(index: Int): BluetoothDevice {
@@ -111,13 +113,16 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
         BleDebugLog.i(logTag, "onXsensDotBatteryChanged-()")
     }
 
-    override fun onXsensDotDataChanged(p0: String?, xsData: XsensDotData?) {
+    override fun onXsensDotDataChanged(address: String?, xsData: XsensDotData?) {
         BleDebugLog.i(logTag, "onXsensDotDataChanged-()")
+        BleDebugLog.d(logTag, "address: $address, xsData: $xsData")
         val eulerAngles = xsData?.euler
         if (eulerAngles != null) {
             val eulerAnglesStr = String.format("%.6f", eulerAngles[0]) + ", "+ String.format("%.6f", eulerAngles[1]) + ", " + String.format("%.6f", eulerAngles[2])
             BleDebugLog.d(logTag, "eulerAnglesStr: $eulerAnglesStr")
             BleDebugLog.d(logTag, "sampleTimeFine: ${xsData.sampleTimeFine}")
+            // data 파일에 업데이트
+            updateFiles(address!!, xsData)
         }
     }
 
@@ -175,4 +180,18 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
         BleDebugLog.i(logTag, "onXsensDotRotLocalRead-()")
     }
 
+    // 센서 data 실시간 받아오면서 update
+    private fun updateFiles(address: String, data: XsensDotData) {
+        BleDebugLog.i(logTag, "updateFiles-()")
+        BleDebugLog.d(logTag, "mLoggerList: ${mLoggerList.value}")
+
+        for (map in mLoggerList.value!!) {
+            val _address = map[KEY_ADDRESS] as String
+            if (_address == address) {
+                val logger = map[KEY_LOGGER] as XsensDotLogger?
+                logger?.update(data)
+            }
+        }
+
+    }
 }

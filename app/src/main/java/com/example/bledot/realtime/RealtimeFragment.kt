@@ -103,5 +103,8 @@ class RealtimeFragment : Fragment() {
         binding.fileSaveBtn.setOnClickListener {
             realtimeViewModel.createFile(bleViewModel.mConnectedXsDevice.value!!)
         }
+        binding.fileCloseBtn.setOnClickListener {
+            realtimeViewModel.closeFiles()
+        }
     }
 }
