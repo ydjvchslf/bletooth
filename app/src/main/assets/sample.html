@@ -52,4 +52,20 @@
         myChart.update();
   }
 
+   function addDataList(dataList) {
+     console.log("addDataList-()")
+        // deleteAllData
+        var data = myChart.data.datasets[0].data = []
+
+        for (i in dataList) {
+            var xValue = dataList[i].xValue
+            var yValue = dataList[i].yValue
+            data.push({x: xValue,
+                       y: yValue})
+        }
+         myChart.update();
+  }
+
+   myChart.options.animation = false;
+
 </script>

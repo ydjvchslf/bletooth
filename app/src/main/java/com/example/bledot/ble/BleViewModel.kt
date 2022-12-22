@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bledot.data.BleDevice
+import com.example.bledot.data.XYZData
 import com.example.bledot.util.*
 import com.xsens.dot.android.sdk.events.XsensDotData
 import com.xsens.dot.android.sdk.interfaces.XsensDotDeviceCallback
@@ -28,7 +29,9 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
     // KEY
     val KEY_DEVICE = "KEY_DEVICE"
     // data 리스너
-    var dataListener : ((Double, Double) -> Unit)? = null
+    var dataListener : ((XYZData) -> Unit)? = null
+    // 100개 단위
+    var xyzData100List = ArrayList<XYZData>()
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -118,20 +121,27 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
 
     override fun onXsensDotDataChanged(address: String?, xsData: XsensDotData?) {
         BleDebugLog.i(logTag, "onXsensDotDataChanged-()")
-        BleDebugLog.d(logTag, "address: $address, xsData: $xsData")
+        //BleDebugLog.d(logTag, "address: $address, xsData: $xsData")
         val eulerAngles = xsData?.euler
         if (eulerAngles != null) {
             val eulerAnglesStr = String.format("%.6f", eulerAngles[0]) + ", "+ String.format("%.6f", eulerAngles[1]) + ", " + String.format("%.6f", eulerAngles[2])
-            BleDebugLog.d(logTag, "eulerAnglesStr: $eulerAnglesStr")
+            //BleDebugLog.d(logTag, "eulerAnglesStr: $eulerAnglesStr")
 
             val xEuler = String.format("%.6f", eulerAngles[0]).toDouble()
             val yEuler = String.format("%.6f", eulerAngles[1]).toDouble()
+            val zEuler = String.format("%.6f", eulerAngles[2]).toDouble()
 
-            dataListener?.invoke(xEuler, yEuler)
+            if (xyzData100List.size < 50) {
+                xyzData100List.add(XYZData(xEuler, yEuler, zEuler))
+            } else {
+                dataListener?.invoke(xyzData100List[xyzData100List.lastIndex])
+                xyzData100List.clear()
+            }
 
-            BleDebugLog.d(logTag, "sampleTimeFine: ${xsData.sampleTimeFine}")
+            // 모듈러 연산
+
             // data 파일에 업데이트
-            updateFiles(address!!, xsData)
+            //updateFiles(address!!, xsData)
         }
     }
 

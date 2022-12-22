@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView.setWebContentsDebuggingEnabled
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -14,8 +15,10 @@ import com.example.bledot.App
 import com.example.bledot.R
 import com.example.bledot.WebAppInterface
 import com.example.bledot.ble.BleViewModel
+import com.example.bledot.data.XYZData
 import com.example.bledot.databinding.FragmentRealtimeBinding
 import com.example.bledot.util.BleDebugLog
+import com.google.gson.Gson
 
 class RealtimeFragment : Fragment() {
 
@@ -23,7 +26,8 @@ class RealtimeFragment : Fragment() {
     private lateinit var binding: FragmentRealtimeBinding
     private val realtimeViewModel: RealtimeViewModel by activityViewModels()
     private val bleViewModel: BleViewModel by activityViewModels()
-    private var xyAxis = MutableLiveData<ArrayList<Double>>()
+    // 웹뷰용 dataList
+    var webViewList = ArrayList<XYZData>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,7 +103,8 @@ class RealtimeFragment : Fragment() {
         }
         // Export btn
         binding.exportBtn.setOnClickListener {
-            realtimeViewModel.exportFile()
+            //realtimeViewModel.exportFile()
+            binding.realWebView.loadUrl("javascript:deleteData()")
         }
         // Logger btn
         binding.loggerBtn.setOnClickListener {
@@ -114,22 +119,24 @@ class RealtimeFragment : Fragment() {
         // 웹뷰 js 인터페이스 연결
         binding.realWebView.apply {
             settings.javaScriptEnabled = true
+            setWebContentsDebuggingEnabled(true)
             addJavascriptInterface(WebAppInterface(App.context()), "Android") // Android란 이름으로 js 인터페이스 설정
             loadUrl("file:///android_asset/sample.html")
         }
         // 실시간 data 리스너
-        bleViewModel.dataListener = { x, y ->
-            BleDebugLog.d(logTag, "x값: [$x], y값: [$y]")
-            val arrayDouble = ArrayList<Double>()
-            arrayDouble.add(x)
-            arrayDouble.add(y)
-            xyAxis.postValue(arrayDouble)
-        }
+        bleViewModel.dataListener = { xyzData ->
+            BleDebugLog.d(logTag, "xyzData => $xyzData")
+            if (webViewList.size < 10) {
+                webViewList.add(xyzData)
+            } else { // size > 10
+                BleDebugLog.d(logTag, "webViewList.size: ${webViewList.size}")
+                val jsonArrayString = Gson().toJson(webViewList)
+                activity?.runOnUiThread { // 웹뷰 표시용 (UI 메인쓰레드에서)
+                    binding.realWebView.loadUrl("javascript:addDataList($jsonArrayString)")
+                    webViewList.clear()
+                }
 
-        xyAxis.observe(viewLifecycleOwner) {
-            BleDebugLog.i(logTag, "xyAxis?.observe-()")
-            BleDebugLog.d(logTag, "감지중!!!!! x: ${it[0]}, y: ${it[1]}")
-            binding.realWebView.loadUrl("javascript:addData(${it[0]}, ${it[1]})")
+            }
         }
     }
 }
