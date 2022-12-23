@@ -3,17 +3,27 @@
 <div>
     <canvas id="myChart" width="100%" height="100%"></canvas>
 </div>
+<div>
+    <canvas id="myChart2" width="100%" height="50%"></canvas>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Streaming CDN-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.27.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@2.0.0"></script>
+
 
 <script>
 
+    // 첫번째 그래프
     const ctx = document.getElementById('myChart');
     const myChart = new Chart(ctx, {
       type: 'scatter',
       data:{
         datasets: [{
-          label: 'Label name',
+          label: '라벨 이름',
           data:
             [
             ],
@@ -34,8 +44,8 @@
           y: {
             type: 'linear',
             position: 'center',
-              suggestedMin: -100,
-              suggestedMax: 100,
+            suggestedMin: -100,
+            suggestedMax: 100,
             border: {
               color: 'rgb(0, 0, 0)'
             }
@@ -55,7 +65,7 @@
    function addDataList(dataList) {
      console.log("addDataList-()")
         // deleteAllData
-        var data = myChart.data.datasets[0].data = []
+         var data = myChart.data.datasets[0].data // = []
 
         for (i in dataList) {
             var xValue = dataList[i].xValue
@@ -66,6 +76,85 @@
          myChart.update();
   }
 
+
+  /////////////// Streaming 그래프
+    const ctx2 = document.getElementById('myChart2');
+
+   // Change default options for ALL charts
+
+  const myChart2 = new Chart(ctx2, {
+  type: 'line',             // ‘line’、‘bar’、‘bubble’、‘scatter’ タイプに対応
+  data: {
+    datasets: [{
+      label: 'x',
+      backgroundColor: 'rgb(255, 99, 132)',
+      data: []
+    },
+    {
+      label: 'y',
+      backgroundColor: 'rgb(55, 99, 132)',
+      data: []
+      },
+    {
+      label: 'z',
+      backgroundColor: 'rgb(15, 0, 11)',
+      data: []
+    }]
+  },
+  options: {
+    scales: {
+      x: {
+        type: 'realtime',   // x軸は右から左に自動スクロール
+        realtime: {         // 軸ごとのオプション
+          duration: 5000,  // 過去20000ミリ秒のデータを表示
+          refresh: 0,    // onRefresh コールバックを1000ミリ秒毎に呼び出し
+          delay: 0,      // 1000ミリ秒の遅延により、次の値が確定し線が完全に引けてから表示
+          pause: false,     // チャートは一時停止していない
+          ttl: undefined,   // データはチャートから消えると自動的に削除
+          frameRate: 30,    // データポイントを毎秒30回描画
+          // データセットを更新するためのコールバック
+          onRefresh: chart => {
+            //myChart.update(‘quiet’);
+            // データソースに問い合わせを行い、{x: タイムスタンプ, y: 値} 形式のオブジェクトの配列を取得
+            //var data = getLatestData();
+            // 新しいデータ配列を既存のチャートデータに追加
+            //chart.data.datasets[0].data.push(...data);
+          }
+        }
+      }
+    }
+  }
+});
+
+
+  function addStreamingValue(xyzData) {
+
+    if (myChart2.options.scales.x.realtime.pause == true) {
+        myChart2.options.scales.x.realtime.pause == false;
+    }
+      var dataX = myChart2.data.datasets[0].data
+      var dataY = myChart2.data.datasets[1].data
+      var dataZ = myChart2.data.datasets[2].data
+       //console.log(xyzData)
+
+      dataX.push({x: Date.now(),
+                 y: xyzData.xValue})
+
+     dataZ.push({x: Date.now(),
+                y: xyzData.yValue})
+
+     dataZ.push({x: Date.now(),
+                 y: xyzData.zValue})
+
+  }
+
+  function stopStreaming() {
+      myChart2.options.scales.x.realtime.pause = true;
+  }
+
+    // Animation 효과
    myChart.options.animation = false;
+   myChart2.options.animation = false;
+
 
 </script>
