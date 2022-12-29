@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.bledot.data.BleDevice
 import com.example.bledot.data.XYZData
 import com.example.bledot.util.*
 import com.xsens.dot.android.sdk.events.XsensDotData
@@ -14,7 +13,6 @@ import com.xsens.dot.android.sdk.models.FilterProfileInfo
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
 import com.xsens.dot.android.sdk.utils.XsensDotLogger
-
 class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCallback {
 
     private val logTag = BleViewModel::class.simpleName
@@ -30,8 +28,10 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
     val KEY_DEVICE = "KEY_DEVICE"
     // data 리스너
     var dataListener : ((XYZData) -> Unit)? = null
-    // 100개 단위
-    var xyzData100List = ArrayList<XYZData>()
+    // data2 리스너
+    var data2Listener : ((XYZData) -> Unit)? = null
+    // 50개 단위
+    var xyzData50List = ArrayList<XYZData>()
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -131,11 +131,14 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             val yEuler = String.format("%.6f", eulerAngles[1]).toDouble()
             val zEuler = String.format("%.6f", eulerAngles[2]).toDouble()
 
-            if (xyzData100List.size < 50) {
-                xyzData100List.add(XYZData(xEuler, yEuler, zEuler))
+            if (xyzData50List.size < 50) {
+                xyzData50List.add(XYZData(xEuler, yEuler, zEuler))
+                //if(xyzData50List.size == 20){
+                    data2Listener?.invoke(xyzData50List[xyzData50List.lastIndex])
+                //}
             } else {
-                dataListener?.invoke(xyzData100List[xyzData100List.lastIndex])
-                xyzData100List.clear()
+                dataListener?.invoke(xyzData50List[xyzData50List.lastIndex])
+                xyzData50List.clear()
             }
 
             // 모듈러 연산
