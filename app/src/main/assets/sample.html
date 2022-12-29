@@ -3,18 +3,11 @@
 <div>
     <canvas id="myChart" width="100%" height="100%"></canvas>
 </div>
-<div>
-    <canvas id="myChart2" width="100%" height="50%"></canvas>
-</div>
+
+<button type="button" onclick="fn_stop()">stop</button>
+<p> <canvas id="timeline" width="300" height="300"></canvas> </p>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- Streaming CDN-->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2"></script>
-<script src="https://cdn.jsdelivr.net/npm/luxon@1.27.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@2.0.0"></script>
-
-
 <script>
 
     // 첫번째 그래프
@@ -54,13 +47,6 @@
       }
     });
 
-  function addData(xAxis, yAxis){
-        var data = myChart.data.datasets[0].data
-        console.log(data)
-        data.push({x: xAxis, y: yAxis})
-        console.log(data)
-        myChart.update();
-  }
 
    function addDataList(dataList) {
      console.log("addDataList-()")
@@ -76,85 +62,118 @@
          myChart.update();
   }
 
-
-  /////////////// Streaming 그래프
-    const ctx2 = document.getElementById('myChart2');
-
-   // Change default options for ALL charts
-
-  const myChart2 = new Chart(ctx2, {
-  type: 'line',             // ‘line’、‘bar’、‘bubble’、‘scatter’ タイプに対応
-  data: {
-    datasets: [{
-      label: 'x',
-      backgroundColor: 'rgb(255, 99, 132)',
-      data: []
-    },
-    {
-      label: 'y',
-      backgroundColor: 'rgb(55, 99, 132)',
-      data: []
-      },
-    {
-      label: 'z',
-      backgroundColor: 'rgb(15, 0, 11)',
-      data: []
-    }]
-  },
-  options: {
-    scales: {
-      x: {
-        type: 'realtime',   // x軸は右から左に自動スクロール
-        realtime: {         // 軸ごとのオプション
-          duration: 5000,  // 過去20000ミリ秒のデータを表示
-          refresh: 0,    // onRefresh コールバックを1000ミリ秒毎に呼び出し
-          delay: 0,      // 1000ミリ秒の遅延により、次の値が確定し線が完全に引けてから表示
-          pause: false,     // チャートは一時停止していない
-          ttl: undefined,   // データはチャートから消えると自動的に削除
-          frameRate: 30,    // データポイントを毎秒30回描画
-          // データセットを更新するためのコールバック
-          onRefresh: chart => {
-            //myChart.update(‘quiet’);
-            // データソースに問い合わせを行い、{x: タイムスタンプ, y: 値} 形式のオブジェクトの配列を取得
-            //var data = getLatestData();
-            // 新しいデータ配列を既存のチャートデータに追加
-            //chart.data.datasets[0].data.push(...data);
-          }
-        }
-      }
-    }
-  }
-});
-
-
-  function addStreamingValue(xyzData) {
-
-    if (myChart2.options.scales.x.realtime.pause == true) {
-        myChart2.options.scales.x.realtime.pause == false;
-    }
-      var dataX = myChart2.data.datasets[0].data
-      var dataY = myChart2.data.datasets[1].data
-      var dataZ = myChart2.data.datasets[2].data
-       //console.log(xyzData)
-
-      dataX.push({x: Date.now(),
-                 y: xyzData.xValue})
-
-     dataZ.push({x: Date.now(),
-                y: xyzData.yValue})
-
-     dataZ.push({x: Date.now(),
-                 y: xyzData.zValue})
-
-  }
-
-  function stopStreaming() {
-      myChart2.options.scales.x.realtime.pause = true;
-  }
-
-    // Animation 효과
    myChart.options.animation = false;
-   myChart2.options.animation = false;
+
+
+   /////////////////////// 두번째 그래프 ///////////////////////
+    //timeline
+    const canvas2 = document.getElementById('timeline');
+    const ctx2 = canvas2.getContext("2d");
+
+  // context, 가로, 세로, 현재 x, 간격
+  fn_draw_xAxis(ctx2, 300, 300, 0, 50);
+
+    // context, 가로, 세로, 현재 x, 간격
+    function fn_draw_xAxis(ctx, w, h, currX, intv){
+
+        let halfH = h/2; // 150
+        let halfW = w/2; // 200
+
+        ctx.lineWidth=0.3;
+
+        //가로선
+        let intY = 30 //parseInt(halfH/5); // 30 (y 간격)
+
+        let posY = intY;
+
+        while(posY < h){ // 30 < 300 / 60 < 300
+
+            ctx.beginPath();
+            ctx.moveTo(30, posY); // (0, 30) / (0, 60)
+            ctx.lineTo(300, posY); // (400, 30) / (400, 60)
+            ctx.stroke();
+
+            ctx.font = '12px sherif';
+            ctx.strokeText(transferXAxis(posY), 0, posY+3);
+
+            posY += intY;
+
+        }
+
+    }
+
+  function transferXAxis(posY) {
+      let std = 150;
+      return (std - posY)
+  }
+
+    // 버튼 이벤트
+    function fn_start(){
+        timerId = setInterval(fn_draw_next, 5);
+    }
+    function fn_stop(){
+        clearInterval(timerId);
+    }
+
+
+
+
+    //시간 x축 시작점인가?
+    var time_x = 0;
+
+    var timerId;
+
+    var arrY=[];
+
+    function fn_draw_next(xyzData){
+
+        let std = 150;
+
+	    y = 150 - (xyzData.yValue)
+
+	    arrY.push(y);
+        console.log("arrY => " + arrY);
+
+        fn_draw_timeline();
+
+    }
+
+
+    function fn_draw_timeline(){
+
+      let w = canvas2.width; // 가로
+      let h = canvas2.height; // 세로
+
+      //double buffering
+      var bufferCanvas = document.createElement('canvas');
+      var ctxBuffer = bufferCanvas.getContext("2d");
+      ctxBuffer.canvas.width = w;
+      ctxBuffer.canvas.height = h;
+      fn_draw_xAxis(ctxBuffer, w, h, time_x, 50);
+
+      let posX = (time_x < w - 1) ? 0 : (time_x - w + 1);
+      console.log("posX: "+posX);
+
+      //색상지정
+      ctxBuffer.strokeStyle='green';
+      ctxBuffer.lineWidth = 1;
+      ctxBuffer.beginPath();
+      let scrX = 0;
+      while(posX < arrY.length - 1){
+          ctxBuffer.moveTo(scrX, arrY[posX]);
+          ctxBuffer.lineTo(scrX+1, arrY[posX+1]);
+          posX++;
+          scrX++;
+      }
+      ctxBuffer.stroke();
+
+      //canvas 초기화 (사각형 영역 지우기)
+      ctx2.clearRect(0, 0, w, h);
+      //변경된 내용 업데이트
+      ctx2.drawImage(bufferCanvas, 0, 0);
+
+      time_x ++;
+    }
 
 
 </script>

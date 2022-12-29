@@ -78,6 +78,7 @@ class RealtimeFragment : Fragment() {
                 }
                 else -> {
                     bleViewModel.stopMeasure(bleViewModel.mConnectedXsDevice.value!!)
+                    binding.realWebView.loadUrl("javascript:stopStreaming()")
                 }
             }
         }
@@ -104,7 +105,9 @@ class RealtimeFragment : Fragment() {
         // Export btn
         binding.exportBtn.setOnClickListener {
             //realtimeViewModel.exportFile()
-            binding.realWebView.loadUrl("javascript:deleteData()")
+            val XYZData = XYZData(3.0, 2.0, 99.7)
+            val jsonData = Gson().toJson(XYZData)
+            binding.realWebView.loadUrl("javascript:addStreamingValue($jsonData)")
         }
         // Logger btn
         binding.loggerBtn.setOnClickListener {
@@ -125,7 +128,7 @@ class RealtimeFragment : Fragment() {
         }
         // 실시간 data 리스너
         bleViewModel.dataListener = { xyzData ->
-            BleDebugLog.d(logTag, "xyzData => $xyzData")
+            BleDebugLog.d(logTag, "1번 그래프 Listener")
             if (webViewList.size < 10) {
                 webViewList.add(xyzData)
             } else { // size > 10
@@ -135,7 +138,14 @@ class RealtimeFragment : Fragment() {
                     binding.realWebView.loadUrl("javascript:addDataList($jsonArrayString)")
                     webViewList.clear()
                 }
+            }
+        }
 
+        bleViewModel.data2Listener = { xyzData ->
+            BleDebugLog.d(logTag, "2번 그래프 Listener")
+            val jsonXYZData = Gson().toJson(xyzData)
+            activity?.runOnUiThread { // 웹뷰 표시용 (UI 메인쓰레드에서) Streaming 그래프
+                binding.realWebView.loadUrl("javascript:fn_draw_next($jsonXYZData)")
             }
         }
     }
