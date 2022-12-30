@@ -28,7 +28,6 @@ class DetailFragment : Fragment() {
     private val logTag = DetailFragment::class.simpleName
     private lateinit var binding: FragmentDetailBinding
     private val detailViewModel: DetailViewModel by activityViewModels()
-    private var timer: Timer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,50 +43,12 @@ class DetailFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
 
-        binding.webView.apply {
-            settings.javaScriptEnabled = true
-            addJavascriptInterface(WebAppInterface(App.context()), "Android") // Android란 이름으로 js 인터페이스 설정
-            loadUrl("file:///android_asset/sample.html")
+        binding.getBtn.setOnClickListener {
+            detailViewModel.getProductList()
         }
-
-        binding.startBtn.setOnClickListener {
-            //startTime()
-        }
-
-        binding.stopBtn.setOnClickListener {
-            //stopTime()
-        }
-    }
-
-    private fun startTime() {
-        BleDebugLog.i(logTag, "startTime-()")
-        timer = Timer()
-        timer?.scheduleAtFixedRate(0, 1000) {
-            //BleDebugLog.d(logTag, "${LocalDateTime.now()}")
-//            val arrayInt = createNum()
-//            BleDebugLog.d(logTag, "x=> ${arrayInt[0]}, y=> ${arrayInt[1]}")
-//            xyAxis.postValue(arrayInt)
-//            BleDebugLog.d(logTag, "xyAxis=> ${xyAxis.value}")
-        }
-    }
-
-    private fun stopTime() {
-        BleDebugLog.i(logTag, "stopTime-()")
-        timer?.cancel()
-    }
-
-    private fun createNum(): ArrayList<Int> {
-        val range = (-100..100)
-        val x = range.random()
-        val y = range.random()
-        val arrayInt = ArrayList<Int>()
-        arrayInt.add(x)
-        arrayInt.add(y)
-        return arrayInt
     }
 }
