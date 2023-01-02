@@ -73,4 +73,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     // Gson
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    //OkHttp: 통신 로그 확인하기 위함
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 }
