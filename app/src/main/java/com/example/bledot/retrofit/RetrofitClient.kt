@@ -20,6 +20,7 @@ object RetrofitClient {
 
     //Retrofit 객체 초기화
     private val retrofit: Retrofit = Retrofit.Builder()
+        .addCallAdapterFactory(ResponseAdapterFactory())
         .baseUrl(this.BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
