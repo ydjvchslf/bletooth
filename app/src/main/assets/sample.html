@@ -123,16 +123,25 @@
 
     var timerId;
 
+    var arrX=[];
     var arrY=[];
+    var arrZ=[];
 
     function fn_draw_next(xyzData){
 
         let std = 150;
 
+        x = 150 - (xyzData.xValue)
 	    y = 150 - (xyzData.yValue)
+	    z = 150 - (xyzData.zValue)
 
+	    arrX.push(x);
 	    arrY.push(y);
+        arrZ.push(z);
+
+        console.log("arrX => " + arrX);
         console.log("arrY => " + arrY);
+        console.log("arrZ => " + arrZ);
 
         fn_draw_timeline();
 
@@ -154,18 +163,9 @@
       let posX = (time_x < w - 1) ? 0 : (time_x - w + 1);
       console.log("posX: "+posX);
 
-      //색상지정
-      ctxBuffer.strokeStyle='green';
-      ctxBuffer.lineWidth = 1;
-      ctxBuffer.beginPath();
-      let scrX = 0;
-      while(posX < arrY.length - 1){
-          ctxBuffer.moveTo(scrX, arrY[posX]);
-          ctxBuffer.lineTo(scrX+1, arrY[posX+1]);
-          posX++;
-          scrX++;
-      }
-      ctxBuffer.stroke();
+      fn_draw_eachData(0, ctxBuffer, posX, w)
+      fn_draw_eachData(1, ctxBuffer, posX, w)
+      fn_draw_eachData(2, ctxBuffer, posX, w)
 
       //canvas 초기화 (사각형 영역 지우기)
       ctx2.clearRect(0, 0, w, h);
@@ -174,6 +174,42 @@
 
       time_x ++;
     }
+
+    function fn_draw_eachData(xyz, ctxBuffer, posX, w) {
+
+      let color = '';
+      let graph = [];
+
+      if (xyz == 0) {
+        color = 'red';
+        graph = arrX;
+      } else if (xyz == 1) {
+        color = 'green';
+        graph = arrY;
+      } else if (xyz == 2) {
+        color = 'blue';
+        graph = arrZ;
+      }
+
+      //색상지정
+      ctxBuffer.strokeStyle = color;
+      ctxBuffer.lineWidth = 1;
+      ctxBuffer.beginPath();
+
+      posX = (time_x < w - 1) ? 0 : (time_x - w + 1);
+      scrX = 30; // x축 시작점
+
+      while(posX < graph.length - 1){
+          ctxBuffer.moveTo(scrX, graph[posX]);
+          ctxBuffer.lineTo(scrX+1, graph[posX+1]);
+          posX++;
+          scrX++;
+      }
+      ctxBuffer.stroke();
+
+    }
+
+
 
 
 </script>
