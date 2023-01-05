@@ -24,7 +24,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BleDot"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:usesCleartextTraffic="true"> <!-- api 호출시 http 도 되도록 추가 -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
