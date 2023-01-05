@@ -1,5 +1,6 @@
 package com.example.bledot.retrofit
 
+import com.example.bledot.util.BleDebugLog
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -9,7 +10,7 @@ import retrofit2.Response
 sealed class Result<T> {
     class Success<T>(val code: Int, val data: T) : Result<T>()
     class Loading<T> : Result<T>()
-    class ApiError<T>(val code: Int, val message: String) : Result<T>()
+    class ApiError<T>(val code: Int, val message: String?) : Result<T>()
     class NetworkError<T>(val throwable: Throwable) : Result<T>()
     class NullResult<T> : Result<T>()
     // 최종 결과 response
@@ -20,25 +21,42 @@ class ResponseCall<T> constructor(
     private val callDelegate: Call<T>
 ) : Call<Result<T>> {
 
+    private val logTag = ResponseCall::class.simpleName
+
     override fun enqueue(callback: Callback<Result<T>>) {
         callDelegate.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
+                when(response.code()) {
+                    in 200..299 -> { // 200, response.body()
+                        val resBody = response.body()
+                        resBody?.let {
+                            callback.onResponse(this@ResponseCall, Response.success(Result.Success(response.code(), it)))
+                        }
+                    }
+                    in 400..409 -> {
+                        response.body()
+                        callback.onResponse(this@ResponseCall, Response.success(Result.ApiError(response.code(), response.message()))) // 400대, response.message()
+                    }
+                }
+
+                /*
                 response.body()?.let {
                     when(response.code()) {
                         in 200..299 -> {
-                            callback.onResponse(this@ResponseCall, Response.success(Result.Success(response.code(), it)))
+                            response.body()
+                            callback.onResponse(this@ResponseCall, Response.success(Result.Success(response.code(), it))) // 200, response.body()
                         }
                         in 400..409 -> {
-                            callback.onResponse(this@ResponseCall, Response.success(Result.ApiError(response.code(), response.message())))
-                        }
-                        5000 -> { // ex) 로그인 에러 (계정 틀림)
-                            callback.onResponse(this@ResponseCall, Response.success(Result.ApiError(response.code(), "Login Error!")))
+                            response.body()
+                            callback.onResponse(this@ResponseCall, Response.success(Result.ApiError(response.code(), response.message()))) // 400대, response.message()
                         }
                     }
                 }
+                 */
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
+                BleDebugLog.e(t.toString())
                 callback.onResponse(this@ResponseCall, Response.success(Result.NetworkError(t)))
                 call.cancel()
             }
