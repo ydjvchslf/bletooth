@@ -144,7 +144,7 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             // 모듈러 연산
 
             // data 파일에 업데이트
-            //updateFiles(address!!, xsData)
+            updateFiles(address!!, xsData)
         }
     }
 
