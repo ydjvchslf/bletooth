@@ -76,4 +76,6 @@ dependencies {
     //OkHttp: 통신 로그 확인하기 위함
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    // Splash
+    implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
 }
