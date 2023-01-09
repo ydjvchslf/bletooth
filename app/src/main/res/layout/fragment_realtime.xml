@@ -103,7 +103,7 @@
             android:text="export"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/stop"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/logger_btn"
@@ -121,9 +121,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="create file"
-            app:layout_constraintTop_toBottomOf="@id/logger_btn"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone" />
+            app:layout_constraintStart_toEndOf="@id/logger_btn"
+            app:layout_constraintTop_toBottomOf="@id/stop"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/file_close_btn"
@@ -132,8 +132,8 @@
             android:layout_marginStart="15dp"
             android:text="close file"
             app:layout_constraintStart_toEndOf="@id/file_save_btn"
-            app:layout_constraintTop_toBottomOf="@id/logger_btn"
-            android:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@id/stop"
+            android:visibility="visible" />
 
         <WebView
             android:id="@+id/real_web_view"

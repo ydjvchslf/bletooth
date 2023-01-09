@@ -82,37 +82,6 @@ class RealtimeFragment : Fragment() {
                 }
             }
         }
-        // init
-        binding.init.setOnClickListener {
-            realtimeViewModel.initRecord(bleViewModel.mConnectedXsDevice.value!!)
-        }
-        // RC start
-        binding.RcStart.setOnClickListener {
-            realtimeViewModel.startRecording()
-        }
-        // RC stop
-        binding.RcStop.setOnClickListener {
-            realtimeViewModel.stopRecording()
-        }
-        // Internal erase
-        binding.internalErase.setOnClickListener {
-            realtimeViewModel.eraseInternal()
-        }
-        // Select internal file
-        binding.selectFileBtn.setOnClickListener {
-            realtimeViewModel.selectInternalFile()
-        }
-        // Export btn
-        binding.exportBtn.setOnClickListener {
-            //realtimeViewModel.exportFile()
-            val XYZData = XYZData(3.0, 2.0, 99.7)
-            val jsonData = Gson().toJson(XYZData)
-            binding.realWebView.loadUrl("javascript:addStreamingValue($jsonData)")
-        }
-        // Logger btn
-        binding.loggerBtn.setOnClickListener {
-            realtimeViewModel.createLogger()
-        }
         binding.fileSaveBtn.setOnClickListener {
             realtimeViewModel.createFile(bleViewModel.mConnectedXsDevice.value!!)
         }
