@@ -1,27 +1,33 @@
-package com.example.bledot
+package com.example.bledot.activity.before
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.bledot.databinding.ActivityMainBinding
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.bledot.R
+import com.example.bledot.activity.main.MainActivity
+import com.example.bledot.databinding.ActivityBeforeBinding
 import com.example.bledot.util.BleDebugLog
-import com.xsens.dot.android.sdk.XsensDotSdk
 import kotlin.system.exitProcess
 
-class MainActivity : AppCompatActivity() {
+class BeforeActivity : AppCompatActivity() {
 
-    private val logTag = MainActivity::class.simpleName ?: ""
-    private lateinit var binding: ActivityMainBinding
-    private val activityViewModel = ActivityViewModel()
+    private val logTag = BeforeActivity::class.simpleName ?: ""
+    private lateinit var binding: ActivityBeforeBinding
+    private val beforeViewModel = BeforeViewModel()
+
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
 
     companion object {
         const val PERMISSION_REQUEST = 200
@@ -43,29 +49,28 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
-            setKeepOnScreenCondition { activityViewModel.isLoading.value }
+            setKeepOnScreenCondition { beforeViewModel.isLoading.value }
         }
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        BleDebugLog.d(logTag, "onCreate-()")
+        binding = ActivityBeforeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 네비게이션
-        val bottomNavView = binding.bottomNav
-        val navController = (supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment).findNavController()
-        bottomNavView.setupWithNavController(navController)
+        navController = Navigation.findNavController(this, R.id.before_nav_host)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
         // 권한
         checkPermissions(requiredPermissionArray)
-
-        // 센서 재연결 시 SDK 자동 재시작
-        XsensDotSdk.setReconnectEnabled(true)
     }
 
     private fun checkPermissions(permissions: Array<String>){
         BleDebugLog.d(logTag, "checkPermission-()")
         permissions.forEach { permission ->
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST)
+                ActivityCompat.requestPermissions(this, permissions,
+                    PERMISSION_REQUEST
+                )
                 return
             }
         }
@@ -83,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     BleDebugLog.d(logTag, "권한요청 승인")
                 }else{
+                    Toast.makeText(this, "권한요청 미승인 시 앱 종료됩니다", Toast.LENGTH_SHORT).show()
                     exitProcess(0)
                 }
             }

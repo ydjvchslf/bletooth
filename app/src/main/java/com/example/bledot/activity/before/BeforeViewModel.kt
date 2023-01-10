@@ -1,4 +1,4 @@
-package com.example.bledot
+package com.example.bledot.activity.before
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ActivityViewModel: ViewModel() {
+class BeforeViewModel: ViewModel() {
 
     private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(true)
     val isLoading : StateFlow<Boolean>
@@ -19,5 +19,4 @@ class ActivityViewModel: ViewModel() {
             _isLoading.value = false
         }
     }
-
 }
