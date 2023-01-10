@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.example.bledot.R
 import com.example.bledot.activity.main.MainActivity
@@ -40,14 +41,12 @@ class LoginFragment : Fragment() {
             //activity?.finish()
         }
         // 비밀번호 찾기 버튼
-        binding.findPwBtn.setOnClickListener {
-            NavHostFragment.findNavController(this)
-                .navigate(R.id.action_loginFragment_to_findFragment)
+        binding.findPwTextView.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.findFragment)
     }
         // 회원가입 버튼
-        binding.signUpBtn.setOnClickListener {
-            NavHostFragment.findNavController(this)
-                .navigate(R.id.action_loginFragment_to_signUpFragment)
+        binding.signUpTextView.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.signupFragment)
         }
     }
 }
