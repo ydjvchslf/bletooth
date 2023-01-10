@@ -9,14 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <TextView
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="7.6dp"
-            android:text="Find PW"
-            android:textSize="23sp" />
-
+            android:text="비번찾기 페이지!!!! " />
     </LinearLayout>
 
 </LinearLayout>
