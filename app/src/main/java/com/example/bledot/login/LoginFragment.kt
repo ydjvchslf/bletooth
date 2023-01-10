@@ -36,6 +36,8 @@ class LoginFragment : Fragment() {
         binding.signInBtn.setOnClickListener {
             // mainActivity 띄우기
             activity?.startActivity(Intent(activity, MainActivity::class.java))
+            // TODO:: 정상 로그인 후, 기존 액티비티 제거할 것
+            //activity?.finish()
         }
         // 비밀번호 찾기 버튼
         binding.findPwBtn.setOnClickListener {
