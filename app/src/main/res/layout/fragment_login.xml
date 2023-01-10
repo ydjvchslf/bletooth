@@ -31,25 +31,70 @@
             android:layout_marginTop="7.6dp"
             android:layout_gravity="center" />
 
+        <EditText
+            android:id="@+id/editText_email"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="77dp"
+            android:layout_gravity="center"/>
+
+        <EditText
+            android:id="@+id/editText_pw"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="3dp"
+            android:layout_gravity="center"/>
+
         <Button
             android:id="@+id/sign_in_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:background="@drawable/blue_btn_rounded_corner_rectangle"
+            android:layout_width="300dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="15dp"
             android:text="sign in"
             android:layout_gravity="center"/>
 
-        <Button
-            android:id="@+id/sign_up_btn"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/find_pw_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:textSize="14sp"
+                android:text="Find Password" />
+
+            <TextView
+                android:id="@+id/sign_up_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="Sign Up" />
+
+        </LinearLayout>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="sign up"
+            android:textSize="14sp"
+            android:text="SNS LOGIN"
+            android:layout_marginTop="105dp"
             android:layout_gravity="center"/>
 
         <Button
-            android:id="@+id/find_pw_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="find pw"
+            android:id="@+id/google_btn"
+            android:background="@drawable/blue_btn_rounded_corner_rectangle"
+            android:layout_width="300dp"
+            android:layout_height="47dp"
+            android:layout_marginTop="15dp"
+            android:text="GOOGLE"
             android:layout_gravity="center"/>
 
     </LinearLayout>
