@@ -1,24 +1,16 @@
-package com.example.bledot.detail
+package com.example.bledot.config
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bledot.data.Product
-import com.example.bledot.data.RemoteUserInfo
 import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.retrofit.RemoteDataSource
-import com.example.bledot.retrofit.RetrofitClient
 import com.example.bledot.util.BleDebugLog
-import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
-class DetailViewModel : ViewModel() {
+class ConfigViewModel : ViewModel() {
 
-    private val logTag = DetailViewModel::class.simpleName
+    private val logTag = ConfigViewModel::class.simpleName
     private val remoteDataSource = RemoteDataSource()
     //var serverRetCode: Int? = null
 
