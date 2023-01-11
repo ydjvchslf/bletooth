@@ -33,5 +33,25 @@
         android:id="@+id/configFragment"
         android:name="com.example.bledot.config.ConfigFragment"
         android:label="fragment_config"
-        tools:layout="@layout/fragment_config" />
+        tools:layout="@layout/fragment_config" >
+        <action
+            android:id="@+id/action_configFragment_to_changePwFragment"
+            app:destination="@id/changePwFragment" />
+        <action
+            android:id="@+id/action_configFragment_to_editInfoFragment"
+            app:destination="@id/editInfoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/changePwFragment"
+        android:name="com.example.bledot.changepw.ChangePwFragment"
+        android:label="fragment_change_pw"
+        tools:layout="@layout/fragment_change_pw" />
+
+    <fragment
+        android:id="@+id/editInfoFragment"
+        android:name="com.example.bledot.editinfo.EditInfoFragment"
+        android:label="fragment_edit_info"
+        tools:layout="@layout/fragment_edit_info" />
+
 </navigation>

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.util.BleDebugLog
@@ -45,6 +46,14 @@ class ConfigFragment : Fragment() {
                     Toast.makeText(context, "200 OK", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+        // edit info 버튼
+        binding.editInfoBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.editInfoFragment)
+        }
+        // change pw 버튼
+        binding.changePwBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.changePwFragment)
         }
     }
 }
