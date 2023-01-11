@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -43,10 +44,19 @@ class LoginFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
         // 로그인 버튼
         binding.signInBtn.setOnClickListener {
-            // mainActivity 띄우기
-            activity?.startActivity(Intent(activity, MainActivity::class.java))
-            // TODO:: 정상 로그인 후, 기존 액티비티 제거할 것
-            //activity?.finish()
+            loginViewModel.login { retCode, userInfo ->
+                if (retCode == 200) {
+                    Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                    BleDebugLog.d(logTag, "userInfo: ${userInfo.toString()}")
+                    // mainActivity 띄우기
+                    activity?.startActivity(Intent(activity, MainActivity::class.java))
+                    // TODO:: 정상 로그인 후, 기존 액티비티 제거할 것
+                    //activity?.finish()
+                }
+                if (retCode == 5555) {
+                    Toast.makeText(context, "계정 틀림, 로그인 에러!!", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
         // 비밀번호 찾기 버튼
         binding.findPwTextView.setOnClickListener {
