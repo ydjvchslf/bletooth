@@ -13,6 +13,7 @@ import com.example.bledot.config.ConfigViewModel
 import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.databinding.FragmentHomeBinding
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.toolbarName
 
 class HomeFragment : Fragment() {
 
@@ -32,5 +33,12 @@ class HomeFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        BleDebugLog.i(logTag, "onViewCreated-()")
+
+        toolbarName.value = "Home"
     }
 }

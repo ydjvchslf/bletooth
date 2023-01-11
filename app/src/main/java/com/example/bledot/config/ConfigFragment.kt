@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.toolbarName
 
 class ConfigFragment : Fragment() {
 
@@ -35,6 +36,8 @@ class ConfigFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+
+        toolbarName.value = "Config"
 
         binding.getBtn.setOnClickListener {
             configViewModel.getProductList {

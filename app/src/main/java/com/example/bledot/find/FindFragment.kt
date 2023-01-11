@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentFindBinding
+import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.toolbarName
 
 class FindFragment : Fragment() {
 
@@ -29,4 +31,8 @@ class FindFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        BleDebugLog.i(logTag, "onViewCreated-()")
+    }
 }
