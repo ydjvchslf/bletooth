@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
     <data>
         <variable
             name="viewModel"
@@ -12,15 +14,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
+        <include
+            layout="@layout/layout_title_sub"
+            app:titleText="@{`Forgot your password?`}"
+            app:subText="@{`We will send a new password to the email \n you signed up for.`}" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="70dp">
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Email`}"
+                app:hint="@{`Email`}" />
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="비번찾기 페이지!!!! " />
+                android:id="@+id/find_pw_btn"
+                android:layout_width="300dp"
+                android:layout_height="47dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="50dp"
+                android:text="Find Password"
+                android:background="@drawable/blue_btn_rounded_corner_rectangle"/>
+
         </LinearLayout>
 
     </LinearLayout>
