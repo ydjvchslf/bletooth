@@ -49,7 +49,7 @@ class ConfigFragment : Fragment() {
         }
         // edit info 버튼
         binding.editInfoBtn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(R.id.editInfoFragment)
+            //Navigation.findNavController(binding.root).navigate(ConfigFragmentDirection)
         }
         // change pw 버튼
         binding.changePwBtn.setOnClickListener {
