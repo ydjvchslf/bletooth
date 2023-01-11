@@ -10,4 +10,5 @@
     <color name="main">#28A7E1</color>
     <color name="sub">#555555</color>
     <color name="preview">#99515151</color>
+    <color name="grey_pale">#F0F0F0</color>
 </resources>
