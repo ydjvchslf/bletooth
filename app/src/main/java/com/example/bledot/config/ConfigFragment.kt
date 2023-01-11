@@ -1,6 +1,5 @@
-package com.example.bledot.detail
+package com.example.bledot.config
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,26 +8,15 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
-import com.example.bledot.App
 import com.example.bledot.R
-import com.example.bledot.WebAppInterface
-import com.example.bledot.ble.BleFragment
-import com.example.bledot.ble.BleViewModel
-import com.example.bledot.databinding.FragmentBleBinding
-import com.example.bledot.databinding.FragmentDetailBinding
+import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.util.BleDebugLog
-import java.time.LocalDateTime
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.concurrent.scheduleAtFixedRate
-import kotlin.math.log
 
-class DetailFragment : Fragment() {
+class ConfigFragment : Fragment() {
 
-    private val logTag = DetailFragment::class.simpleName
-    private lateinit var binding: FragmentDetailBinding
-    private val detailViewModel: DetailViewModel by activityViewModels()
+    private val logTag = ConfigFragment::class.simpleName
+    private lateinit var binding: FragmentConfigBinding
+    private val configViewModel: ConfigViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,9 +24,9 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         BleDebugLog.i(logTag, "onCreateView-()")
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_config, container, false)
         with(binding) {
-            viewModel = detailViewModel
+            viewModel = configViewModel
             lifecycleOwner = viewLifecycleOwner
         }
         return binding.root
@@ -49,7 +37,7 @@ class DetailFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
 
         binding.getBtn.setOnClickListener {
-            detailViewModel.getProductList {
+            configViewModel.getProductList {
                 if (it == 200) {
                     Toast.makeText(context, "200 OK", Toast.LENGTH_SHORT).show()
                 }
@@ -57,7 +45,7 @@ class DetailFragment : Fragment() {
         }
 
         binding.loginBtn.setOnClickListener {
-            detailViewModel.login { retCode, userInfo ->
+            configViewModel.login { retCode, userInfo ->
                 if (retCode == 200) {
                     Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show()
                     binding.textView.text = userInfo.toString()

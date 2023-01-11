@@ -10,19 +10,22 @@
         android:name="com.example.bledot.ble.BleFragment"
         android:label="fragment_ble"
         tools:layout="@layout/fragment_ble" />
-    <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.example.bledot.detail.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+
     <fragment
         android:id="@+id/recordFragment"
         android:name="com.example.bledot.record.RecordFragment"
         android:label="fragment_record"
         tools:layout="@layout/fragment_record" />
+
     <fragment
         android:id="@+id/realtimeFragment"
         android:name="com.example.bledot.realtime.RealtimeFragment"
         android:label="fragment_realtime"
         tools:layout="@layout/fragment_realtime" />
+
+    <fragment
+        android:id="@+id/configFragment"
+        android:name="com.example.bledot.config.ConfigFragment"
+        android:label="fragment_config"
+        tools:layout="@layout/fragment_config" />
 </navigation>

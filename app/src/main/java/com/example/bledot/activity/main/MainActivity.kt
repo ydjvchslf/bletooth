@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         val bottomNavView = binding.bottomNav
         val navController = (supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment).findNavController()
         bottomNavView.setupWithNavController(navController)
+        // Bottom menu 아이콘이 테마색으로 변경되는 것을 막기위해서는 Tint 를 초기화
+        bottomNavView.itemIconTintList = null
 
         // 센서 재연결 시 SDK 자동 재시작
         XsensDotSdk.setReconnectEnabled(true)
