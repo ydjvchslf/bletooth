@@ -12,17 +12,42 @@
     </data>
 
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.bledot.changepw.ChangePwFragment"
-        android:id="@+id/changePwFragment" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.example.bledot.changepw.ChangePwFragment"
+            android:id="@+id/changePwFragment"
+            android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Change pw 페이지"
-            android:textSize="40sp" />
+            <include
+                layout="@layout/layout_title_sub"
+                app:titleText="@{`Are you changing your password?`}"
+                app:subText="@{`Enter a new password and save it.`}" />
 
-    </LinearLayout>
+            <include
+                layout="@layout/layout_field_hint"
+                android:id="@+id/current_pw"
+                app:field="@{`Current password`}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                android:id="@+id/pw"
+                app:field="@{`Password`}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                android:id="@+id/re_pw"
+                app:field="@{`Re-confirm Password`}" />
+
+            <Button
+                android:id="@+id/change_btn"
+                android:layout_width="300dp"
+                android:layout_height="47dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginBottom="30dp"
+                android:text="change"
+                android:background="@drawable/blue_btn_rounded_corner_rectangle"/>
+
+        </LinearLayout>
 
 </layout>
