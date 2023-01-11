@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentSignupBinding
+import com.example.bledot.util.BleDebugLog
 
 class SignupFragment : Fragment() {
 
@@ -29,4 +30,10 @@ class SignupFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        BleDebugLog.i(logTag, "onViewCreated-()")
+        BleDebugLog.d(logTag, "name: ${binding.userName.infoInputEditText.text}")
+
+    }
 }
