@@ -12,7 +12,6 @@ class ConfigViewModel : ViewModel() {
 
     private val logTag = ConfigViewModel::class.simpleName
     private val remoteDataSource = RemoteDataSource()
-    //var serverRetCode: Int? = null
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -28,24 +27,4 @@ class ConfigViewModel : ViewModel() {
             }
         }
     }
-
-    fun login(user: (Int?, UserInfoEntity?) -> Unit) {
-        BleDebugLog.i(logTag, "login-()")
-        viewModelScope.launch {
-            remoteDataSource.loginServer { retCode, userInfoEntity -> // 200 or 5555
-                when (retCode) {
-                    200 -> {
-                        user.invoke(200, userInfoEntity)
-                    }
-                    5555 -> {
-                        user.invoke(5555, null)
-                    }
-                    else -> {
-                        return@loginServer
-                    }
-                }
-            }
-        }
-    }
-
 }

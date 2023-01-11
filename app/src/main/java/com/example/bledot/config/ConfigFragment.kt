@@ -46,17 +46,5 @@ class ConfigFragment : Fragment() {
                 }
             }
         }
-
-        binding.loginBtn.setOnClickListener {
-            configViewModel.login { retCode, userInfo ->
-                if (retCode == 200) {
-                    Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                    binding.textView.text = userInfo.toString()
-                }
-                if (retCode == 5555) {
-                    Toast.makeText(context, "계정 틀림, 로그인 에러!!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
     }
 }
