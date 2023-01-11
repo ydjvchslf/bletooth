@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.example.bledot.R
 import com.example.bledot.activity.main.MainActivity
+import com.example.bledot.ble.BleViewModel
+import com.example.bledot.databinding.FragmentBleBinding
 import com.example.bledot.databinding.FragmentLoginBinding
 import com.example.bledot.util.BleDebugLog
 import kotlin.system.exitProcess
@@ -18,15 +22,19 @@ import kotlin.system.exitProcess
 class LoginFragment : Fragment() {
 
     private val logTag = LoginFragment::class.simpleName
-    private var mBinding: FragmentLoginBinding? = null
-    private val binding get() = mBinding!!
+    private lateinit var binding: FragmentLoginBinding
+    private val loginViewModel: LoginViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = FragmentLoginBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
+        with(binding) {
+            viewModel = loginViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
         return binding.root
     }
 
