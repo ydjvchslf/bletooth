@@ -14,13 +14,89 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.bledot.editinfo.EditInfoFrament"
-        android:id="@+id/editInfoFragment">
+        android:id="@+id/editInfoFragment"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <include
+            layout="@layout/layout_title_sub"
+            app:titleText="@{`Do you modify the information??`}"
+            app:subText="@{`Please enter the information to modify and save it.`}" />
+
+        <!-- 회원가입 각 항목 부분 -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="40sp"
-            android:text="Edit info 페이지" />
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/layout_field_hint"
+                android:id="@+id/userName"
+                app:field="@{`Patient Name`}"
+                app:hint="@{`Enter Patient Name`}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                android:id="@+id/birth"
+                app:field="@{`Date of Birth`}"
+                app:hint="@{`YYYY/MM/DD`}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Gender`}"
+                app:hint="@{``}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Weigth`}"
+                app:hint="@{``}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Race`}"
+                app:hint="@{`Korean`}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Pathology`}"
+                app:hint="@{``}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Email`}"
+                app:hint="@{`abc@gmail.com`}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Password`}"
+                app:hint="@{``}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Address`}"
+                app:hint="@{``}" />
+
+            <include
+                layout="@layout/layout_field_hint"
+                app:field="@{`Country`}"
+                app:hint="@{``}" />
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="300dp"
+                android:layout_height="47dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginBottom="30dp"
+                android:text="save"
+                android:background="@drawable/blue_btn_rounded_corner_rectangle"/>
+
+        </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 </layout>
