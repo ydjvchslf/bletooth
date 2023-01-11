@@ -39,5 +39,8 @@ class EditInfoFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
 
         toolbarName.value = "User Info"
+
+        binding.userName.infoInputEditText.setText("용미경")
+        binding.birth.infoInputEditText.setText("1991.09.14")
     }
 }
