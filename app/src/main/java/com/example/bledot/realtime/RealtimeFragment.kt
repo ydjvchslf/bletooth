@@ -18,6 +18,7 @@ import com.example.bledot.ble.BleViewModel
 import com.example.bledot.data.XYZData
 import com.example.bledot.databinding.FragmentRealtimeBinding
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.toolbarName
 import com.google.gson.Gson
 
 class RealtimeFragment : Fragment() {
@@ -47,6 +48,8 @@ class RealtimeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+
+        toolbarName.value = "Record Activity"
 
         // zeroing
         binding.zeroing.setOnClickListener {
