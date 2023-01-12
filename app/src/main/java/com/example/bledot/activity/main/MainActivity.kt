@@ -1,15 +1,21 @@
 package com.example.bledot.activity.main
 
+import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bledot.R
 import com.example.bledot.databinding.ActivityMainBinding
+import com.example.bledot.util.mainToolbar
 import com.example.bledot.util.toolbarName
 import com.xsens.dot.android.sdk.XsensDotSdk
+import land.sungbin.systemuicontroller.setStatusBarColor
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +47,8 @@ class MainActivity : AppCompatActivity() {
 
         // Bottom menu 아이콘이 테마색으로 변경되는 것을 막기위해서는 Tint 를 초기화
         bottomNavView.itemIconTintList = null
+        // 상태바 색상 변경
+        this.setStatusBarColor(Color.parseColor("#FFFFFFFF"), true)
 
         //툴바 이름
         toolbarName.observe(this) { toolbarName ->
