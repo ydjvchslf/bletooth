@@ -43,4 +43,9 @@ class EditInfoFragment : Fragment() {
         binding.userName.infoInputEditText.setText("용미경")
         binding.birth.infoInputEditText.setText("1991.09.14")
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        BleDebugLog.i(logTag, "onDestroy-()")
+    }
 }

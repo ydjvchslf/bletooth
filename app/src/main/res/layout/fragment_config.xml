@@ -14,8 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.example.bledot.config.ConfigFragment"
-        android:id="@+id/configFragment"
         android:gravity="center_horizontal">
 
         <include

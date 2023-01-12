@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.util.BleDebugLog
@@ -49,7 +51,7 @@ class ConfigFragment : Fragment() {
         }
         // edit info 버튼
         binding.editInfoBtn.setOnClickListener {
-            //Navigation.findNavController(binding.root).navigate(ConfigFragmentDirection)
+            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToEditInfoFragment())
         }
         // change pw 버튼
         binding.changePwBtn.setOnClickListener {

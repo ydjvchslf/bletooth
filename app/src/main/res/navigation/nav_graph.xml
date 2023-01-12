@@ -46,12 +46,20 @@
         android:id="@+id/changePwFragment"
         android:name="com.example.bledot.changepw.ChangePwFragment"
         android:label="fragment_change_pw"
-        tools:layout="@layout/fragment_change_pw" />
+        tools:layout="@layout/fragment_change_pw" >
+        <action
+            android:id="@+id/action_changePwFragment_to_configFragment"
+            app:destination="@id/ConfigFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/editInfoFragment"
         android:name="com.example.bledot.editinfo.EditInfoFragment"
         android:label="fragment_edit_info"
-        tools:layout="@layout/fragment_edit_info" />
+        tools:layout="@layout/fragment_edit_info" >
+        <action
+            android:id="@+id/action_editInfoFragment_to_configFragment"
+            app:destination="@id/ConfigFragment" />
+    </fragment>
 
 </navigation>
