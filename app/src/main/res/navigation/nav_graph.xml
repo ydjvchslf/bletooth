@@ -49,7 +49,7 @@
         tools:layout="@layout/fragment_change_pw" >
         <action
             android:id="@+id/action_changePwFragment_to_configFragment"
-            app:destination="@id/ConfigFragment" />
+            app:destination="@id/configFragment" />
     </fragment>
 
     <fragment
@@ -59,7 +59,7 @@
         tools:layout="@layout/fragment_edit_info" >
         <action
             android:id="@+id/action_editInfoFragment_to_configFragment"
-            app:destination="@id/ConfigFragment" />
+            app:destination="@id/configFragment" />
     </fragment>
 
 </navigation>

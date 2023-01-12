@@ -33,19 +33,31 @@
 
         <EditText
             android:id="@+id/editText_email"
-            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:background="@drawable/grey_edittext_rounded_corner_rectangle"
+            android:drawableStart="@drawable/ic_login_email_resize"
+            android:paddingLeft="20dp"
+            android:drawablePadding="20dp"
             android:layout_width="300dp"
             android:layout_height="40dp"
             android:layout_marginTop="77dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:textSize="13sp"
+            android:hint="Email"
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/editText_pw"
-            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:background="@drawable/grey_edittext_rounded_corner_rectangle"
+            android:drawableStart="@drawable/ic_login_pw_resize"
+            android:paddingLeft="20dp"
+            android:drawablePadding="20dp"
             android:layout_width="300dp"
             android:layout_height="40dp"
             android:layout_marginTop="3dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:textSize="13sp"
+            android:hint="Password"
+            android:singleLine="true"/>
 
         <Button
             android:id="@+id/sign_in_btn"
@@ -54,7 +66,8 @@
             android:layout_height="47dp"
             android:layout_marginTop="15dp"
             android:text="sign in"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:textColor="@color/white"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,18 +97,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:text="SNS LOGIN"
+            android:text="SNS Login"
             android:layout_marginTop="105dp"
             android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/google_btn"
-            android:background="@drawable/blue_btn_rounded_corner_rectangle"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:drawableStart="@drawable/ic_login_google"
+            android:paddingLeft="110dp"
+            android:drawablePadding="5dp"
             android:layout_width="300dp"
             android:layout_height="47dp"
             android:layout_marginTop="15dp"
             android:text="GOOGLE"
-            android:layout_gravity="center"/>
+            android:textAlignment="textStart"
+            android:layout_gravity="center"
+            tools:ignore="RtlCompat" />
 
     </LinearLayout>
 </layout>
