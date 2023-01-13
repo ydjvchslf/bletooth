@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bledot.R
 import com.example.bledot.databinding.ActivityMainBinding
-import com.example.bledot.util.mainToolbar
 import com.example.bledot.util.toolbarName
 import com.xsens.dot.android.sdk.XsensDotSdk
 import land.sungbin.systemuicontroller.setStatusBarColor
@@ -49,11 +48,6 @@ class MainActivity : AppCompatActivity() {
         bottomNavView.itemIconTintList = null
         // 상태바 색상 변경
         this.setStatusBarColor(Color.parseColor("#FFFFFFFF"), true)
-
-        //툴바 이름
-        toolbarName.observe(this) { toolbarName ->
-            binding.toolbarTextView.text = toolbarName
-        }
 
         // 센서 재연결 시 SDK 자동 재시작
         XsensDotSdk.setReconnectEnabled(true)

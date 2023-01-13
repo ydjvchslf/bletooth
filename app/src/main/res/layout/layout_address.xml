@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+    <data>
+        <variable
+            name="field"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:hint="Field"
+            android:text="@{field == null ? `Default field Text` : field}"/>
+
+        <EditText
+            android:id="@+id/address1"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="5dp"
+            android:hint="Street address"
+            android:background="@drawable/edittext_rounded_corner_rectangle"/>
+
+        <EditText
+            android:id="@+id/address2"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="5dp"
+            android:hint="City"
+            android:background="@drawable/edittext_rounded_corner_rectangle"/>
+
+        <EditText
+            android:id="@+id/address3"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="5dp"
+            android:hint="State / Province / Regine"
+            android:background="@drawable/edittext_rounded_corner_rectangle"/>
+
+        <EditText
+            android:id="@+id/address4"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="5dp"
+            android:hint="Zip / PostCode"
+            android:background="@drawable/edittext_rounded_corner_rectangle"/>
+
+    </LinearLayout>
+
+</layout>

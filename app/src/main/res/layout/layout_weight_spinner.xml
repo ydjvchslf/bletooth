@@ -7,10 +7,7 @@
     <data>
         <variable
             name="field"
-            type="String" />
-        <variable
-            name="hint"
-            type="String" />
+            type="String"/>
     </data>
 
     <LinearLayout
@@ -26,13 +23,22 @@
             android:hint="Field"
             android:text="@{field == null ? `Default field Text` : field}"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
         <EditText
-            android:id="@+id/info_input_editText"
-            android:layout_width="300dp"
-            android:layout_height="41dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/edittext_rounded_corner_rectangle"
-            android:hint="@{hint == null ? `` : hint}"/>
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"/>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

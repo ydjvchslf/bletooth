@@ -8,9 +8,6 @@
         <variable
             name="field"
             type="String" />
-        <variable
-            name="hint"
-            type="String" />
     </data>
 
     <LinearLayout
@@ -27,12 +24,18 @@
             android:text="@{field == null ? `Default field Text` : field}"/>
 
         <EditText
-            android:id="@+id/info_input_editText"
+            android:id="@+id/pw1_editText"
             android:layout_width="300dp"
             android:layout_height="41dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/edittext_rounded_corner_rectangle"
-            android:hint="@{hint == null ? `` : hint}"/>
+            android:background="@drawable/edittext_rounded_corner_rectangle"/>
+
+        <EditText
+            android:id="@+id/pw2_editText"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"/>
 
     </LinearLayout>
 

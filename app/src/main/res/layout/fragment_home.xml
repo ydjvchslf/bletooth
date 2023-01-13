@@ -10,17 +10,17 @@
             type="com.example.bledot.home.HomeViewModel" />
     </data>
 
+    <!-- 콘텐트 부분 -->
     <LinearLayout
-        tools:context="com.example.bledot.home.HomeFragment"
         android:id="@+id/homeFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="HOME"
-            android:textSize="100sp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home Fragment" />
 
     </LinearLayout>
 
