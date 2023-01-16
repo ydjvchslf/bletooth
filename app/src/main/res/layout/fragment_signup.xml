@@ -80,7 +80,16 @@
                     app:field="@{`Patient Name`}"
                     app:hint="@{`Enter Patient Name`}" />
 
+                <TextView
+                    android:id="@+id/name_state_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter up to 30 characters"
+                    android:textColor="@color/red"
+                    android:visibility="invisible"/>
+
                 <include
+                    android:id="@+id/birth"
                     layout="@layout/layout_field_hint"
                     app:field="@{`Date of Birth`}"
                     app:hint="@{`YYYY/MM/DD`}" />
@@ -93,6 +102,14 @@
                     android:id="@+id/weight_spinner"
                     layout="@layout/layout_weight_spinner"
                     app:field="@{`Weight`}"/>
+
+                <TextView
+                    android:id="@+id/weight_state_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter within a hundred digits"
+                    android:textColor="@color/red"
+                    android:visibility="invisible"/>
 
                 <include
                     android:id="@+id/race_spinner"
@@ -110,6 +127,7 @@
                     app:hint="@{`abc@gmail.com`}" />
 
                 <TextView
+                    android:id="@+id/email_state_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="This is an available"
