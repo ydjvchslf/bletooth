@@ -28,13 +28,23 @@
             android:layout_width="300dp"
             android:layout_height="41dp"
             android:layout_marginTop="5dp"
+            android:inputType="textPassword"
             android:background="@drawable/edittext_rounded_corner_rectangle"/>
+
+        <TextView
+            android:id="@+id/pw_limit_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter a number of at least 8 characters"
+            android:textColor="@color/red"
+            android:visibility="invisible"/>
 
         <EditText
             android:id="@+id/pw2_editText"
             android:layout_width="300dp"
             android:layout_height="41dp"
             android:layout_marginTop="5dp"
+            android:inputType="textPassword"
             android:background="@drawable/edittext_rounded_corner_rectangle"/>
 
     </LinearLayout>

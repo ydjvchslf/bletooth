@@ -61,6 +61,20 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         checkNameGuide()
         checkDateGuide()
         checkWeightGuide()
+        checkEmailGuide()
+        binding.emailCheckBtn.setOnClickListener {
+            // TODO:: 서버 email 유효체크 후 emailFlag = true
+            emailFlag = true
+            Toast.makeText(context, "emailFlag: $emailFlag", Toast.LENGTH_SHORT).show()
+        }
+        checkPwGuide()
+        checkPhoneGuide()
+        checkAddressGuide()
+        checkAgreeGuide()
+
+        binding.signUpBtn.setOnClickListener {
+            checkAllFlags()
+        }
     }
 
     private fun makeDropdownMenu() {
@@ -129,38 +143,39 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     if (textlength == 4 && before != 1) {
                         binding.birth.infoInputEditText.setText(binding.birth.infoInputEditText.text.toString() + "/")
                         binding.birth.infoInputEditText.setSelection(binding.birth.infoInputEditText.text.length)
-
-                        dateFlag = false
+                        showBirthError()
                     } else if (textlength == 7 && before != 1) {
                         binding.birth.infoInputEditText.setText(binding.birth.infoInputEditText.text.toString() + "/")
                         binding.birth.infoInputEditText.setSelection(binding.birth.infoInputEditText.text.length)
-
-                        dateFlag = false
+                        showBirthError()
                     } else if (textlength == 5 && !binding.birth.infoInputEditText.text.toString().contains("/")) {
                         binding.birth.infoInputEditText.setText(binding.birth.infoInputEditText.text.toString()
                                 .substring(0, 4) + "/" + binding.birth.infoInputEditText.text.toString()
                                 .substring(4))
                         binding.birth.infoInputEditText.setSelection(binding.birth.infoInputEditText.text.length)
-
-                        dateFlag = false
+                        showBirthError()
                     } else if (textlength == 8 && binding.birth.infoInputEditText.text.toString().substring(7, 8) != "/") {
                         binding.birth.infoInputEditText.setText(
                         binding.birth.infoInputEditText.text.toString()
                                 .substring(0, 7) + "/" + binding.birth.infoInputEditText.text.toString()
                                 .substring(7))
                         binding.birth.infoInputEditText.setSelection(binding.birth.infoInputEditText.text.length)
-
-                        dateFlag = false
-                        Toast.makeText(context, "dateFlag => $dateFlag", Toast.LENGTH_SHORT).show()
+                        showBirthError()
+                    } else if (textlength != 10) {
+                        showBirthError()
                     }
                 }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
             override fun afterTextChanged(p0: Editable?) {
                 val inputText = binding.birth.infoInputEditText.text.toString()
-                //val pattern = Pattern.compile(REG)
                 val result = Pattern.matches(REG, inputText)
-                Toast.makeText(context, "result => $result", Toast.LENGTH_SHORT).show()
+                if(result) {
+                    binding.birthStateTextView.visibility = View.INVISIBLE
+                    binding.birth.infoInputEditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                    dateFlag = true
+                }
             }
         })
     }
@@ -181,9 +196,240 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     binding.weightStateTextView.visibility = View.INVISIBLE
                     binding.weightSpinner.weightEditText.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
-                    nameFlag = true
+                    weightFlag = true
                 }
             }
         })
     }
+
+    private fun checkEmailGuide() {
+        binding.email.infoInputEditText.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (binding.email.infoInputEditText.text.isEmpty()) {
+                    binding.emailNotTextView.visibility = View.VISIBLE
+                    binding.email.infoInputEditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    emailFlag = false
+                } else {
+                    val emailValidation = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+                    var userEmail = binding.email.infoInputEditText.text.toString().trim()
+                    val emailGuide = Pattern.matches(emailValidation, userEmail)
+                    if (emailGuide) {
+                        //이메일 형태가 정상일 경우
+                        binding.emailNotTextView.visibility = View.GONE
+                        binding.email.infoInputEditText.background =
+                            ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                    } else {
+                        binding.emailNotTextView.visibility = View.VISIBLE
+                        binding.email.infoInputEditText.background =
+                            ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                        emailFlag = false
+                    }
+                }
+            }
+        })
+    }
+
+    private fun checkPwGuide() {
+        binding.pw.pw1EditText.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (binding.pw.pw1EditText.text.isEmpty() || binding.pw.pw1EditText.text.toString().length < 8) {
+                    binding.pw.pwLimitTextView.visibility = View.VISIBLE
+                    binding.pw.pw1EditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    pwFlag = false
+                } else {
+                    binding.pw.pwLimitTextView.visibility = View.INVISIBLE
+                    binding.pw.pw1EditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                }
+            }
+        })
+
+        binding.pw.pw2EditText.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {
+                if (binding.pw.pw1EditText.text.toString() != binding.pw.pw2EditText.text.toString()) {
+                    binding.pwNotTextView.visibility = View.VISIBLE
+                    binding.pw.pw1EditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    binding.pw.pw2EditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    pwFlag = false
+                } else {
+                    binding.pwNotTextView.visibility = View.INVISIBLE
+                    binding.pw.pw1EditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                    binding.pw.pw2EditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                    pwFlag = true
+                }
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+        })
+    }
+
+    private fun checkPhoneGuide() {
+        binding.phone.infoInputEditText.inputType = InputType.TYPE_CLASS_NUMBER
+        binding.phone.infoInputEditText.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (binding.phone.infoInputEditText.text.isEmpty()) {
+                    binding.phoneNotTextView.visibility = View.VISIBLE
+                    binding.phone.infoInputEditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    phoneFlag = false
+                } else {
+                    binding.phoneNotTextView.visibility = View.INVISIBLE
+                    binding.phone.infoInputEditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                    phoneFlag = true
+                }
+            }
+        })
+    }
+
+    private fun checkAddressGuide() {
+        binding.address.address1.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (binding.address.address1.text.isEmpty()) {
+                    binding.address.addressNotTextView.visibility = View.VISIBLE
+                    binding.address.address1.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    addressFlag = false
+                } else {
+                    binding.address.addressNotTextView.visibility = View.INVISIBLE
+                    binding.address.address1.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                }
+            }
+        })
+
+        binding.address.address2.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (binding.address.address2.text.isEmpty()) {
+                    binding.address.addressNotTextView.visibility = View.VISIBLE
+                    binding.address.address2.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    addressFlag = false
+                } else {
+                    binding.address.addressNotTextView.visibility = View.INVISIBLE
+                    binding.address.address2.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                }
+            }
+        })
+
+        binding.address.address3.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (binding.address.address3.text.isEmpty()) {
+                    binding.address.addressNotTextView.visibility = View.VISIBLE
+                    binding.address.address3.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    addressFlag = false
+                } else {
+                    binding.address.addressNotTextView.visibility = View.INVISIBLE
+                    binding.address.address3.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                }
+            }
+        })
+
+        binding.address.address4.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (binding.address.address4.text.isEmpty()) {
+                    binding.address.addressNotTextView.visibility = View.VISIBLE
+                    binding.address.address4.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                    addressFlag = false
+                } else {
+                    binding.address.addressNotTextView.visibility = View.INVISIBLE
+                    binding.address.address4.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                    addressFlag = true
+                }
+            }
+        })
+    }
+
+    private fun checkAgreeGuide() {
+        binding.checkbox.setOnClickListener {
+            agreeFlag = binding.checkbox.isChecked
+        }
+    }
+
+    private fun showBirthError() {
+        binding.birthStateTextView.visibility = View.VISIBLE
+        binding.birth.infoInputEditText.background =
+            ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+        dateFlag = false
+    }
+
+    private fun checkAllFlags() {
+//        Toast.makeText(context, "nameFlag: $nameFlag , dateFlag : $dateFlag ,&& weightFlag: $weightFlag , && emailFlag : $emailFlag ," +
+//                "&& pwFlag : $pwFlag ,&& phoneFlag : $phoneFlag ,&& addressFlag : $addressFlag ,&& agreeFlag: $agreeFlag ,", Toast.LENGTH_SHORT).show()
+        if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag) {
+            Toast.makeText(context, "모든조건 완성, Sign up 성공적", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
+            if (!nameFlag) {
+                binding.nameStateTextView.visibility = View.VISIBLE
+                binding.name.infoInputEditText.background =
+                    ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+            } else if (!dateFlag) {
+                showBirthError()
+            } else if (!weightFlag) {
+                binding.weightStateTextView.visibility = View.VISIBLE
+                binding.weightSpinner.weightEditText.background =
+                    ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+            } else if (!emailFlag) {
+                if(binding.email.infoInputEditText.text.isEmpty()) {
+                    binding.emailNotTextView.visibility = View.VISIBLE
+                    binding.email.infoInputEditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                } else {
+                    Toast.makeText(context, "이메일 중복체크를 해주세요", Toast.LENGTH_SHORT).show()
+                }
+            } else if (!pwFlag) {
+                binding.pw.pwLimitTextView.visibility = View.VISIBLE
+                binding.pw.pw1EditText.background =
+                    ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+            } else if (!phoneFlag) {
+                binding.phoneNotTextView.visibility = View.VISIBLE
+                binding.phone.infoInputEditText.background =
+                    ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+            } else if (!addressFlag) {
+                binding.address.addressNotTextView.visibility = View.VISIBLE
+                if(binding.address.address1.text.isEmpty()) {
+                    binding.address.address1.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                } else if(binding.address.address2.text.isEmpty()) {
+                    binding.address.address2.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                } else if(binding.address.address3.text.isEmpty()) {
+                    binding.address.address3.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                } else if(binding.address.address4.text.isEmpty()) {
+                    binding.address.address4.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+                }
+            } else if (!agreeFlag) {
+                Toast.makeText(context, "동의 체크 해주세요", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }

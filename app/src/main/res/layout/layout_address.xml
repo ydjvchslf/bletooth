@@ -55,6 +55,14 @@
             android:hint="Zip / PostCode"
             android:background="@drawable/edittext_rounded_corner_rectangle"/>
 
+        <TextView
+            android:id="@+id/address_not_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please enter all address."
+            android:textColor="@color/red"
+            android:visibility="invisible"/>
+
     </LinearLayout>
 
 </layout>

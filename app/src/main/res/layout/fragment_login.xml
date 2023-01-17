@@ -57,6 +57,7 @@
             android:layout_gravity="center"
             android:textSize="13sp"
             android:hint="Password"
+            android:inputType="textPassword"
             android:singleLine="true"/>
 
         <Button
