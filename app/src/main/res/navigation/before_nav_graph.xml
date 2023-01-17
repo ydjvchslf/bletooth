@@ -17,6 +17,7 @@
             android:id="@+id/action_loginFragment_to_signUpFragment"
             app:destination="@id/signupFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.example.bledot.signup.SignupFragment"
@@ -26,6 +27,10 @@
         android:id="@+id/findFragment"
         android:name="com.example.bledot.find.FindFragment"
         android:label="FindPwFragment"
-        tools:layout="@layout/fragment_find" />
+        tools:layout="@layout/fragment_find" >
+        <action
+            android:id="@+id/action_findFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 
 </navigation>

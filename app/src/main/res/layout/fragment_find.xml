@@ -85,7 +85,8 @@
                 android:text="This email is not valid."
                 android:layout_marginTop="10dp"
                 android:textColor="@color/red"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:visibility="invisible"/>
 
             <Button
                 android:id="@+id/find_pw_btn"
@@ -106,6 +107,7 @@
                 android:layout_gravity="center"/>
 
             <TextView
+                android:id="@+id/sign_in_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
