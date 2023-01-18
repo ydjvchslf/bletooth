@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "475206409313",
+    "project_id": "logintest-178d0",
+    "storage_bucket": "logintest-178d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475206409313:android:945ee7f469d1e04c025e20",
+        "android_client_info": {
+          "package_name": "com.example.bledot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "475206409313-vl9mrcvsabrrvmmhkbliskkus6lur4ju.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bledot",
+            "certificate_hash": "ffc38b3356edd744d05880f30cb459bb080a8095"
+          }
+        },
+        {
+          "client_id": "475206409313-q6c83mdl3poakb59gmtjtut97vba7dnq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgDQHbpwwyfqr_LrH-FthVCwRqkiGVKH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "475206409313-q6c83mdl3poakb59gmtjtut97vba7dnq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
