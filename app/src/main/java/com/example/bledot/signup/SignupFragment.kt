@@ -1,6 +1,7 @@
 package com.example.bledot.signup
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -16,7 +17,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.bledot.R
+import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.FragmentSignupBinding
 import com.example.bledot.util.BleDebugLog
 import java.util.regex.Pattern
@@ -36,6 +40,8 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var phoneFlag = false
     private var addressFlag = false
     private var agreeFlag = false
+    //구글 로그인으로 넘어온 유저 email
+    private val arg: SignupFragmentArgs by navArgs()
 
     val REG = "\\d{4}/(0[1-9]|1[012])/(0[1-9]|[12][0-9]|3[01])"
 
@@ -56,6 +62,9 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
         BleDebugLog.d(logTag, "name: ${binding.name.infoInputEditText.text}")
+        // 구글로 넘어온 유저
+        checkGoogleUser()
+
         makeDropdownMenu()
         // 필드 형식 안맞을 시 빨간 테두리 & 문구
         checkNameGuide()
@@ -384,19 +393,22 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag) {
             Toast.makeText(context, "모든조건 완성, Sign up 성공적", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
             if (!nameFlag) {
+                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
                 binding.nameStateTextView.visibility = View.VISIBLE
                 binding.name.infoInputEditText.background =
                     ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
             } else if (!dateFlag) {
+                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
                 showBirthError()
             } else if (!weightFlag) {
+                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
                 binding.weightStateTextView.visibility = View.VISIBLE
                 binding.weightSpinner.weightEditText.background =
                     ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
             } else if (!emailFlag) {
                 if(binding.email.infoInputEditText.text.isEmpty()) {
+                    Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
                     binding.emailNotTextView.visibility = View.VISIBLE
                     binding.email.infoInputEditText.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
@@ -404,14 +416,17 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     Toast.makeText(context, "이메일 중복체크를 해주세요", Toast.LENGTH_SHORT).show()
                 }
             } else if (!pwFlag) {
+                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
                 binding.pw.pwLimitTextView.visibility = View.VISIBLE
                 binding.pw.pw1EditText.background =
                     ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
             } else if (!phoneFlag) {
+                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
                 binding.phoneNotTextView.visibility = View.VISIBLE
                 binding.phone.infoInputEditText.background =
                     ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
             } else if (!addressFlag) {
+                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
                 binding.address.addressNotTextView.visibility = View.VISIBLE
                 if(binding.address.address1.text.isEmpty()) {
                     binding.address.address1.background =
@@ -432,4 +447,25 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
+    private fun checkGoogleUser() {
+        if(arg.email != null) {
+            Toast.makeText(context, "arg.email: ${arg.email}", Toast.LENGTH_SHORT).show()
+            signupViewModel.checkUserInfo(arg.email) { isExist ->
+                if (isExist) {
+                    activity?.startActivity(Intent(activity, MainActivity::class.java))
+                } else {
+                    // Sign up 이메일 채우기, pw 삭제
+                    binding.email.infoInputEditText.apply {
+                        setText(arg.email)
+                        isEnabled = false
+                    }
+                    emailFlag = true
+                    binding.emailCheckBtn.visibility = View.GONE
+
+                    binding.pw.root.visibility = View.GONE
+                    pwFlag = true
+                }
+            }
+        }
+    }
 }

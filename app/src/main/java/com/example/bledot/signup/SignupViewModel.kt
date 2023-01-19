@@ -10,4 +10,9 @@ class SignupViewModel: ViewModel() {
     init {
         BleDebugLog.i(logTag, "init-()")
     }
+
+    fun checkUserInfo(email: String?, isExist: (Boolean) -> Unit) {
+        BleDebugLog.i(logTag, "checkUserInfo-()")
+        isExist.invoke(false)
+    }
 }

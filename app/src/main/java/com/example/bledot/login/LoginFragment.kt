@@ -61,7 +61,7 @@ class LoginFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
         // 로그인 버튼
         binding.signInBtn.setOnClickListener {
-            if (isCheckEmailAndPw()) {
+            if (isCheckedEmailAndPw()) {
                 activity?.startActivity(Intent(activity, MainActivity::class.java))
                 /*
                 loginViewModel.login { retCode, userInfo ->
@@ -90,19 +90,13 @@ class LoginFragment : Fragment() {
         }
         // 구글로그인 버튼
         binding.googleBtn.setOnClickListener {
-            val user: FirebaseUser? = auth?.currentUser
-            user?.let {
-                checkAutoGoogle()
-                return@setOnClickListener
-            }
             googleLogin()
         }
         // 구글 자동로그인
-        // Firebase
-        //checkAutoGoogle()
+        checkAutoGoogle()
     }
 
-    private fun isCheckEmailAndPw(): Boolean {
+    private fun isCheckedEmailAndPw(): Boolean {
         return if (binding.editTextEmail.text.isEmpty() || binding.editTextPw.text.isEmpty()) {
             Toast.makeText(context, "Email 과 Password 입력해주세요", Toast.LENGTH_SHORT).show()
             false
@@ -113,7 +107,6 @@ class LoginFragment : Fragment() {
 
     private fun googleLogin() {
         BleDebugLog.i(logTag, "googleLogin-()")
-
         val signInIntent = mGoogleSignInClient?.signInIntent
         resultLauncher.launch(signInIntent)
     }
@@ -125,22 +118,6 @@ class LoginFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             val account = task.getResult(ApiException::class.java)
             firebaseAuthWithGoogle(account.idToken)
-            //handleSignInResult(task)
-        }
-    }
-
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>){
-        BleDebugLog.i(logTag, "handleSignInResult-()")
-        try {
-            val account = completedTask.getResult(ApiException::class.java)
-
-            val email = account?.email.toString()
-            val familyName = account?.familyName.toString()
-            BleDebugLog.d(logTag, "email: $email, familyName: $familyName")
-            firebaseAuthWithGoogle(account?.idToken)
-            activity?.startActivity(Intent(activity, MainActivity::class.java))
-        } catch (e: ApiException){
-            BleDebugLog.d(logTag, "signInResult:failed code: ${e.statusCode}")
         }
     }
 
@@ -162,7 +139,19 @@ class LoginFragment : Fragment() {
                 // 인증에 성공한 후, 현재 로그인된 유저의 정보를 가져올 수 있습니다.
                 val email = auth?.currentUser?.email
                 BleDebugLog.d(logTag, "idToken: $idToken, \n email: $email")
+                // 구글로그인 후, 유저정보 있는지 없는지 체크
+                email?.let { isCheckedUserInfo(it) }
+            }
+        }
+    }
+
+    private fun isCheckedUserInfo(email: String) {
+        loginViewModel.checkUserInfo(email) { isExist ->
+            if (isExist) {
                 activity?.startActivity(Intent(activity, MainActivity::class.java))
+            } else {
+                val navAction = LoginFragmentDirections.actionLoginFragmentToSignUpFragment(email)
+                Navigation.findNavController(binding.root).navigate(navAction)
             }
         }
     }

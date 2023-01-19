@@ -22,7 +22,14 @@
         android:id="@+id/signupFragment"
         android:name="com.example.bledot.signup.SignupFragment"
         android:label="SignUpFragment"
-        tools:layout="@layout/fragment_signup" />
+        tools:layout="@layout/fragment_signup" >
+        <argument
+            android:name="email"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
     <fragment
         android:id="@+id/findFragment"
         android:name="com.example.bledot.find.FindFragment"

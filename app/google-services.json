@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "475206409313-vl9mrcvsabrrvmmhkbliskkus6lur4ju.apps.googleusercontent.com",
+          "client_id": "475206409313-4dst7a42rip6lcc1ci4nif0vn1psf9qb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.bledot",
-            "certificate_hash": "ffc38b3356edd744d05880f30cb459bb080a8095"
+            "certificate_hash": "362063c772b07038ffcb9b2c61dc159de46a3837"
           }
         },
         {
