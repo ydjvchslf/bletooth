@@ -9,6 +9,8 @@ class App: Application() {
         lateinit var instance: App
             private set
 
+        lateinit var prefs: PreferenceUtil
+
         fun context(): Context {
             return instance.applicationContext
         }
@@ -17,5 +19,6 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        prefs = PreferenceUtil(applicationContext)
     }
 }

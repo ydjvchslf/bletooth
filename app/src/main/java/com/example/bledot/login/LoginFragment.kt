@@ -1,9 +1,10 @@
 package com.example.bledot.login
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +14,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import com.example.bledot.App
 import com.example.bledot.R
 import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.FragmentLoginBinding
 import com.example.bledot.util.BleDebugLog
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 
 
@@ -59,9 +57,21 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+        // 일반 로그인 > 자동 로그인 체크
+        val preEmail = App.prefs.getString("email", "no history")
+        BleDebugLog.d(logTag, "preEmail: $preEmail")
+        if(preEmail != "no history") {
+            activity?.startActivity(Intent(activity, MainActivity::class.java))
+        }
         // 로그인 버튼
         binding.signInBtn.setOnClickListener {
             if (isCheckedEmailAndPw()) {
+
+                val receivedEmail = binding.editTextEmail.text.toString()
+                val receivedPw = binding.editTextPw.text.toString()
+                // 일반 로그인 성공 후 Preference 저장
+                App.prefs.setString("email", receivedEmail)
+
                 activity?.startActivity(Intent(activity, MainActivity::class.java))
                 /*
                 loginViewModel.login { retCode, userInfo ->
@@ -93,7 +103,7 @@ class LoginFragment : Fragment() {
             googleLogin()
         }
         // 구글 자동로그인
-        checkAutoGoogle()
+        //checkAutoGoogle()
     }
 
     private fun isCheckedEmailAndPw(): Boolean {
