@@ -57,12 +57,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
-        // 일반 로그인 > 자동 로그인 체크
-        val preEmail = App.prefs.getString("email", "no history")
-        BleDebugLog.d(logTag, "preEmail: $preEmail")
-        if(preEmail != "no history") {
-            activity?.startActivity(Intent(activity, MainActivity::class.java))
-        }
         // 로그인 버튼
         binding.signInBtn.setOnClickListener {
             if (isCheckedEmailAndPw()) {
@@ -73,6 +67,7 @@ class LoginFragment : Fragment() {
                 App.prefs.setString("email", receivedEmail)
 
                 activity?.startActivity(Intent(activity, MainActivity::class.java))
+                activity?.finish()
                 /*
                 loginViewModel.login { retCode, userInfo ->
                     if (retCode == 200) {
@@ -80,7 +75,7 @@ class LoginFragment : Fragment() {
                         BleDebugLog.d(logTag, "userInfo: ${userInfo.toString()}")
                         // mainActivity 띄우기
                         activity?.startActivity(Intent(activity, MainActivity::class.java))
-                        // TODO:: 정상 로그인 후, 기존 액티비티 제거할 것
+                        // 정상 로그인 후, Before 액티비티 제거
                         //activity?.finish()
                     }
                     if (retCode == 5555) {
@@ -103,7 +98,10 @@ class LoginFragment : Fragment() {
             googleLogin()
         }
         // 구글 자동로그인
-        //checkAutoGoogle()
+        checkAutoGoogle()
+
+        // 일반 자동로그인
+        checkAutoLogin()
     }
 
     private fun isCheckedEmailAndPw(): Boolean {
@@ -138,6 +136,7 @@ class LoginFragment : Fragment() {
                 val idToken = task.result.token
                 BleDebugLog.d(logTag, "idToken: $idToken")
                 activity?.startActivity(Intent(activity, MainActivity::class.java))
+                activity?.finish()
             }
         }
     }
@@ -159,10 +158,21 @@ class LoginFragment : Fragment() {
         loginViewModel.checkUserInfo(email) { isExist ->
             if (isExist) {
                 activity?.startActivity(Intent(activity, MainActivity::class.java))
+                activity?.finish()
             } else {
                 val navAction = LoginFragmentDirections.actionLoginFragmentToSignUpFragment(email)
                 Navigation.findNavController(binding.root).navigate(navAction)
             }
+        }
+    }
+
+    private fun checkAutoLogin() {
+        // 일반 로그인 > 자동 로그인 체크
+        val preEmail = App.prefs.getString("email", "no history")
+        BleDebugLog.d(logTag, "preEmail: $preEmail")
+        if(preEmail != "no history") {
+            activity?.startActivity(Intent(activity, MainActivity::class.java))
+            activity?.finish()
         }
     }
 }
