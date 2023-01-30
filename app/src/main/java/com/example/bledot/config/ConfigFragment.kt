@@ -24,7 +24,6 @@ import com.example.bledot.activity.before.BeforeActivity
 import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.util.BleDebugLog
-import com.example.bledot.util.toolbarName
 
 class ConfigFragment : Fragment() {
 
@@ -49,8 +48,8 @@ class ConfigFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
-
-        toolbarName.value = "Config"
+        // 내 정보 보기
+        configViewModel.getMyInfo()
 
         binding.getBtn.setOnClickListener {
             configViewModel.getProductList {
@@ -88,11 +87,11 @@ class ConfigFragment : Fragment() {
 
     @SuppressLint("CommitPrefEdits", "ApplySharedPref")
     private fun normalLogout() {
+        BleDebugLog.i(logTag, "normalLogout-()")
         // 일반로그인 경우, pref 초기화
         val preEmail = App.prefs.getString("email", "no history")
         BleDebugLog.d(logTag, "preEmail: $preEmail")
         if (preEmail != "no history") { // 일반로그인 상태
-            BleDebugLog.d(logTag, "==일반로그인 로그아웃==")
             val prefs : SharedPreferences? = context?.getSharedPreferences("prefs_name", Context.MODE_PRIVATE)
             val editor = prefs?.edit()
             editor?.remove("email")
@@ -103,7 +102,9 @@ class ConfigFragment : Fragment() {
         }
     }
 
+    @SuppressLint("CommitPrefEdits", "ApplySharedPref")
     private fun googleLogout() {
+        BleDebugLog.i(logTag, "googleLogout-()")
         // TODO :: Firebase google sign out
     }
 }

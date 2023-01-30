@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentChangePwBinding
 import com.example.bledot.util.BleDebugLog
-import com.example.bledot.util.toolbarName
 
 class ChangePwFragment : Fragment() {
 
@@ -35,7 +34,5 @@ class ChangePwFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
-
-        toolbarName.value = "Change PW"
     }
 }

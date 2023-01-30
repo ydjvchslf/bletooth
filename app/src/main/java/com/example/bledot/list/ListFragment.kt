@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentListBinding
 import com.example.bledot.util.BleDebugLog
-import com.example.bledot.util.toolbarName
 
 class ListFragment : Fragment() {
 
@@ -35,7 +34,5 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
-
-        toolbarName.value = "Activity List"
     }
 }

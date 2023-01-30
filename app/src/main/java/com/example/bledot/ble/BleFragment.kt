@@ -19,7 +19,6 @@ import com.example.bledot.data.BleDevice.Companion.fromXsDeviceToBleDevice
 import com.example.bledot.databinding.FragmentBleBinding
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.btScanningStatus
-import com.example.bledot.util.toolbarName
 import com.xsens.dot.android.sdk.interfaces.XsensDotScannerCallback
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.utils.XsensDotScanner
@@ -54,9 +53,6 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         BleDebugLog.i(logTag, "onViewCreated-()")
         super.onViewCreated(view, savedInstanceState)
-
-        toolbarName.value = "Device Connection"
-
         // 스캔 상태 체크 -> 버튼 문구 표시
         btScanningStatus.observe(viewLifecycleOwner) { btStatus ->
             if (btStatus) {

@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bledot.R
 import com.example.bledot.databinding.ActivityMainBinding
-import com.example.bledot.util.toolbarName
 import com.xsens.dot.android.sdk.XsensDotSdk
 import land.sungbin.systemuicontroller.setStatusBarColor
 

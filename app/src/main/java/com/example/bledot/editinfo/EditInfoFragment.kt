@@ -14,7 +14,6 @@ import com.example.bledot.R
 import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.databinding.FragmentEditInfoBinding
 import com.example.bledot.util.BleDebugLog
-import com.example.bledot.util.toolbarName
 
 class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
