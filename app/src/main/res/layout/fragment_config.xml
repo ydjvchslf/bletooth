@@ -50,9 +50,8 @@
             android:gravity="center_horizontal">
 
             <include
-                layout="@layout/layout_title_sub"
-                app:titleText="@{`사용자 이름`}"
-                app:subText="@{`사용자@메일주소.com`}" />
+                layout="@layout/layout_name_mail"
+                android:id="@+id/my_info"/>
 
             <Button
                 android:id="@+id/get_btn"

@@ -7,7 +7,6 @@ import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.BleDebugLog
 import kotlinx.coroutines.launch
 
-
 class ConfigViewModel : ViewModel() {
 
     private val logTag = ConfigViewModel::class.simpleName
@@ -15,6 +14,15 @@ class ConfigViewModel : ViewModel() {
 
     init {
         BleDebugLog.i(logTag, "init-()")
+    }
+
+    fun getMyInfo(userInfo: (UserInfoEntity?) -> Unit) {
+        BleDebugLog.i(logTag, "getMyInfo-()")
+        viewModelScope.launch  {
+            remoteDataSource.getUserInfo {
+                userInfo.invoke(it)
+            }
+        }
     }
 
    fun getProductList(serverRetCode: (Int) -> Unit) {

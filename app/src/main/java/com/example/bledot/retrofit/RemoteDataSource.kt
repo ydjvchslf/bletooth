@@ -70,4 +70,55 @@ class RemoteDataSource {
             else -> { }
         }
     }
+
+    suspend fun getUserInfo(userCallback: (UserInfoEntity?) -> Unit) {
+        BleDebugLog.w(logTag, "getUserInfo-()")
+        val sampleUser = sampleUserEntity()
+        userCallback.invoke(sampleUser)
+    /*
+        val response = retrofitService.getUser()
+        when (response) {
+            is Result.Success -> {
+                BleDebugLog.i(logTag, "Api Success!!")
+                val resBody = response.data
+                val statusCode = resBody.statusCode
+                if (statusCode == 200) {
+                    BleDebugLog.d(logTag, "userInfo 가져오기 성공")
+                    val remoteUserInfo = resBody.data
+                    val userInfoEntity = remoteUserInfo?.toEntity()
+                    userCallback.invoke(userInfoEntity)
+                }
+            }
+            is Result.ApiError -> {
+                BleDebugLog.i(logTag, "ApiError!!")
+                BleDebugLog.d(logTag, "Error Code: [${response.code}], message: ${response.message}")
+            }
+            is Result.NetworkError -> {
+                BleDebugLog.i(logTag, "NetworkError!!")
+                // throwable
+                BleDebugLog.d(logTag, "${response.throwable}")
+            }
+            else -> { }
+        }
+    */
+    }
+
+    private fun sampleUserEntity(): UserInfoEntity {
+        return UserInfoEntity(
+            "abc@naver.com",
+            "용미경",
+            "용미경",
+            "용미경",
+            "용미경",
+            "용미경",
+            "용미경",
+            "용미경",
+            315679995,
+            "주소1",
+            "주소2",
+            "주소3",
+            "주소4",
+            "Korea"
+        )
+    }
 }

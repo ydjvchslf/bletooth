@@ -12,4 +12,7 @@ interface RetrofitService {
 
     @GET("login_s")
     suspend fun loginSuccess(): Result<RemoteDefaultData>
+
+    @GET("user/{userId}")
+    suspend fun getUser(): Result<RemoteDefaultData>
 }

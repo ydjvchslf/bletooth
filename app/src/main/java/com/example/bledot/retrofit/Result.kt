@@ -9,10 +9,8 @@ import retrofit2.Response
 
 sealed class Result<T> {
     class Success<T>(val code: Int, val data: T) : Result<T>()
-    class Loading<T> : Result<T>()
     class ApiError<T>(val code: Int, val message: String?) : Result<T>()
     class NetworkError<T>(val throwable: Throwable) : Result<T>()
-    class NullResult<T> : Result<T>()
     // 최종 결과 response
     class CustomResponse<T>(val code: Int, val data: T?, val message: String?) : Result<T>()
 }

@@ -49,7 +49,11 @@ class ConfigFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
         // 내 정보 보기
-        configViewModel.getMyInfo()
+        configViewModel.getMyInfo {
+            BleDebugLog.d(logTag, "$it")
+            binding.myInfo.titleTextView.text = "${it?.name}"
+            binding.myInfo.subTextView.text = "${it?.email}"
+        }
 
         binding.getBtn.setOnClickListener {
             configViewModel.getProductList {
