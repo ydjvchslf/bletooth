@@ -15,4 +15,4 @@ const val KEY_DATA = "KEY_DATA"
 //const val BASE_URL = "https://fakestoreapi.com"
 const val BASE_URL = "http://192.168.1.250:8080"
 
-val toolbarName = MutableLiveData("")
+var userId = MutableLiveData("")
