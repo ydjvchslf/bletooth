@@ -71,7 +71,7 @@ class RemoteDataSource {
         }
     }
 
-    suspend fun getUserInfo(userCallback: (UserInfoEntity?) -> Unit) {
+    suspend fun getUserInfo(userCallback: (UserInfoEntity) -> Unit) {
         BleDebugLog.w(logTag, "getUserInfo-()")
         val sampleUser = sampleUserEntity()
         userCallback.invoke(sampleUser)
@@ -107,12 +107,12 @@ class RemoteDataSource {
         return UserInfoEntity(
             "abc@naver.com",
             "용미경",
-            "용미경",
-            "용미경",
-            "용미경",
-            "용미경",
-            "용미경",
-            "용미경",
+            "1991-09-14",
+            "Female",
+            "55",
+            "1",
+            "korean",
+            "감기",
             315679995,
             "주소1",
             "주소2",

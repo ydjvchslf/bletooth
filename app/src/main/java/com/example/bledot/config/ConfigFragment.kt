@@ -50,9 +50,9 @@ class ConfigFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
         // 내 정보 보기
         configViewModel.getMyInfo {
-            BleDebugLog.d(logTag, "$it")
-            binding.myInfo.titleTextView.text = "${it?.name}"
-            binding.myInfo.subTextView.text = "${it?.email}"
+            BleDebugLog.d(logTag, "userInfo: $it")
+            binding.myInfo.titleTextView.text = it.name
+            binding.myInfo.subTextView.text = it.email
         }
 
         binding.getBtn.setOnClickListener {
@@ -64,7 +64,8 @@ class ConfigFragment : Fragment() {
         }
         // edit info 버튼
         binding.editInfoBtn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToEditInfoFragment())
+            val crtUserInfo = configViewModel.crnUserInfo
+            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToEditInfoFragment(crtUserInfo))
         }
         // change pw 버튼
         binding.changePwBtn.setOnClickListener {
@@ -110,5 +111,7 @@ class ConfigFragment : Fragment() {
     private fun googleLogout() {
         BleDebugLog.i(logTag, "googleLogout-()")
         // TODO :: Firebase google sign out
+        activity?.startActivity(Intent(activity, BeforeActivity::class.java))
+        activity?.finish()
     }
 }

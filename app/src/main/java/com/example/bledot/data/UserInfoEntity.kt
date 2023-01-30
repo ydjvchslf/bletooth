@@ -1,5 +1,9 @@
 package com.example.bledot.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class UserInfoEntity(
     val email: String,
     val name: String,
@@ -15,7 +19,7 @@ data class UserInfoEntity(
     val address3: String,
     val address4: String,
     val country: String,
-) {
+): Parcelable {
     override fun toString(): String {
         return "email: $email, name: $name, phone: $phone"
     }

@@ -11,15 +11,17 @@ class ConfigViewModel : ViewModel() {
 
     private val logTag = ConfigViewModel::class.simpleName
     private val remoteDataSource = RemoteDataSource()
+    lateinit var crnUserInfo: UserInfoEntity
 
     init {
         BleDebugLog.i(logTag, "init-()")
     }
 
-    fun getMyInfo(userInfo: (UserInfoEntity?) -> Unit) {
+    fun getMyInfo(userInfo: (UserInfoEntity) -> Unit) {
         BleDebugLog.i(logTag, "getMyInfo-()")
         viewModelScope.launch  {
             remoteDataSource.getUserInfo {
+                crnUserInfo = it
                 userInfo.invoke(it)
             }
         }

@@ -6,12 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
 import com.example.bledot.R
-import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.databinding.FragmentEditInfoBinding
 import com.example.bledot.util.BleDebugLog
 
@@ -20,6 +19,8 @@ class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private val logTag = EditInfoFragment::class.simpleName
     private lateinit var binding: FragmentEditInfoBinding
     private val editInfoViewModel: EditInfoViewModel by activityViewModels()
+    // Config 에서 넘어온 userInfo
+    private val arg: EditInfoFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,14 +40,7 @@ class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
         makeDropdownMenu()
-
-        binding.name.infoInputEditText.setText("용미경")
-        binding.birth.infoInputEditText.setText("1991.09.14")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        BleDebugLog.i(logTag, "onDestroy-()")
+        settingCrtUserInfo(arg)
     }
 
     private fun makeDropdownMenu() {
@@ -75,4 +69,17 @@ class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) { }
 
     override fun onNothingSelected(p0: AdapterView<*>?) { }
+
+    private fun settingCrtUserInfo(arg: EditInfoFragmentArgs) {
+        BleDebugLog.i(logTag, "settingCrtUserInfo-()")
+        val userInfo = arg.userInfo
+        binding.name.infoInputEditText.setText(userInfo.name)
+        binding.birth.infoInputEditText.setText(userInfo.birth)
+        binding.weightSpinner.weightEditText.setText(userInfo.weight)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        BleDebugLog.i(logTag, "onDestroy-()")
+    }
 }
