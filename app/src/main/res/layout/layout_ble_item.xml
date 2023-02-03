@@ -3,7 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="20dp"
-    android:orientation="horizontal">
+    android:layout_margin="10dp"
+    android:orientation="horizontal"
+    android:background="@drawable/grey_edittext_rounded_corner_rectangle">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_bluetooth_item" />
 
     <TextView
         android:id="@+id/name"
@@ -27,7 +34,8 @@
         android:layout_height="wrap_content"
         android:text="state"
         android:textSize="15sp"
-        android:layout_marginStart="20dp" />
+        android:layout_marginStart="20dp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/battery"

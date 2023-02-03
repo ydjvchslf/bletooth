@@ -24,6 +24,9 @@ import com.example.bledot.activity.before.BeforeActivity
 import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.util.BleDebugLog
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 
 class ConfigFragment : Fragment() {
 
@@ -111,6 +114,18 @@ class ConfigFragment : Fragment() {
     private fun googleLogout() {
         BleDebugLog.i(logTag, "googleLogout-()")
         // TODO :: Firebase google sign out
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        val auth = FirebaseAuth.getInstance()
+
+        // TODO :: Firebase 까지 갈 필요 없음! auth 사용안하고 GoogleSignInClient 에서 유저 정보 얻어오는걸로 해보기
+
+        mGoogleSignInClient.signOut()
+        auth.signOut()
+
         activity?.startActivity(Intent(activity, BeforeActivity::class.java))
         activity?.finish()
     }

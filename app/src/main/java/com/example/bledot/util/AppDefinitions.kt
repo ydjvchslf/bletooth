@@ -1,5 +1,6 @@
 package com.example.bledot.util
 
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.xsens.dot.android.sdk.utils.XsensDotLogger
 

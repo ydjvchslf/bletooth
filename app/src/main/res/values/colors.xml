@@ -11,5 +11,6 @@
     <color name="sub">#555555</color>
     <color name="preview">#99515151</color>
     <color name="grey_pale">#F0F0F0</color>
+    <color name="grey_light">#9F9F9F</color>
     <color name="red">#FF0000</color>
 </resources>

@@ -26,6 +26,18 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
     var mConnectedIndex = -1 // 리스트 index
     // KEY
     val KEY_DEVICE = "KEY_DEVICE"
+
+    // Device 연결 상태
+    var BLE_STATE = MutableLiveData(BleState.NOT_SCANNED)
+    // 스캔 작업 히스토리 여부
+    var hasScanHistory = false
+    // 스캔 중
+    var isScanning = false
+    // 연결 중
+    var isConnecting = false
+    // 끊기 중
+    var isDisconnecting = false
+
     // data 리스너
     var dataListener : ((XYZData) -> Unit)? = null
     // data2 리스너
@@ -35,6 +47,7 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
 
     init {
         BleDebugLog.i(logTag, "init-()")
+        BleDebugLog.d(logTag, "BLE_STATE: ${BLE_STATE.value}")
     }
 
     fun startMeasure(device: XsensDotDevice) {
@@ -64,10 +77,13 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
         BleDebugLog.i(logTag, "connectSensor-()")
         addDevice(xsDevice)
         xsDevice?.connect()
+        BLE_STATE.value = BleState.TRYING
     }
 
     fun disconnectAllSensor() {
         BleDebugLog.i(logTag, "disconnectSensor-()")
+        BLE_STATE.value = (BleState.TRYING) // 해제할때 로딩중이 안뜬다;
+
         if (mSensorList.value != null) {
             for (device in mSensorList.value!!) {
                 if (device.address == mConnectedXsDevice.value?.address) {
@@ -76,9 +92,11 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
                 }
             }
         }
-        mSensorList.value?.clear()
+        //mSensorList.value?.clear()
         mConnectionState.value = 0
-        mConnectedXsDevice.value = null
+        //mConnectedXsDevice.value = null
+        BLE_STATE.value = (BleState.SCAN_COMPLETE_DISCONNECTED)
+
     }
 
     fun addDevice(xsDevice: XsensDotDevice?) {
@@ -101,6 +119,7 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
 
     override fun onXsensDotConnectionChanged(address: String?, p1: Int) {
         BleDebugLog.i(logTag, "onXsensDotConnectionChanged-()")
+        //BLE_STATE.postValue(BleState.TRYING)
     }
 
     override fun onXsensDotServicesDiscovered(p0: String?, p1: Int) {
@@ -150,10 +169,18 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
 
     override fun onXsensDotInitDone(p0: String?) {
         BleDebugLog.i(logTag, "onXsensDotInitDone-()")
-        mConnectionState.value = mConnectedXsDevice.value!!.connectionState
+        mConnectionState.value = mConnectedXsDevice.value?.connectionState
+        if (mConnectionState.value == 0) { // 안타는거같아
+            BLE_STATE.value = (BleState.SCAN_COMPLETE_DISCONNECTED)
+        } else if (mConnectionState.value == 2) {
+            BLE_STATE.value = (BleState.SCAN_COMPLETE_CONNECTED)
+        }
+
         BleDebugLog.d(logTag, "mConnectionState.value: ${mConnectionState.value}")
+        BleDebugLog.d(logTag, "mConnectedXsDevice.value.tag: ${mConnectedXsDevice.value?.tag}")
         BleDebugLog.d(logTag, "mConnectedIndex : $mConnectedIndex")
         BleDebugLog.d(logTag, "mConnectedXsDevice.value?.connectionState: ${mConnectedXsDevice.value?.connectionState}")
+        BleDebugLog.d(logTag, "BLE_STATE: ${BLE_STATE.value}")
     }
 
     override fun onXsensDotButtonClicked(p0: String?, p1: Long) {
