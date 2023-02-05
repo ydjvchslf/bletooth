@@ -82,7 +82,6 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
 
     fun disconnectAllSensor() {
         BleDebugLog.i(logTag, "disconnectSensor-()")
-        BLE_STATE.value = (BleState.TRYING) // 해제할때 로딩중이 안뜬다;
 
         if (mSensorList.value != null) {
             for (device in mSensorList.value!!) {
@@ -93,10 +92,15 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             }
         }
         //mSensorList.value?.clear()
-        mConnectionState.value = 0
+        //mConnectionState.value = 0
         //mConnectedXsDevice.value = null
+        if(this.BLE_STATE.value == BleState.CONNECTED){
+            BLE_STATE.value = (BleState.NOT_SCANNED)
+            mConnectionState.value = 0
+            mConnectedXsDevice.value = null
+            return
+        }
         BLE_STATE.value = (BleState.SCAN_COMPLETE_DISCONNECTED)
-
     }
 
     fun addDevice(xsDevice: XsensDotDevice?) {

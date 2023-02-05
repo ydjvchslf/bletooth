@@ -254,7 +254,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:visibility="gone" >
+                        android:visibility="@{viewModel.BLE_STATE ==  bleState.CONNECTED ? View.VISIBLE : View.GONE}" >
                         
                         <ImageView
                             android:id="@+id/big_circle"
