@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -68,6 +69,10 @@ class ChangePwFragment : Fragment() {
                 timer?.schedule(object : TimerTask() {
                     override fun run() {
                         // Do your actual work here
+                        if (binding.currentPw.infoInputEditText.text.isEmpty()){
+                            BleDebugLog.d(logTag, "isEmpty() 입니다")
+                            return
+                        }
                         val crtPw = binding.currentPw.infoInputEditText.text.toString().toInt()
                         BleDebugLog.d(logTag, "유저 입력한 현재 비번: $crtPw")
                         activity?.runOnUiThread {
@@ -101,12 +106,16 @@ class ChangePwFragment : Fragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (binding.pw.pw1EditText.text.isEmpty() || binding.pw.pw1EditText.text.toString().length < 8) {
+                val length = binding.pw.pw1EditText.text.toString().length
+                if (length == 0) {
+                    pwFlag2 = false
+                }
+                if (length in 1..7) {
                     binding.pw.pwLimitTextView.visibility = View.VISIBLE
                     binding.pw.pw1EditText.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
                     pwFlag2 = false
-                } else {
+                } else if (7 < length) {
                     binding.pw.pwLimitTextView.visibility = View.INVISIBLE
                     binding.pw.pw1EditText.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
@@ -142,7 +151,10 @@ class ChangePwFragment : Fragment() {
         if (pwFlag1 && pwFlag2) {
             // TODO:: 비밀번호 변경 Api
             showDialog("Complete", "Your password has been changed.")
-        } else { return }
+        } else {
+            Toast.makeText(context, "pwFlag1: $pwFlag1, pwFlag2: $pwFlag2", Toast.LENGTH_SHORT).show()
+            return
+        }
     }
 
     private fun showDialog(title: String, subTitle: String) {
