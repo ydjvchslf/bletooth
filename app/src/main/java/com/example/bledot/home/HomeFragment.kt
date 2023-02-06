@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import com.example.bledot.R
+import com.example.bledot.changepw.ChangePwFragmentDirections
 import com.example.bledot.config.ConfigFragment
 import com.example.bledot.config.ConfigViewModel
 import com.example.bledot.databinding.FragmentConfigBinding
@@ -39,16 +41,16 @@ class HomeFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
         // 버튼 > 네비게이션
         binding.listBtn.setOnClickListener {
-
+            Navigation.findNavController(binding.root).navigate(HomeFragmentDirections.actionHomeFragmentToListFragment())
         }
         binding.deviceBtn.setOnClickListener {
-
+            Navigation.findNavController(binding.root).navigate(HomeFragmentDirections.actionHomeFragmentToBleFragment())
         }
         binding.recordBtn.setOnClickListener {
-
+            Navigation.findNavController(binding.root).navigate(HomeFragmentDirections.actionHomeFragmentToRealtimeFragment())
         }
         binding.settingBtn.setOnClickListener {
-
+            Navigation.findNavController(binding.root).navigate(HomeFragmentDirections.actionHomeFragmentToConfigFragment())
         }
     }
 }
