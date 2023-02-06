@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView.setWebContentsDebuggingEnabled
+import android.widget.Switch
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -47,6 +48,16 @@ class RealtimeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+        // toggle btn
+        binding.toggleBtn.setOnClickListener {
+            val isToggleValue = binding.toggleBtn.isChecked
+            BleDebugLog.d(logTag, "isToggleValue: $isToggleValue")
+            realtimeViewModel.isWearingOption = isToggleValue
+        }
+        // recording btn
+        binding.recordBtn.setOnClickListener {
+
+        }
         // zeroing
         binding.zeroing.setOnClickListener {
             when (bleViewModel.mConnectedXsDevice.value) {

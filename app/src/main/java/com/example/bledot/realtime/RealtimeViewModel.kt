@@ -34,9 +34,11 @@ class RealtimeViewModel: ViewModel() {
     private var mDataList: ArrayList<HashMap<String?, Any>>? = null
     // A list contains mac address and XsensDotLogger object -> 전역변수로 이동
     //private var mLoggerList: ArrayList<HashMap<String, Any>>? = null
+    var isWearingOption: Boolean = false
 
     init {
         BleDebugLog.i(logTag, "init-()")
+        BleDebugLog.d(logTag, "isWearingOption: $isWearingOption")
         // Remove XsensDotLogger objects from list before start data logging.
         mLoggerList?.value?.clear()
     }
