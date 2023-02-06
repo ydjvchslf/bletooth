@@ -229,6 +229,7 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun isConnectedSensor(): XsensDotDevice? {
         BleDebugLog.i(logTag, "isConnectedSensor-()")
         bleViewModel.mConnectedXsDevice.value.let { device ->
@@ -242,10 +243,10 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
                 BleDebugLog.d(logTag, "device 이미 연결 중")
                 bleViewModel.BLE_STATE.value = BleState.CONNECTED
 
-                binding.batteryPer.text = device.batteryPercentage.toString()
-                binding.name.text = device.name
+                binding.batteryPer.text = device.batteryPercentage.toString()+"%"
+                binding.name.text = device.tag
                 binding.address.text = device.address
-                binding.battery.text = device.batteryState.toString()
+                binding.battery.text = device.batteryPercentage.toString()+"%"
                 return device
             }
         }

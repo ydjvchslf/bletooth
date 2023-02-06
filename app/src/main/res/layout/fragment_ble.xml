@@ -308,7 +308,7 @@
                             android:layout_marginTop="50dp"
                             android:text="Connected" />
 
-                        <LinearLayout
+                        <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/crn_device"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -316,48 +316,52 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginTop="30dp"
-                            android:padding="20dp"
-                            android:orientation="horizontal" >
+                            android:padding="20dp" >
 
                             <ImageView
+                                android:id="@+id/ble_icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                android:layout_marginStart="20dp"
                                 android:src="@drawable/ic_bluetooth_item" />
 
                             <TextView
                                 android:id="@+id/name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/ble_icon"
+                                app:layout_constraintBottom_toTopOf="@id/address"
                                 android:text="name"
                                 android:textSize="15sp"
-                                android:layout_marginStart="20dp" />
+                                android:layout_marginStart="10dp" />
 
                             <TextView
                                 android:id="@+id/address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                app:layout_constraintStart_toEndOf="@id/ble_icon"
+                                app:layout_constraintTop_toBottomOf="@id/name"
+                                app:layout_constraintBottom_toBottomOf="parent"
                                 android:text="address"
                                 android:textSize="15sp"
-                                android:layout_marginStart="20dp" />
-
-                            <TextView
-                                android:id="@+id/state"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="state"
-                                android:textSize="15sp"
-                                android:layout_marginStart="20dp"
-                                android:visibility="gone"/>
+                                android:layout_marginStart="10dp" />
 
                             <TextView
                                 android:id="@+id/battery"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 android:text="battery"
                                 android:textSize="15sp"
-                                android:layout_marginStart="20dp" />
+                                android:layout_marginEnd="20dp" />
 
-                        </LinearLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <TextView
                             android:id="@+id/disconnect_textView"
@@ -380,7 +384,6 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:background="@color/grey_light"
                         android:visibility="@{viewModel.BLE_STATE == bleState.TRYING ? View.VISIBLE : View.GONE}">
 
                         <com.airbnb.lottie.LottieAnimationView
