@@ -37,5 +37,18 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+        // 버튼 > 네비게이션
+        binding.listBtn.setOnClickListener {
+
+        }
+        binding.deviceBtn.setOnClickListener {
+
+        }
+        binding.recordBtn.setOnClickListener {
+
+        }
+        binding.settingBtn.setOnClickListener {
+
+        }
     }
 }

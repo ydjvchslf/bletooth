@@ -11,17 +11,230 @@
     </data>
 
     <!-- 콘텐트 부분 -->
-    <LinearLayout
-        android:id="@+id/homeFragment"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/ic_logo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/info_textView"
+            android:layout_margin="50dp"
+            android:src="@drawable/ic_logo" />
+
+        <ImageView
+            android:id="@+id/ic_logo_name"
+            android:layout_width="122dp"
+            android:layout_height="20dp"
+            app:layout_constraintStart_toEndOf="@id/ic_logo"
+            app:layout_constraintTop_toTopOf="@id/ic_logo"
+            app:layout_constraintBottom_toBottomOf="@id/ic_logo"
+            android:src="@drawable/ic_anchor_logics" />
+
         <TextView
+            android:id="@+id/info_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home Fragment" />
+            app:layout_constraintTop_toBottomOf="@id/ic_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="50dp"
+            android:textSize="17sp"
+            android:text="@{`Hello ` + viewModel.crnUserInfo.name + `!\nWear a safe vest today, too :)`}" />
+        
+        <ImageView
+            android:id="@+id/ic_rock"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toTopOf="@id/info_textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/info_textView"
+            android:src="@drawable/ic_blue_rock" />
 
-    </LinearLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/ic_rock"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" >
+
+            <!-- list btn -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/list_btn"
+                android:layout_width="330dp"
+                android:layout_height="65dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/device_btn"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/blue_btn_rounded_corner_rectangle">
+
+                <ImageView
+                    android:id="@+id/ic_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_white_list" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_white_right_arrow" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ic_list"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="20dp"
+                    android:text="Activity List" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- device btn -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/device_btn"
+                android:layout_width="330dp"
+                android:layout_height="65dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/record_btn"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/grey_btn_rounded_corner_rectangle">
+
+                <ImageView
+                    android:id="@+id/ic_device"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_black_ble" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_black_right_arrow" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ic_device"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="20dp"
+                    android:text="Device Connection" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- record btn -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/record_btn"
+                android:layout_width="330dp"
+                android:layout_height="65dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/setting_btn"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/blue_btn_rounded_corner_rectangle">
+
+                <ImageView
+                    android:id="@+id/ic_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_white_record" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_white_right_arrow" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ic_record"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="20dp"
+                    android:text="Record Activity" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- setting btn -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/setting_btn"
+                android:layout_width="330dp"
+                android:layout_height="65dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/grey_btn_rounded_corner_rectangle">
+
+                <ImageView
+                    android:id="@+id/ic_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_black_setting" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_black_right_arrow" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ic_setting"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="20dp"
+                    android:text="Setting" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

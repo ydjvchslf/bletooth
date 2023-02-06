@@ -11,8 +11,20 @@ import kotlinx.coroutines.launch
 class HomeViewModel : ViewModel() {
 
     private val logTag = HomeViewModel::class.simpleName
+    private val remoteDataSource = RemoteDataSource()
+    lateinit var crnUserInfo: UserInfoEntity
 
     init {
         BleDebugLog.i(logTag, "init-()")
+        getMyInfo()
+    }
+
+    private fun getMyInfo() {
+        BleDebugLog.i(logTag, "getMyInfo-()")
+        viewModelScope.launch  {
+            remoteDataSource.getUserInfo {
+                crnUserInfo = it
+            }
+        }
     }
 }
