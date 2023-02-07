@@ -26,8 +26,10 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.Gson
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
 
 
@@ -42,9 +44,13 @@ class RealtimeFragment : Fragment() {
     // 경과 시간 위한 timer
     private var time = 0
     private var timerTask: Timer? = null
+    // realTime chart
     private lateinit var chart: LineChart
     private lateinit var data: LineData
+
     private lateinit var set: LineDataSet
+    private lateinit var set2: LineDataSet
+    private lateinit var set3: LineDataSet
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +78,7 @@ class RealtimeFragment : Fragment() {
             activity?.runOnUiThread {
                 // 난수 생성
                 val random = (-20..20).random()  // -20 <= n <= 20
-                addEntry(random.toDouble(), (random-2).toDouble(), (random+2).toDouble())
+                addEntry(random.toDouble(), (random-10).toDouble(), (random+10).toDouble())
             }
         }
         // toggle btn
@@ -218,11 +224,18 @@ class RealtimeFragment : Fragment() {
 
     private fun settingRealtimeChart() {
         BleDebugLog.i(logTag, "settingRealtimeChart-()")
-        data = LineData()
-        chart.data = data
 
         set = createSet()
-        data.addDataSet(set)
+        set2 = createSet2()
+        set3 = createSet3()
+
+        val dataSets = arrayListOf<ILineDataSet>()
+        dataSets.add(set)
+        dataSets.add(set2)
+        dataSets.add(set3)
+
+        data = LineData(dataSets)
+        chart.data = data
 
         chart.apply {
             setDrawGridBackground(true)
@@ -285,9 +298,11 @@ class RealtimeFragment : Fragment() {
     private fun addEntry(num: Double, num2: Double, num3: Double) {
         BleDebugLog.i(logTag, "addEntry-()")
         BleDebugLog.d(logTag, "num: $num")
+        BleDebugLog.d(logTag, "num2: $num2")
+
         val entry = Entry(set.entryCount.toFloat(), num.toFloat())
-        val entry2 = Entry(set.entryCount.toFloat(), num2.toFloat())
-        val entry3 = Entry(set.entryCount.toFloat(), num3.toFloat())
+        val entry2 = Entry(set2.entryCount.toFloat(), num2.toFloat())
+        val entry3 = Entry(set3.entryCount.toFloat(), num3.toFloat())
 
         data.addEntry(entry, 0)
         data.addEntry(entry2, 1)
@@ -303,11 +318,35 @@ class RealtimeFragment : Fragment() {
     }
 
     private fun createSet(): LineDataSet {
-        val set = LineDataSet(null, "Real-time Line Data")
+        val set = LineDataSet(null, "Data Set 1")
         set.lineWidth = 1f
         set.setDrawValues(false)
         set.valueTextColor = Color.WHITE
         set.color = Color.WHITE
+        set.mode = LineDataSet.Mode.LINEAR
+        set.setDrawCircles(false)
+        set.highLightColor = Color.rgb(190, 190, 190)
+        return set
+    }
+
+    private fun createSet2(): LineDataSet {
+        val set = LineDataSet(null, "Data Set 2")
+        set.lineWidth = 1f
+        set.setDrawValues(false)
+        set.valueTextColor = Color.RED
+        set.color = Color.RED
+        set.mode = LineDataSet.Mode.LINEAR
+        set.setDrawCircles(false)
+        set.highLightColor = Color.rgb(190, 190, 190)
+        return set
+    }
+
+    private fun createSet3(): LineDataSet {
+        val set = LineDataSet(null, "Data Set 3")
+        set.lineWidth = 1f
+        set.setDrawValues(false)
+        set.valueTextColor = Color.GREEN
+        set.color = Color.GREEN
         set.mode = LineDataSet.Mode.LINEAR
         set.setDrawCircles(false)
         set.highLightColor = Color.rgb(190, 190, 190)
