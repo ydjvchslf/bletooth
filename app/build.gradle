@@ -91,4 +91,6 @@ dependencies {
     // lottie
     def lottieVersion = "5.2.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+    // MPAndroid Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
