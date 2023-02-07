@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="viewModel"
             type="com.example.bledot.realtime.RealtimeViewModel" />
@@ -49,61 +50,101 @@
                 android:id="@+id/toggle_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="Wearing a Vest "
-                android:track="@drawable/switch_selector"
-                android:thumb="@drawable/switch_thumb"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
+                android:text="Wearing a Vest "
+                android:thumb="@drawable/switch_thumb"
+                android:track="@drawable/switch_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <Button
                 android:id="@+id/record_btn"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                app:layout_constraintTop_toBottomOf="@id/toggle_btn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/ic_recording_start" />
+                android:background="@drawable/ic_recording_start"
+                android:visibility="@{viewModel.isRecording ? View.INVISIBLE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toggle_btn" />
+
+            <Button
+                android:id="@+id/stop_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/ic_recording_stop"
+                android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toggle_btn" />
 
             <TextView
                 android:id="@+id/record_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/record_btn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="10dp"
-                android:text="When you're ready to record,\npress the record button." />
+                android:text="When you're ready to record,\npress the record button."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/record_btn"
+                android:visibility="@{viewModel.isRecording ? View.INVISIBLE : View.VISIBLE}" />
+
+            <!-- 분, 초 -->
+            <TextView
+                android:id="@+id/minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toStartOf="@id/second"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stop_btn"
+                android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.INVISIBLE}"/>
+
+            <TextView
+                android:id="@+id/second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":00"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/minute"
+                app:layout_constraintTop_toBottomOf="@id/stop_btn"
+                android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.INVISIBLE}"/>
 
             <Button
                 android:id="@+id/zeroing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button_zeroing"
                 android:text="zero"
-                android:layout_marginStart="15dp"
-                app:layout_constraintTop_toBottomOf="@id/record_textView"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="start"
                 android:layout_marginStart="15dp"
-                app:layout_constraintTop_toBottomOf="@id/record_textView"
-                app:layout_constraintStart_toEndOf="@id/zeroing"/>
+                android:text="start"
+                app:layout_constraintStart_toEndOf="@id/zeroing"
+                app:layout_constraintTop_toBottomOf="@id/record_textView" />
 
             <Button
                 android:id="@+id/stop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="stop"
                 android:layout_marginStart="15dp"
-                app:layout_constraintTop_toBottomOf="@id/record_textView"
-                app:layout_constraintStart_toEndOf="@id/start"/>
+                android:text="stop"
+                app:layout_constraintStart_toEndOf="@id/start"
+                app:layout_constraintTop_toBottomOf="@id/record_textView" />
 
             <Button
                 android:id="@+id/init"
@@ -111,10 +152,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="RC init"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/zeroing"
+                android:visibility="gone"
                 app:layout_constraintRight_toLeftOf="@id/Rc_start"
-                android:visibility="gone" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/zeroing" />
 
             <Button
                 android:id="@+id/Rc_start"
@@ -122,9 +163,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="RC start"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/init"
-                app:layout_constraintTop_toBottomOf="@id/zeroing"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@id/zeroing" />
 
             <Button
                 android:id="@+id/Rc_stop"
@@ -132,9 +173,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="RC stop"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/Rc_start"
-                app:layout_constraintTop_toBottomOf="@id/start"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@id/start" />
 
             <Button
                 android:id="@+id/internal_erase"
@@ -142,9 +183,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="internal erase"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/Rc_start"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@id/Rc_start" />
 
             <Button
                 android:id="@+id/select_file_btn"
@@ -152,9 +193,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="select file"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/internal_erase"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@id/internal_erase" />
 
             <Button
                 android:id="@+id/export_btn"
@@ -162,9 +203,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="export"
-                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/stop"
-                android:visibility="gone" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/logger_btn"
@@ -172,9 +213,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="logger"
-                app:layout_constraintTop_toBottomOf="@id/select_file_btn"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@id/select_file_btn" />
 
             <Button
                 android:id="@+id/file_save_btn"
@@ -182,9 +223,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="create file"
+                android:visibility="visible"
                 app:layout_constraintStart_toEndOf="@id/logger_btn"
-                app:layout_constraintTop_toBottomOf="@id/stop"
-                android:visibility="visible" />
+                app:layout_constraintTop_toBottomOf="@id/stop" />
 
             <Button
                 android:id="@+id/file_close_btn"
@@ -192,21 +233,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:text="close file"
+                android:visibility="visible"
                 app:layout_constraintStart_toEndOf="@id/file_save_btn"
-                app:layout_constraintTop_toBottomOf="@id/stop"
-                android:visibility="visible" />
+                app:layout_constraintTop_toBottomOf="@id/stop" />
 
             <WebView
                 android:id="@+id/real_web_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="@id/file_save_btn"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/file_save_btn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+   </LinearLayout>
 
 </layout>

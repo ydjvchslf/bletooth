@@ -1,6 +1,7 @@
 package com.example.bledot.realtime
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,9 @@ import com.example.bledot.data.XYZData
 import com.example.bledot.databinding.FragmentRealtimeBinding
 import com.example.bledot.util.BleDebugLog
 import com.google.gson.Gson
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.timer
 
 class RealtimeFragment : Fragment() {
 
@@ -29,6 +33,9 @@ class RealtimeFragment : Fragment() {
     private val bleViewModel: BleViewModel by activityViewModels()
     // 웹뷰용 dataList
     var webViewList = ArrayList<XYZData>()
+    // 경과 시간 위한 timer
+    private var time = 0
+    private var timerTask: Timer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,9 +61,20 @@ class RealtimeFragment : Fragment() {
             BleDebugLog.d(logTag, "isToggleValue: $isToggleValue")
             realtimeViewModel.isWearingOption = isToggleValue
         }
-        // recording btn
+        // recording start btn
         binding.recordBtn.setOnClickListener {
-
+            BleDebugLog.i(logTag, "녹화 Start")
+            realtimeViewModel.isRecording.value = true
+            BleDebugLog.i(logTag, "isRecording: ${realtimeViewModel.isRecording.value}")
+            startTimer()
+        }
+        // recording stop btn
+        binding.stopBtn.setOnClickListener {
+            BleDebugLog.i(logTag, "녹화 Stop")
+            realtimeViewModel.isRecording.value = false
+            BleDebugLog.i(logTag, "isRecording: ${realtimeViewModel.isRecording.value}")
+            stopTimer()
+            showDialog("New Data", "Do you want to upload to the server?")
         }
         // zeroing
         binding.zeroing.setOnClickListener {
@@ -127,5 +145,60 @@ class RealtimeFragment : Fragment() {
                 binding.realWebView.loadUrl("javascript:fn_draw_next($jsonXYZData)")
             }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun startTimer() {
+        BleDebugLog.i(logTag, "startTimer-()")
+        timerTask = timer(period = 1000) {
+            time ++
+            BleDebugLog.d(logTag, "time: $time")
+
+            val second = time % 60
+            val minute = time / 60
+
+            activity?.runOnUiThread {
+                // 초
+                binding.second.text = if (second < 10) ":0${second}"
+                else ":${second}"
+                // 분
+                binding.minute.text = if (minute < 10) "0${minute}"
+                else "$minute"
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        BleDebugLog.i(logTag, "stopTimer-()")
+        timerTask?.cancel()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun resetTimer() {
+        BleDebugLog.i(logTag, "resetTimer-()")
+        timerTask?.cancel()
+
+        time = 0
+        binding.recordTextView.text = "When you're ready to record,\npress the record button."
+    }
+
+    private fun showDialog(title: String, subTitle: String) {
+        val builder = AlertDialog.Builder(context).apply {
+            setTitle(title)
+            setMessage(subTitle)
+            setPositiveButton("Action") { _, _ ->
+                resetTimer()
+            }
+            setNegativeButton("Cancel") { _, _ ->
+                resetTimer()
+            }
+        }
+        builder.create().show()
+    }
+
+    override fun onDestroy() {
+        BleDebugLog.i(logTag, "resetTimer-()")
+        resetTimer()
+        super.onDestroy()
     }
 }

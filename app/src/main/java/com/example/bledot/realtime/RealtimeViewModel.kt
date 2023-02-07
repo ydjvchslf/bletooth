@@ -2,6 +2,7 @@ package com.example.bledot.realtime
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bledot.App
 import com.example.bledot.BuildConfig
@@ -35,6 +36,7 @@ class RealtimeViewModel: ViewModel() {
     // A list contains mac address and XsensDotLogger object -> 전역변수로 이동
     //private var mLoggerList: ArrayList<HashMap<String, Any>>? = null
     var isWearingOption: Boolean = false
+    var isRecording = MutableLiveData(false)
 
     init {
         BleDebugLog.i(logTag, "init-()")
