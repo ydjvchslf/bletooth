@@ -1,29 +1,35 @@
 package com.example.bledot.realtime
 
+import android.R
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView.setWebContentsDebuggingEnabled
-import android.widget.Switch
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import com.example.bledot.App
-import com.example.bledot.R
 import com.example.bledot.WebAppInterface
 import com.example.bledot.ble.BleViewModel
 import com.example.bledot.data.XYZData
 import com.example.bledot.databinding.FragmentRealtimeBinding
 import com.example.bledot.util.BleDebugLog
+import com.github.mikephil.charting.charts.Chart
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.gson.Gson
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
+
 
 class RealtimeFragment : Fragment() {
 
@@ -36,6 +42,9 @@ class RealtimeFragment : Fragment() {
     // 경과 시간 위한 timer
     private var time = 0
     private var timerTask: Timer? = null
+    private lateinit var chart: LineChart
+    private lateinit var data: LineData
+    private lateinit var set: LineDataSet
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,11 +52,12 @@ class RealtimeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         BleDebugLog.i(logTag, "onCreateView-()")
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_realtime, container, false)
+        binding = DataBindingUtil.inflate(inflater, com.example.bledot.R.layout.fragment_realtime, container, false)
         with(binding) {
             viewModel = realtimeViewModel
             lifecycleOwner = viewLifecycleOwner
         }
+        chart = binding.lineChart
         return binding.root
     }
 
@@ -55,6 +65,16 @@ class RealtimeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+        // 차트 기본 세팅
+        settingRealtimeChart()
+        // temp btn
+        binding.tempBtn.setOnClickListener {
+            activity?.runOnUiThread {
+                // 난수 생성
+                val random = (-20..20).random()  // -20 <= n <= 20
+                addEntry(random.toDouble(), (random-2).toDouble(), (random+2).toDouble())
+            }
+        }
         // toggle btn
         binding.toggleBtn.setOnClickListener {
             val isToggleValue = binding.toggleBtn.isChecked
@@ -194,6 +214,104 @@ class RealtimeFragment : Fragment() {
             }
         }
         builder.create().show()
+    }
+
+    private fun settingRealtimeChart() {
+        BleDebugLog.i(logTag, "settingRealtimeChart-()")
+        data = LineData()
+        chart.data = data
+
+        set = createSet()
+        data.addDataSet(set)
+
+        chart.apply {
+            setDrawGridBackground(true)
+            setBackgroundColor(Color.BLACK) // xml 에서 설정할 수 있음, 똑같으면 대체하기
+            setGridBackgroundColor(Color.BLACK)
+            // description text
+            description.isEnabled = true
+            // touch gestures (false-비활성화)
+            setTouchEnabled(false)
+            // scaling and dragging (false-비활성화)
+            isDragEnabled = false
+            setScaleEnabled(false)
+            //auto scale
+            isAutoScaleMinMaxEnabled = false
+            // if disabled, scaling can be done on x- and y-axis separately
+            setPinchZoom(false)
+        }
+
+        val des = chart.description
+        des.apply {
+            isEnabled = true
+            text = "Real-Time DATA"
+            textSize = 15f
+            textColor = Color.WHITE
+        }
+
+        //X축
+        chart.xAxis.setDrawGridLines(true)
+        chart.xAxis.setDrawAxisLine(false)
+
+        chart.xAxis.isEnabled = true
+        chart.xAxis.setDrawGridLines(false)
+
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
+
+        //Legend
+        val l = chart.legend
+        l.isEnabled = true
+        l.formSize = 10f // set the size of the legend forms/shapes
+
+        l.textSize = 12f
+        l.textColor = Color.WHITE
+
+        //Y축
+        val leftAxis = chart.axisLeft
+        leftAxis.isEnabled = true
+        leftAxis.textColor = resources.getColor(com.example.bledot.R.color.main)
+        leftAxis.setDrawGridLines(true)
+        leftAxis.gridColor = resources.getColor(com.example.bledot.R.color.main)
+
+        val rightAxis = chart.axisRight
+        rightAxis.isEnabled = false
+
+        addEntry(0.0, 0.0, 0.0)
+
+        // don't forget to refresh the drawing
+        chart.invalidate()
+    }
+
+    private fun addEntry(num: Double, num2: Double, num3: Double) {
+        BleDebugLog.i(logTag, "addEntry-()")
+        BleDebugLog.d(logTag, "num: $num")
+        val entry = Entry(set.entryCount.toFloat(), num.toFloat())
+        val entry2 = Entry(set.entryCount.toFloat(), num2.toFloat())
+        val entry3 = Entry(set.entryCount.toFloat(), num3.toFloat())
+
+        data.addEntry(entry, 0)
+        data.addEntry(entry2, 1)
+        data.addEntry(entry3, 2)
+
+        data.notifyDataChanged()
+
+        // let the chart know it's data has changed
+        chart.notifyDataSetChanged()
+        chart.setVisibleXRangeMaximum(10.0f)
+        // this automatically refreshes the chart (calls invalidate())
+        chart.moveViewTo(data.entryCount.toFloat(), 50f, YAxis.AxisDependency.LEFT)
+    }
+
+    private fun createSet(): LineDataSet {
+        val set = LineDataSet(null, "Real-time Line Data")
+        set.lineWidth = 1f
+        set.setDrawValues(false)
+        set.valueTextColor = Color.WHITE
+        set.color = Color.WHITE
+        set.mode = LineDataSet.Mode.LINEAR
+        set.setDrawCircles(false)
+        set.highLightColor = Color.rgb(190, 190, 190)
+        return set
     }
 
     override fun onDestroy() {
