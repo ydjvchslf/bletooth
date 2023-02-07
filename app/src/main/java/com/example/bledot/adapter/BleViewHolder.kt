@@ -40,8 +40,9 @@ class BleViewHolder(binding: LayoutBleItemBinding): RecyclerView.ViewHolder(bind
         addressTextView.text = bleDevice.macAddress
 
         if(bleDevice.batteryPercent == -1) {
-            battery.text = "연결하기"
-            battery.setTextColor(Color.parseColor("#28A7E1"))
+            //battery.text = "연결하기"
+            //battery.setTextColor(Color.parseColor("#28A7E1"))
+            battery.visibility = View.INVISIBLE
             connectCircle.visibility = View.INVISIBLE
             return
         }
