@@ -113,6 +113,12 @@
     myChart.update();
   }
 
+  function clearChart() {
+    // deleteAllData
+    myChart.data.datasets[0].data = []
+    myChart.update();
+  }
+
   myChart.options.animation = false;
 
 </script>

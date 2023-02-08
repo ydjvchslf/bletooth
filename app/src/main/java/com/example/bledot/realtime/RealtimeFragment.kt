@@ -93,6 +93,7 @@ class RealtimeFragment : Fragment() {
             BleDebugLog.i(logTag, "녹화 Start")
             realtimeViewModel.isRecording.value = true
             BleDebugLog.i(logTag, "isRecording: ${realtimeViewModel.isRecording.value}")
+            binding.realWebView.loadUrl("javascript:clearChart()")
             startTimer()
         }
         // recording stop btn
