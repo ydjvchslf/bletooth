@@ -96,7 +96,7 @@ class RealtimeFragment : Fragment() {
             startTimer()
         }
         // recording stop btn
-        binding.stopBtn.setOnClickListener {
+        binding.icStopBtn.setOnClickListener {
             BleDebugLog.i(logTag, "녹화 Stop")
             realtimeViewModel.isRecording.value = false
             BleDebugLog.i(logTag, "isRecording: ${realtimeViewModel.isRecording.value}")
