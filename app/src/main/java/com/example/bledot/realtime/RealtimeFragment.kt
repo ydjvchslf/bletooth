@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView.setWebContentsDebuggingEnabled
 import android.widget.Toast
+import androidx.core.graphics.toColorInt
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -239,8 +240,7 @@ class RealtimeFragment : Fragment() {
 
         chart.apply {
             setDrawGridBackground(true)
-            setBackgroundColor(Color.BLACK) // xml 에서 설정할 수 있음, 똑같으면 대체하기
-            setGridBackgroundColor(Color.BLACK)
+            setGridBackgroundColor(Color.WHITE) // chart 배경색
             // description text
             description.isEnabled = true
             // touch gestures (false-비활성화)
@@ -254,14 +254,6 @@ class RealtimeFragment : Fragment() {
             setPinchZoom(false)
         }
 
-        val des = chart.description
-        des.apply {
-            isEnabled = true
-            text = "Real-Time DATA"
-            textSize = 15f
-            textColor = Color.WHITE
-        }
-
         //X축
         chart.xAxis.setDrawGridLines(true)
         chart.xAxis.setDrawAxisLine(false)
@@ -269,7 +261,7 @@ class RealtimeFragment : Fragment() {
         chart.xAxis.isEnabled = true
         chart.xAxis.setDrawGridLines(false)
 
-        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
+        chart.xAxis.textColor = Color.WHITE
 
         //Legend
         val l = chart.legend
@@ -277,14 +269,14 @@ class RealtimeFragment : Fragment() {
         l.formSize = 10f // set the size of the legend forms/shapes
 
         l.textSize = 12f
-        l.textColor = Color.WHITE
+        l.textColor = Color.BLACK // label color
 
         //Y축
         val leftAxis = chart.axisLeft
         leftAxis.isEnabled = true
-        leftAxis.textColor = resources.getColor(com.example.bledot.R.color.main)
+        leftAxis.textColor = Color.BLACK
         leftAxis.setDrawGridLines(true)
-        leftAxis.gridColor = resources.getColor(com.example.bledot.R.color.main)
+        leftAxis.gridColor = Color.BLACK
 
         val rightAxis = chart.axisRight
         rightAxis.isEnabled = false
@@ -318,38 +310,38 @@ class RealtimeFragment : Fragment() {
     }
 
     private fun createSet(): LineDataSet {
-        val set = LineDataSet(null, "Data Set 1")
+        val set = LineDataSet(null, "Roll") // X
         set.lineWidth = 1f
         set.setDrawValues(false)
-        set.valueTextColor = Color.WHITE
-        set.color = Color.WHITE
-        set.mode = LineDataSet.Mode.LINEAR
+        set.valueTextColor = Color.rgb(243,101,75)
+        set.color = Color.rgb(243,101,75)
+        set.mode = LineDataSet.Mode.CUBIC_BEZIER
         set.setDrawCircles(false)
-        set.highLightColor = Color.rgb(190, 190, 190)
+        //set.highLightColor = Color.rgb(190, 190, 190)
         return set
     }
 
     private fun createSet2(): LineDataSet {
-        val set = LineDataSet(null, "Data Set 2")
+        val set = LineDataSet(null, "Pitch") // Y
         set.lineWidth = 1f
         set.setDrawValues(false)
-        set.valueTextColor = Color.RED
-        set.color = Color.RED
-        set.mode = LineDataSet.Mode.LINEAR
+        set.valueTextColor = Color.rgb(91,209,178)
+        set.color = Color.rgb(91,209,178)
+        set.mode = LineDataSet.Mode.CUBIC_BEZIER
         set.setDrawCircles(false)
-        set.highLightColor = Color.rgb(190, 190, 190)
+        //set.highLightColor = Color.rgb(190, 190, 190)
         return set
     }
 
     private fun createSet3(): LineDataSet {
-        val set = LineDataSet(null, "Data Set 3")
+        val set = LineDataSet(null, "Yaw") // Z
         set.lineWidth = 1f
         set.setDrawValues(false)
-        set.valueTextColor = Color.GREEN
-        set.color = Color.GREEN
-        set.mode = LineDataSet.Mode.LINEAR
+        set.valueTextColor = Color.rgb(23,145,253)
+        set.color = Color.rgb(23,145,253)
+        set.mode = LineDataSet.Mode.CUBIC_BEZIER
         set.setDrawCircles(false)
-        set.highLightColor = Color.rgb(190, 190, 190)
+        //set.highLightColor = Color.rgb(255, 255, 0)
         return set
     }
 
