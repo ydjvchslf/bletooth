@@ -48,6 +48,7 @@ class BleViewHolder(binding: LayoutBleItemBinding): RecyclerView.ViewHolder(bind
         }
 
         battery.text = bleDevice.batteryPercent.toString()+"%"
+        battery.visibility = View.VISIBLE
         connectCircle.visibility = View.VISIBLE
     }
 }
