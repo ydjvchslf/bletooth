@@ -1,215 +1,99 @@
 
+<html>
 
+<head>
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=euc-kr" />
+    <title>����</title>
+</head>
+
+<body>
+
+<div style="font-size: 17; font-family: Arial; text-align : center;">
+    Anteroposterior
+</div>
 <div>
     <canvas id="myChart" width="100%" height="100%"></canvas>
 </div>
 
-<button type="button" onclick="fn_stop()">stop</button>
-<p> <canvas id="timeline" width="300" height="300"></canvas> </p>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
-    // 첫번째 그래프
-    const ctx = document.getElementById('myChart');
-    const myChart = new Chart(ctx, {
-      type: 'scatter',
-      data:{
-        datasets: [{
-          label: '라벨 이름',
-          data:
-            [
-            ],
-          backgroundColor: 'rgb(255, 99, 132)' // 점 색상
-        }],
-      },
-      options: {
-        scales: {
-          x: {
-            type: 'linear',
-            position: 'center',
-            suggestedMin: -100,
-            suggestedMax: 100,
-            border: {
-              color: 'rgb(0, 0, 0)'
+      // ù��° �׷���
+      const ctx = document.getElementById('myChart');
+      const myChart = new Chart(ctx, {
+        type: 'scatter',
+        data:{
+          datasets: [{
+            label: '�� �̸�',
+            data:
+              [],
+            backgroundColor: 'rgb(40,166,225)' // �� ����
+          }],
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: false // �� display
             }
           },
-          y: {
-            type: 'linear',
-            position: 'center',
-            suggestedMin: -100,
-            suggestedMax: 100,
-            border: {
-              color: 'rgb(0, 0, 0)'
+          scales: {
+            x: {
+              title: {
+                align:'end',
+                display: true,
+                text: 'Lateral',
+                color: 'rgb(0, 0, 0)',
+                font: {
+                  fontFamily: 'Arial',
+                  size: 17
+                },
+              },
+              type: 'linear',
+              position: 'center',
+              suggestedMin: -100,
+              suggestedMax: 100,
+              border: {
+                color: 'rgb(0, 0, 0)'
+              }
+            },
+            y: {
+              title: {
+                //display: true,
+                //text: 'Anteroposterior',
+                font: {
+                  size: 17
+                },
+              },
+              type: 'linear',
+              position: 'center',
+              suggestedMin: -100,
+              suggestedMax: 100,
+              border: {
+                color: 'rgb(0, 0, 0)'
+              }
             }
           }
         }
-      }
-    });
+      });
 
+     function addDataList(dataList) {
+       console.log("addDataList-()")
+          // deleteAllData
+           var data = myChart.data.datasets[0].data // = []
 
-   function addDataList(dataList) {
-     console.log("addDataList-()")
-        // deleteAllData
-         var data = myChart.data.datasets[0].data // = []
-
-        for (i in dataList) {
-            var xValue = dataList[i].xValue
-            var yValue = dataList[i].yValue
-            data.push({x: xValue,
-                       y: yValue})
-        }
-         myChart.update();
-  }
-
-   myChart.options.animation = false;
-
-
-   /////////////////////// 두번째 그래프 ///////////////////////
-    //timeline
-    const canvas2 = document.getElementById('timeline');
-    const ctx2 = canvas2.getContext("2d");
-
-  // context, 가로, 세로, 현재 x, 간격
-  fn_draw_xAxis(ctx2, 300, 300, 0, 50);
-
-    // context, 가로, 세로, 현재 x, 간격
-    function fn_draw_xAxis(ctx, w, h, currX, intv){
-
-        let halfH = h/2; // 150
-        let halfW = w/2; // 200
-
-        ctx.lineWidth=0.3;
-
-        //가로선
-        let intY = 30 //parseInt(halfH/5); // 30 (y 간격)
-
-        let posY = intY;
-
-        while(posY < h){ // 30 < 300 / 60 < 300
-
-            ctx.beginPath();
-            ctx.moveTo(30, posY); // (0, 30) / (0, 60)
-            ctx.lineTo(300, posY); // (400, 30) / (400, 60)
-            ctx.stroke();
-
-            ctx.font = '12px sherif';
-            ctx.strokeText(transferXAxis(posY), 0, posY+3);
-
-            posY += intY;
-
-        }
-
+          for (i in dataList) {
+              var xValue = dataList[i].xValue
+              var yValue = dataList[i].yValue
+              data.push({x: xValue,
+                         y: yValue})
+          }
+           myChart.update();
     }
 
-  function transferXAxis(posY) {
-      let std = 150;
-      return (std - posY)
-  }
+     myChart.options.animation = false;
 
-    // 버튼 이벤트
-    function fn_start(){
-        timerId = setInterval(fn_draw_next, 5);
-    }
-    function fn_stop(){
-        clearInterval(timerId);
-    }
+    </script>
 
+</body>
 
-
-
-    //시간 x축 시작점인가?
-    var time_x = 0;
-
-    var timerId;
-
-    var arrX=[];
-    var arrY=[];
-    var arrZ=[];
-
-    function fn_draw_next(xyzData){
-
-        let std = 150;
-
-        x = 150 - (xyzData.xValue)
-	    y = 150 - (xyzData.yValue)
-	    z = 150 - (xyzData.zValue)
-
-	    arrX.push(x);
-	    arrY.push(y);
-        arrZ.push(z);
-
-        console.log("arrX => " + arrX);
-        console.log("arrY => " + arrY);
-        console.log("arrZ => " + arrZ);
-
-        fn_draw_timeline();
-
-    }
-
-
-    function fn_draw_timeline(){
-
-      let w = canvas2.width; // 가로
-      let h = canvas2.height; // 세로
-
-      //double buffering
-      var bufferCanvas = document.createElement('canvas');
-      var ctxBuffer = bufferCanvas.getContext("2d");
-      ctxBuffer.canvas.width = w;
-      ctxBuffer.canvas.height = h;
-      fn_draw_xAxis(ctxBuffer, w, h, time_x, 50);
-
-      let posX = (time_x < w - 1) ? 0 : (time_x - w + 1);
-      console.log("posX: "+posX);
-
-      fn_draw_eachData(0, ctxBuffer, posX, w)
-      fn_draw_eachData(1, ctxBuffer, posX, w)
-      fn_draw_eachData(2, ctxBuffer, posX, w)
-
-      //canvas 초기화 (사각형 영역 지우기)
-      ctx2.clearRect(0, 0, w, h);
-      //변경된 내용 업데이트
-      ctx2.drawImage(bufferCanvas, 0, 0);
-
-      time_x ++;
-    }
-
-    function fn_draw_eachData(xyz, ctxBuffer, posX, w) {
-
-      let color = '';
-      let graph = [];
-
-      if (xyz == 0) {
-        color = 'red';
-        graph = arrX;
-      } else if (xyz == 1) {
-        color = 'green';
-        graph = arrY;
-      } else if (xyz == 2) {
-        color = 'blue';
-        graph = arrZ;
-      }
-
-      //색상지정
-      ctxBuffer.strokeStyle = color;
-      ctxBuffer.lineWidth = 1;
-      ctxBuffer.beginPath();
-
-      posX = (time_x < w - 1) ? 0 : (time_x - w + 1);
-      scrX = 30; // x축 시작점
-
-      while(posX < graph.length - 1){
-          ctxBuffer.moveTo(scrX, graph[posX]);
-          ctxBuffer.lineTo(scrX+1, graph[posX+1]);
-          posX++;
-          scrX++;
-      }
-      ctxBuffer.stroke();
-
-    }
-
-
-
-
-</script>
+</html>
