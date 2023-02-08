@@ -1,6 +1,5 @@
 package com.example.bledot.realtime
 
-import android.R
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Color
@@ -10,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView.setWebContentsDebuggingEnabled
 import android.widget.Toast
-import androidx.core.graphics.toColorInt
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,17 +18,17 @@ import com.example.bledot.ble.BleViewModel
 import com.example.bledot.data.XYZData
 import com.example.bledot.databinding.FragmentRealtimeBinding
 import com.example.bledot.util.BleDebugLog
-import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.Legend.LegendVerticalAlignment
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.Gson
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
 
 
@@ -74,6 +72,8 @@ class RealtimeFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
         // 차트 기본 세팅
         settingRealtimeChart()
+        // 기기 연결 확인
+        checkConnection()
         // temp btn
         binding.tempBtn.setOnClickListener {
             activity?.runOnUiThread {
@@ -167,9 +167,11 @@ class RealtimeFragment : Fragment() {
 
         bleViewModel.data2Listener = { xyzData ->
             BleDebugLog.d(logTag, "2번 그래프 Listener")
-            val jsonXYZData = Gson().toJson(xyzData)
-            activity?.runOnUiThread { // 웹뷰 표시용 (UI 메인쓰레드에서) Streaming 그래프
-                binding.realWebView.loadUrl("javascript:fn_draw_next($jsonXYZData)")
+            activity?.runOnUiThread {
+                val xValue = xyzData.xValue
+                val yValue = xyzData.yValue
+                val zValue = xyzData.zValue
+                addEntry(xValue, yValue, zValue)
             }
         }
     }
@@ -267,9 +269,9 @@ class RealtimeFragment : Fragment() {
         val l = chart.legend
         l.isEnabled = true
         l.formSize = 10f // set the size of the legend forms/shapes
-
         l.textSize = 12f
         l.textColor = Color.BLACK // label color
+        //l.verticalAlignment = LegendVerticalAlignment.TOP // label 위치
 
         //Y축
         val leftAxis = chart.axisLeft
@@ -289,8 +291,6 @@ class RealtimeFragment : Fragment() {
 
     private fun addEntry(num: Double, num2: Double, num3: Double) {
         BleDebugLog.i(logTag, "addEntry-()")
-        BleDebugLog.d(logTag, "num: $num")
-        BleDebugLog.d(logTag, "num2: $num2")
 
         val entry = Entry(set.entryCount.toFloat(), num.toFloat())
         val entry2 = Entry(set2.entryCount.toFloat(), num2.toFloat())
@@ -304,14 +304,14 @@ class RealtimeFragment : Fragment() {
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged()
-        chart.setVisibleXRangeMaximum(10.0f)
+        chart.setVisibleXRangeMaximum(50.0f)
         // this automatically refreshes the chart (calls invalidate())
         chart.moveViewTo(data.entryCount.toFloat(), 50f, YAxis.AxisDependency.LEFT)
     }
 
     private fun createSet(): LineDataSet {
         val set = LineDataSet(null, "Roll") // X
-        set.lineWidth = 1f
+        set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(243,101,75)
         set.color = Color.rgb(243,101,75)
@@ -323,7 +323,7 @@ class RealtimeFragment : Fragment() {
 
     private fun createSet2(): LineDataSet {
         val set = LineDataSet(null, "Pitch") // Y
-        set.lineWidth = 1f
+        set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(91,209,178)
         set.color = Color.rgb(91,209,178)
@@ -335,7 +335,7 @@ class RealtimeFragment : Fragment() {
 
     private fun createSet3(): LineDataSet {
         val set = LineDataSet(null, "Yaw") // Z
-        set.lineWidth = 1f
+        set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(23,145,253)
         set.color = Color.rgb(23,145,253)
@@ -343,6 +343,19 @@ class RealtimeFragment : Fragment() {
         set.setDrawCircles(false)
         //set.highLightColor = Color.rgb(255, 255, 0)
         return set
+    }
+
+    private fun checkConnection() {
+        BleDebugLog.i(logTag, "checkConnection-()")
+        val device = bleViewModel.mConnectedXsDevice.value// 0 미연결, 2 연결
+        BleDebugLog.d(logTag, "device: $device")
+
+        device?.let {
+            if (it.connectionState == 2) {
+                BleDebugLog.i(logTag, "Bluetooth 연결 중")
+                bleViewModel.startMeasure(it)
+            }
+        }
     }
 
     override fun onDestroy() {

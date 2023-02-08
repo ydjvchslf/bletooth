@@ -42,7 +42,7 @@ class RealtimeViewModel: ViewModel() {
         BleDebugLog.i(logTag, "init-()")
         BleDebugLog.d(logTag, "isWearingOption: $isWearingOption")
         // Remove XsensDotLogger objects from list before start data logging.
-        mLoggerList?.value?.clear()
+        mLoggerList.value?.clear()
     }
 
     fun createFile(xsDevice: XsensDotDevice) {

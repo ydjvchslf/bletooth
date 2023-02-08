@@ -155,7 +155,7 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             val zEuler = String.format("%.6f", eulerAngles[2]).toDouble()
 
             BleDebugLog.d(logTag, "xEuler: $xEuler, yEuler: $yEuler, zEuler: $zEuler")
-/*
+
             if (xyzData50List.size < 50) {
                 xyzData50List.add(XYZData(xEuler, yEuler, zEuler))
                 //if(xyzData50List.size == 20){
@@ -169,9 +169,8 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             // 모듈러 연산
 
             // data 파일에 업데이트
-            updateFiles(address!!, xsData)
+            //updateFiles(address!!, xsData)
 
- */
         }
     }
 
