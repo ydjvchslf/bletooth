@@ -128,7 +128,7 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
 
                 bleViewModel.connectSensor(xsDevice)
             } else { // 선택된 device 연결상태 or 다른 것이 연결 상태 -> 연결 끊기
-                Toast.makeText(context, "여기선 조작불가", Toast.LENGTH_SHORT).show()
+                BleDebugLog.d(logTag, "여기선 조작 불가")
             //BleDebugLog.d(logTag, "=====연결끊기")
                 //bleViewModel.disconnectAllSensor {}
             }
@@ -165,6 +165,11 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
         }
         // 이미 연결 중 layout 에서 연결 끊기
         binding.disconnectTextView.setOnClickListener {
+            bleViewModel.disconnectAllSensor()
+            bleViewModel.BLE_STATE.value = (BleState.NOT_SCANNED)
+        }
+        // 처음 연결 후 layout 에서 연결 끊기
+        binding.disconnectTextView2.setOnClickListener {
             bleViewModel.disconnectAllSensor()
             bleViewModel.BLE_STATE.value = (BleState.NOT_SCANNED)
         }

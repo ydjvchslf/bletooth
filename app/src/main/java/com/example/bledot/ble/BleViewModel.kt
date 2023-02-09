@@ -100,6 +100,12 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             mConnectedXsDevice.value = null
             return
         }
+        if(this.BLE_STATE.value == BleState.SCAN_COMPLETE_CONNECTED){
+            BLE_STATE.value = (BleState.NOT_SCANNED)
+            mConnectionState.value = 0
+            mConnectedXsDevice.value = null
+            return
+        }
         BLE_STATE.value = (BleState.SCAN_COMPLETE_DISCONNECTED)
     }
 

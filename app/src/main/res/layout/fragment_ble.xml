@@ -399,6 +399,19 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <TextView
+                        android:id="@+id/disconnect_textView_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/scan_btn"
+                        app:layout_constraintEnd_toEndOf="@id/scan_btn"
+                        app:layout_constraintBottom_toBottomOf="@id/scan_btn"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="50dp"
+                        android:text="Disconnect"
+                        android:textColor="@color/main"
+                        android:visibility="@{viewModel.BLE_STATE == bleState.SCAN_COMPLETE_CONNECTED ? View.VISIBLE : View.GONE}"/>
+
                     <Button
                         android:id="@+id/scan_btn"
                         android:layout_width="300dp"
@@ -410,7 +423,7 @@
                         android:text="scan start"
                         android:textColor="@color/white"
                         android:background="@drawable/blue_btn_rounded_corner_rectangle"
-                        android:visibility="@{(viewModel.BLE_STATE == bleState.NOT_SCANNED) || (viewModel.BLE_STATE == bleState.SCANNING) || (viewModel.BLE_STATE == bleState.SCAN_COMPLETE_CONNECTED) || (viewModel.BLE_STATE == bleState.SCAN_COMPLETE_DISCONNECTED) ? View.VISIBLE : View.GONE}"/>
+                        android:visibility="@{(viewModel.BLE_STATE == bleState.NOT_SCANNED) || (viewModel.BLE_STATE == bleState.SCANNING) || (viewModel.BLE_STATE == bleState.SCAN_COMPLETE_DISCONNECTED) ? View.VISIBLE : View.GONE}"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
