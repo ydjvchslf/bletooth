@@ -31,12 +31,8 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
     var BLE_STATE = MutableLiveData(BleState.NOT_SCANNED)
     // 스캔 작업 히스토리 여부
     var hasScanHistory = false
-    // 스캔 중
-    var isScanning = false
-    // 연결 중
-    var isConnecting = false
-    // 끊기 중
-    var isDisconnecting = false
+    // 녹화 중
+    var isRecording = false
 
     // data 리스너
     var dataListener : ((XYZData) -> Unit)? = null
@@ -175,8 +171,10 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             // 모듈러 연산
 
             // data 파일에 업데이트
-            //updateFiles(address!!, xsData)
-
+            // 녹화 시작일 때만
+            if (isRecording && address != null) {
+                updateFiles(address, xsData)
+            }
         }
     }
 

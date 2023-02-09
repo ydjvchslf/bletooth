@@ -27,16 +27,10 @@ import kotlin.collections.HashMap
 class RealtimeViewModel: ViewModel() {
 
     private val logTag = RealtimeViewModel::class.simpleName
-    private var mManager: XsensDotRecordingManager? = null
-    private var internalList: ArrayList<XsensDotRecordingFileInfo>? = null
-    private var byteIds: ByteArray? = null
-    private var xsLogger: XsensDotLogger? = null
-    // A list contains tag and data from each sensor
-    private var mDataList: ArrayList<HashMap<String?, Any>>? = null
-    // A list contains mac address and XsensDotLogger object -> 전역변수로 이동
-    //private var mLoggerList: ArrayList<HashMap<String, Any>>? = null
     var isWearingOption: Boolean = false
     var isRecording = MutableLiveData(false)
+    var filename = ""
+    var fileFullName = ""
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -54,26 +48,25 @@ class RealtimeViewModel: ViewModel() {
         val fwVersion = xsDevice.firmwareVersion
         val address = xsDevice.address
         val tag = xsDevice.tag.ifEmpty { xsDevice.name }
-        var filename = ""
 
         // Store log file in app internal folder.
         // Don't need user to granted the storage permission.
         val dir: File = App.context().getExternalFilesDir(null)!!
-        filename = dir.absolutePath +
-                    File.separator +
-                    tag + "_" +
+        val filePath = dir.absolutePath + File.separator
+        filename = tag + "_" +
                     SimpleDateFormat(
                     "yyyyMMdd_HHmmss_SSS",
                     Locale.getDefault()
                     ).format(Date()) +
                     ".csv"
+        fileFullName = filePath + filename
         BleDebugLog.d(logTag, "파일 [$filename] 생성 완료")
 
         val logger = XsensDotLogger(
             App.context(),
             XsensDotLogger.TYPE_CSV,
             XsensDotPayload.PAYLOAD_TYPE_COMPLETE_EULER,
-            filename,
+            fileFullName,
             tag,
             fwVersion,
             xsDevice.isSynced,

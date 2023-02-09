@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.Gson
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import java.io.File
 import java.util.*
 import kotlin.concurrent.timer
 
@@ -90,19 +91,39 @@ class RealtimeFragment : Fragment() {
         }
         // recording start btn
         binding.recordBtn.setOnClickListener {
-            BleDebugLog.i(logTag, "녹화 Start")
+            BleDebugLog.i(logTag, "녹화 Start Clicked-()")
+
+            if (bleViewModel.mConnectedXsDevice.value == null) {
+                Toast.makeText(App.context(), "기기 먼저 연결하세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             realtimeViewModel.isRecording.value = true
             BleDebugLog.i(logTag, "isRecording: ${realtimeViewModel.isRecording.value}")
             binding.realWebView.loadUrl("javascript:clearChart()")
             startTimer()
+            bleViewModel.mConnectedXsDevice.value?.let {
+                realtimeViewModel.createFile(it)
+                bleViewModel.isRecording = true
+            }
         }
         // recording stop btn
         binding.icStopBtn.setOnClickListener {
-            BleDebugLog.i(logTag, "녹화 Stop")
+            BleDebugLog.i(logTag, "녹화 Stop Clicked-()")
+
             realtimeViewModel.isRecording.value = false
+            bleViewModel.isRecording = true
             BleDebugLog.i(logTag, "isRecording: ${realtimeViewModel.isRecording.value}")
             stopTimer()
-            showDialog("New Data", "Do you want to upload to the server?")
+            bleViewModel.mConnectedXsDevice.value?.let {
+                bleViewModel.stopMeasure(it)
+                realtimeViewModel.closeFiles()
+            }
+
+            // 현재 저장한 파일명 확실히 있는지 체크 후 dialog 에 표출하기
+            val isExist = checkCurrentData(realtimeViewModel.fileFullName)
+            if (isExist) {
+                showDialog("New Data", "${realtimeViewModel.filename}\nDo you want to upload to the server?")
+            }
         }
         // zeroing
         binding.zeroing.setOnClickListener {
@@ -134,12 +155,14 @@ class RealtimeFragment : Fragment() {
                 }
                 else -> {
                     bleViewModel.stopMeasure(bleViewModel.mConnectedXsDevice.value!!)
-                    binding.realWebView.loadUrl("javascript:stopStreaming()")
                 }
             }
         }
         binding.fileSaveBtn.setOnClickListener {
-            realtimeViewModel.createFile(bleViewModel.mConnectedXsDevice.value!!)
+            bleViewModel.mConnectedXsDevice.value?.let {
+                realtimeViewModel.createFile(it)
+                bleViewModel.isRecording = true
+            }
         }
         binding.fileCloseBtn.setOnClickListener {
             realtimeViewModel.closeFiles()
@@ -218,9 +241,28 @@ class RealtimeFragment : Fragment() {
             setMessage(subTitle)
             setPositiveButton("Action") { _, _ ->
                 resetTimer()
+                // TODO:: 서버 업로드
+                showCompleteDialog("Complete", "The data uploaded to the server.")
             }
             setNegativeButton("Cancel") { _, _ ->
                 resetTimer()
+                // TODO:: 현재 데이터 삭제
+                // 초기화
+                binding.realWebView.loadUrl("javascript:clearChart()")
+                checkConnection()
+            }
+        }
+        builder.create().show()
+    }
+
+    private fun showCompleteDialog(title: String, subTitle: String) {
+        val builder = AlertDialog.Builder(context).apply {
+            setTitle(title)
+            setMessage(subTitle)
+            setPositiveButton("Action") { _, _ ->
+                // TODO:: 초기화
+                binding.realWebView.loadUrl("javascript:clearChart()")
+                checkConnection()
             }
         }
         builder.create().show()
@@ -357,6 +399,12 @@ class RealtimeFragment : Fragment() {
                 bleViewModel.startMeasure(it)
             }
         }
+    }
+
+    private fun checkCurrentData(pathAndName: String): Boolean {
+        BleDebugLog.i(logTag, "checkCurrentData-()")
+        val file = File(pathAndName)
+        return file.exists()
     }
 
     override fun onDestroy() {
