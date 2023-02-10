@@ -1,7 +1,7 @@
 package com.example.bledot.realtime
 
-import android.annotation.SuppressLint
-import android.util.Log
+import android.os.Environment
+import android.os.StatFs
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bledot.App
@@ -9,20 +9,15 @@ import com.example.bledot.BuildConfig
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.KEY_LOGGER
 import com.example.bledot.util.mLoggerList
-import com.xsens.dot.android.sdk.events.XsensDotData
-import com.xsens.dot.android.sdk.interfaces.XsensDotRecordingCallback
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
-import com.xsens.dot.android.sdk.models.XsensDotRecordingFileInfo
-import com.xsens.dot.android.sdk.models.XsensDotRecordingState
-import com.xsens.dot.android.sdk.recording.XsensDotRecordingManager
 import com.xsens.dot.android.sdk.utils.XsensDotLogger
 import java.io.File
-import java.security.AccessController.getContext
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
+import kotlin.math.pow
+
 
 class RealtimeViewModel: ViewModel() {
 
@@ -100,4 +95,53 @@ class RealtimeViewModel: ViewModel() {
             logger.stop()
         }
     }
+
+    fun getExternalMemory() {
+        BleDebugLog.i(logTag, "getExternalMemory-()")
+        val externalMemory = checkExternalStorageAllMemory()
+        val externalAvailableMemory = checkExternalAvailableMemory()
+
+        externalMemory?.let {
+            BleDebugLog.d(logTag, "allMemory: ${getFileSize(it)}")
+        }
+
+        externalAvailableMemory?.let {
+            BleDebugLog.d(logTag, "available: ${getFileSize(it)}")
+        }
+    }
+
+    private fun isExternalMemoryAvailable(): Boolean {
+        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    }
+
+    private fun checkExternalStorageAllMemory(): Long? {
+        return if (isExternalMemoryAvailable()) {
+            val stat = StatFs(Environment.getExternalStorageDirectory().path)
+            val blockSize = stat.blockSizeLong
+            val totalBlocks = stat.blockCountLong
+            totalBlocks * blockSize
+        } else {
+            null
+        }
+    }
+
+    private fun checkExternalAvailableMemory(): Long? {
+        return if (isExternalMemoryAvailable()) {
+            val file = Environment.getExternalStorageDirectory()
+            val stat = StatFs(file.path)
+            val blockSize = stat.blockSizeLong
+            val availableBlocks = stat.availableBlocksLong
+            availableBlocks * blockSize
+        } else {
+            null
+        }
+    }
+
+    private fun getFileSize(size: Long): String {
+        if (size <= 0) return "0"
+        val units = arrayOf("B", "KB", "MB", "GB", "TB")
+        val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
+        return DecimalFormat("#,##0.#").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
+    }
+
 }

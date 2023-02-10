@@ -75,6 +75,8 @@ class RealtimeFragment : Fragment() {
         settingRealtimeChart()
         // 기기 연결 확인
         checkConnection()
+        // 외장 메모리 용량 체크
+        checkExternalStorage()
         // temp btn
         binding.tempBtn.setOnClickListener {
             activity?.runOnUiThread {
@@ -405,6 +407,10 @@ class RealtimeFragment : Fragment() {
         BleDebugLog.i(logTag, "checkCurrentData-()")
         val file = File(pathAndName)
         return file.exists()
+    }
+
+    private fun checkExternalStorage() {
+        realtimeViewModel.getExternalMemory()
     }
 
     override fun onDestroy() {
