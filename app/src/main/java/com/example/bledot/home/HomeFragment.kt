@@ -5,15 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
-import com.example.bledot.App
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentHomeBinding
 import com.example.bledot.util.BleDebugLog
-import java.io.File
 
 
 class HomeFragment : Fragment() {
@@ -54,34 +53,18 @@ class HomeFragment : Fragment() {
         }
 
         // 미전송 데이터 확인
-        isExistData()
+        checkData()
     }
 
-    private fun isExistData() {
-        BleDebugLog.i(logTag, "isExistData-()")
-        val dir: File? = App.context().getExternalFilesDir(null)
-        val path = dir?.absolutePath + File.separator
-
-        BleDebugLog.d(logTag, "path: $path")
-
-        val directory = File(path)
-        val files = directory.listFiles()
-
-        val filesNameList = ArrayList<String>()
-
-        files?.forEach { file ->
-            filesNameList.add(file.name)
-        }
-
-        val dataNum = filesNameList.size
-        BleDebugLog.d(logTag, "dataNum: $dataNum")
-
-        if (0 < dataNum) {
-            // 파일이 1개 이상 존재 시, 다이얼로그 띄워줌
-            showDialog("Data not uploaded",
-                "$dataNum data found\n" +
-                        "Do you want to re-upload?\n" +
-                        "If you cancel, all data will be cleared.")
+    private fun checkData() {
+        homeViewModel.isExistData {
+            if (0 < it) {
+                // 파일이 1개 이상 존재 시, 다이얼로그 띄워줌
+                showDialog("Data not uploaded",
+                    "$it data found\n" +
+                            "Do you want to re-upload?\n" +
+                            "If you cancel, all data will be cleared.")
+            }
         }
     }
 
@@ -91,9 +74,16 @@ class HomeFragment : Fragment() {
             setMessage(subTitle)
             setPositiveButton("Upload") { _, _ ->
                 // TODO:: 데이터 하나씩 업로드
+                // 업로드 후 Re-Check
+                checkData()
             }
             setNegativeButton("Cancel") { _, _ ->
-                // TODO:: 데이터 모두 삭제
+                homeViewModel.deleteAllData {
+                    if (it) {
+                        // 모두 삭제 후 Re-Check
+                        checkData()
+                    }
+                }
             }
         }
         builder.create().show()
