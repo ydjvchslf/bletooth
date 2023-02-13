@@ -244,11 +244,18 @@ class RealtimeFragment : Fragment() {
             setPositiveButton("Action") { _, _ ->
                 resetTimer()
                 // TODO:: 서버 업로드
-                showCompleteDialog("Complete", "The data uploaded to the server.")
+                realtimeViewModel.uploadToServer {
+                    if (it) {
+                        showCompleteDialog("Complete", "The data uploaded to the server.")
+                    } else {
+                        showCompleteDialog("Warning", "The data failed to upload to the server.")
+                    }
+                }
             }
             setNegativeButton("Cancel") { _, _ ->
                 resetTimer()
                 // TODO:: 현재 데이터 삭제
+                realtimeViewModel.deleteData()
                 // 초기화
                 binding.realWebView.loadUrl("javascript:clearChart()")
                 checkConnection()

@@ -4,14 +4,17 @@ import android.os.Environment
 import android.os.StatFs
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.bledot.App
 import com.example.bledot.BuildConfig
+import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.KEY_LOGGER
 import com.example.bledot.util.mLoggerList
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
 import com.xsens.dot.android.sdk.utils.XsensDotLogger
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -22,6 +25,7 @@ import kotlin.math.pow
 class RealtimeViewModel: ViewModel() {
 
     private val logTag = RealtimeViewModel::class.simpleName
+    private val remoteDataSource = RemoteDataSource()
     var isWearingOption: Boolean = false
     var isRecording = MutableLiveData(false)
     var filename = ""
@@ -142,6 +146,59 @@ class RealtimeViewModel: ViewModel() {
         val units = arrayOf("B", "KB", "MB", "GB", "TB")
         val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
         return DecimalFormat("#,##0.#").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
+    }
+
+    fun uploadToServer(callBack: (Boolean) -> Unit) {
+        BleDebugLog.i(logTag, "uploadData-()")
+        viewModelScope.launch {
+            val directory = File(fileFullName)
+            var isSuccess = false
+
+            directory.let {
+                // userId, file 넣어서 Post 호출
+                remoteDataSource.uploadToServer("abc@naver.com", it) { result ->
+                    if (result) {
+                        BleDebugLog.d(logTag, "[${it.name}] 업로드 성공!")
+                        // 업로드 성공 후 데이터 지우기
+                        it.delete()
+                        isSuccess = true
+                    } else {
+                        BleDebugLog.d(logTag, "[${it.name}] 업로드 실패")
+                        isSuccess = false
+                    }
+                }
+            }
+            callBack.invoke(isSuccess)
+        }
+    }
+
+    fun deleteData() {
+        BleDebugLog.i(logTag, "deleteData-()")
+        viewModelScope.launch {
+            val directory = File(fileFullName)
+            directory.delete()
+            checkDataNum()
+        }
+    }
+
+    private fun checkDataNum() {
+        BleDebugLog.i(logTag, "checkDataNum-()")
+
+        val dir: File? = App.context().getExternalFilesDir(null)
+        val filePath = dir?.absolutePath + File.separator
+
+        val directory = File(filePath)
+        val files = directory.listFiles()
+
+        val filesNameList = ArrayList<String>()
+
+        files?.forEach { file ->
+            BleDebugLog.d(logTag, "file.name: ${file.name}")
+            filesNameList.add(file.name)
+        }
+
+        val dataNum = filesNameList.size
+        BleDebugLog.d(logTag, "dataNum: $dataNum")
     }
 
 }
