@@ -69,4 +69,29 @@ class HomeViewModel : ViewModel() {
 
         result.invoke(true)
     }
+
+    fun uploadData(callBack: (Boolean) -> Unit) {
+        BleDebugLog.i(logTag, "uploadData-()")
+        viewModelScope.launch {
+            val directory = File(path)
+            val files = directory.listFiles()
+            var isSuccess = false
+
+            files?.forEach {
+                // userId, file 넣어서 Post 호출
+                remoteDataSource.uploadToServer("abc@naver.com", it) { result ->
+                    if (result) {
+                        BleDebugLog.d(logTag, "[${it.name}] 업로드 성공!")
+                        // 업로드 성공 후 데이터 지우기
+                        it.delete()
+                        isSuccess = true
+                    } else {
+                        BleDebugLog.d(logTag, "[${it.name}] 업로드 실패")
+                        isSuccess = false
+                    }
+                }
+            }
+            callBack.invoke(isSuccess)
+        }
+    }
 }

@@ -14,6 +14,7 @@ const val KEY_TAG = "KEY_TAG"
 const val KEY_DATA = "KEY_DATA"
 
 //const val BASE_URL = "https://fakestoreapi.com"
-const val BASE_URL = "http://192.168.1.250:8080"
+const val BASE_URL = "http://httpbin.org"
+//const val BASE_URL = "http://192.168.1.250:8080"
 
 var userId = MutableLiveData("")

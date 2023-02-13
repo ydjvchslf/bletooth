@@ -1,7 +1,14 @@
 package com.example.bledot.retrofit
 
-import com.example.bledot.data.*
+import com.example.bledot.data.Product
+import com.example.bledot.data.UserInfoEntity
+import com.example.bledot.data.toEntity
 import com.example.bledot.util.BleDebugLog
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
+
 
 class RemoteDataSource {
 
@@ -101,6 +108,41 @@ class RemoteDataSource {
             else -> { }
         }
     */
+    }
+
+    suspend fun uploadToServer(email: String, file: File, resultCallback: (Boolean) -> Unit) {
+        BleDebugLog.w(logTag, "uploadToServer-()")
+
+        // multipart 작업
+        val formId = MultipartBody.Part.createFormData("email", email)
+
+        val requestBody = RequestBody.create(MediaType.parse("text/csv"), file)
+        val multipartBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
+
+        val response = retrofitService.uploadData(formId, multipartBody)
+
+        when (response) {
+            is Result.Success -> { // Success<T>(val code: Int, val data: T)
+                BleDebugLog.i(logTag, "Api Success!!")
+                // response.code = 200, response.data = response.body()
+                val resBody = response.data
+                BleDebugLog.d(logTag, "resBody: $resBody")
+                resultCallback.invoke(true)
+            }
+            is Result.ApiError -> { // ApiError<T>(val code: Int, val message: String)
+                BleDebugLog.i(logTag, "ApiError!!")
+                // response.code = 400대, response.message()
+                BleDebugLog.d(logTag, "Error Code: [${response.code}], message: ${response.message}")
+                resultCallback.invoke(false)
+            }
+            is Result.NetworkError -> { // NetworkError<T>(val throwable: Throwable)
+                BleDebugLog.i(logTag, "NetworkError!!")
+                // throwable
+                BleDebugLog.d(logTag, "${response.throwable}")
+                resultCallback.invoke(false)
+            }
+            else -> { resultCallback.invoke(false) }
+        }
     }
 
     private fun sampleUserEntity(): UserInfoEntity {

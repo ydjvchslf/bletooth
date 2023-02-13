@@ -73,18 +73,41 @@ class HomeFragment : Fragment() {
             setTitle(title)
             setMessage(subTitle)
             setPositiveButton("Upload") { _, _ ->
-                // TODO:: 데이터 하나씩 업로드
-                // 업로드 후 Re-Check
-                checkData()
+                // 데이터 하나씩 업로드
+                homeViewModel.uploadData { isUploaded ->
+                    if (isUploaded) {
+                        // 업로드 후 Re-Check
+                        homeViewModel.isExistData { dataNum ->
+                            if (dataNum == 0) {
+                                showDialogComplete("Complete", "Data has been uploaded.")
+                            }
+                        }
+                    } else {
+                        checkData()
+                    }
+                }
             }
             setNegativeButton("Cancel") { _, _ ->
                 homeViewModel.deleteAllData {
                     if (it) {
                         // 모두 삭제 후 Re-Check
-                        checkData()
+                        homeViewModel.isExistData { dataNum ->
+                            if (dataNum == 0) {
+                                showDialogComplete("Cleared", "All data has been cleared.")
+                            }
+                        }
                     }
                 }
             }
+        }
+        builder.create().show()
+    }
+
+    private fun showDialogComplete(title: String, subTitle: String) {
+        val builder = AlertDialog.Builder(context).apply {
+            setTitle(title)
+            setMessage(subTitle)
+            setPositiveButton("Action") { _, _ -> }
         }
         builder.create().show()
     }
