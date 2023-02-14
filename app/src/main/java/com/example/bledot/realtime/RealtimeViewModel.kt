@@ -90,13 +90,15 @@ class RealtimeViewModel: ViewModel() {
      */
     fun closeFiles() {
         BleDebugLog.i(logTag, "closeFiles-()")
-        for (map in mLoggerList.value!!) {
-            // Call stop() function to flush and close the output stream.
-            // Data is kept in the stream buffer and write to file when the buffer is full.
-            // Call this function to write data to file whether the buffer is full or not.
-            val logger =
-                map[KEY_LOGGER] as XsensDotLogger
-            logger.stop()
+        mLoggerList.value?.let {
+            for (map in it) {
+                // Call stop() function to flush and close the output stream.
+                // Data is kept in the stream buffer and write to file when the buffer is full.
+                // Call this function to write data to file whether the buffer is full or not.
+                val logger =
+                    map[KEY_LOGGER] as XsensDotLogger
+                logger.stop()
+            }
         }
     }
 
