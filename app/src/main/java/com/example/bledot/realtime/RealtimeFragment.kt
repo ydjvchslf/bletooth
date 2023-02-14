@@ -96,7 +96,7 @@ class RealtimeFragment : Fragment() {
             BleDebugLog.i(logTag, "녹화 Start Clicked-()")
 
             if (bleViewModel.mConnectedXsDevice.value == null) {
-                Toast.makeText(App.context(), "기기 먼저 연결하세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             realtimeViewModel.isRecording.value = true
@@ -131,7 +131,7 @@ class RealtimeFragment : Fragment() {
         binding.zeroing.setOnClickListener {
             when (bleViewModel.mConnectedXsDevice.value) {
                 null -> {
-                    Toast.makeText(App.context(), "기기 먼저 연결하세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     bleViewModel.makeResetZero(bleViewModel.mConnectedXsDevice.value!!)
@@ -142,7 +142,7 @@ class RealtimeFragment : Fragment() {
         binding.start.setOnClickListener {
             when (bleViewModel.mConnectedXsDevice.value) {
                 null -> {
-                    Toast.makeText(App.context(), "기기 먼저 연결하세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     bleViewModel.startMeasure(bleViewModel.mConnectedXsDevice.value!!)
@@ -153,7 +153,7 @@ class RealtimeFragment : Fragment() {
         binding.stop.setOnClickListener {
             when (bleViewModel.mConnectedXsDevice.value) {
                 null -> {
-                    Toast.makeText(App.context(), "기기 먼저 연결하세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     bleViewModel.stopMeasure(bleViewModel.mConnectedXsDevice.value!!)
