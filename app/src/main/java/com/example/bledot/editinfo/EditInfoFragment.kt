@@ -9,9 +9,11 @@ import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentEditInfoBinding
+import com.example.bledot.signup.SignupFragmentDirections
 import com.example.bledot.util.BleDebugLog
 
 class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
@@ -41,6 +43,10 @@ class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
         BleDebugLog.i(logTag, "onViewCreated-()")
         makeDropdownMenu()
         settingCrtUserInfo(arg)
+
+        binding.backBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(EditInfoFragmentDirections.actionEditInfoFragmentToConfigFragment())
+        }
     }
 
     private fun makeDropdownMenu() {

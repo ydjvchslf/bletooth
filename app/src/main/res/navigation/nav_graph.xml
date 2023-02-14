@@ -71,7 +71,7 @@
         <action
             android:id="@+id/action_changePwFragment_to_configFragment"
             app:destination="@id/configFragment"
-            app:popUpTo="@id/changePwFragment"
+            app:popUpTo="@id/configFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -85,7 +85,9 @@
             app:argType="com.example.bledot.data.UserInfoEntity" />
         <action
             android:id="@+id/action_editInfoFragment_to_configFragment"
-            app:destination="@id/configFragment" />
+            app:destination="@id/configFragment"
+            app:popUpTo="@id/configFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

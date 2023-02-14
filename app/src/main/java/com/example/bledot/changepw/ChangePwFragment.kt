@@ -17,6 +17,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentChangePwBinding
+import com.example.bledot.editinfo.EditInfoFragmentDirections
 import com.example.bledot.login.LoginFragmentDirections
 import com.example.bledot.util.BleDebugLog
 import java.util.*
@@ -58,6 +59,10 @@ class ChangePwFragment : Fragment() {
         // 비밀번호 변경 버튼
         binding.changeBtn.setOnClickListener {
             changePassword()
+        }
+        // 뒤로가기 버튼
+        binding.backBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(ChangePwFragmentDirections.actionChangePwFragmentToConfigFragment())
         }
     }
 
