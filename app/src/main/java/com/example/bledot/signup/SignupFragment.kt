@@ -84,6 +84,14 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.signUpBtn.setOnClickListener {
             checkAllFlags()
         }
+
+        binding.backBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(SignupFragmentDirections.actionSignupFragmentToLoginFragment())
+        }
+
+        binding.signInBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(SignupFragmentDirections.actionSignupFragmentToLoginFragment())
+        }
     }
 
     private fun makeDropdownMenu() {
