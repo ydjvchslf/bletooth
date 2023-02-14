@@ -61,6 +61,9 @@
         <action
             android:id="@+id/action_configFragment_to_editInfoFragment"
             app:destination="@id/editInfoFragment" />
+        <action
+            android:id="@+id/action_configFragment_to_withdrawalFragment"
+            app:destination="@id/withdrawalFragment" />
     </fragment>
 
     <fragment
@@ -85,6 +88,18 @@
             app:argType="com.example.bledot.data.UserInfoEntity" />
         <action
             android:id="@+id/action_editInfoFragment_to_configFragment"
+            app:destination="@id/configFragment"
+            app:popUpTo="@id/configFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/withdrawalFragment"
+        android:name="com.example.bledot.withdrawal.WithdrawalFragment"
+        android:label="WithdrawalFragment"
+        tools:layout="@layout/fragment_withdrawal">
+        <action
+            android:id="@+id/action_withdrawalFragment_to_configFragment"
             app:destination="@id/configFragment"
             app:popUpTo="@id/configFragment"
             app:popUpToInclusive="true" />

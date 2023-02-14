@@ -74,6 +74,10 @@ class ConfigFragment : Fragment() {
         binding.changePwBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.changePwFragment)
         }
+        // 탈퇴 버튼
+        binding.leaveBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.withdrawalFragment)
+        }
         // Logout 버튼
         binding.logoutBtn.setOnClickListener {
             showDialog("Logout", "Are you sure to logout?")

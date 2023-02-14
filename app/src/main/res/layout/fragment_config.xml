@@ -84,7 +84,7 @@
             <Button
                 android:id="@+id/membership_btn"
                 android:background="@drawable/grey_btn_rounded_corner_rectangle"
-                android:drawableStart="@drawable/ic_setting_editinfo"
+                android:drawableStart="@drawable/ic_setting_membership"
                 android:paddingStart="20dp"
                 android:layout_width="300dp"
                 android:layout_height="65dp"
@@ -108,6 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
+                android:textColor="@color/main"
                 android:text="Logout" />
 
         </LinearLayout>
