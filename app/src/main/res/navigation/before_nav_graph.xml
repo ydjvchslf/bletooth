@@ -42,7 +42,9 @@
         tools:layout="@layout/fragment_find" >
         <action
             android:id="@+id/action_findFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

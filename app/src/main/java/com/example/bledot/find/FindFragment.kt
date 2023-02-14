@@ -62,7 +62,10 @@ class FindFragment : Fragment() {
             }
         }
         binding.signInBtn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(R.id.loginFragment)
+            Navigation.findNavController(binding.root).navigate(FindFragmentDirections.actionFindFragmentToLoginFragment())
+        }
+        binding.backBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(FindFragmentDirections.actionFindFragmentToLoginFragment())
         }
     }
 
