@@ -162,6 +162,7 @@ class RemoteDataSource {
             "주소4",
             "Korea",
             "2222-33-33"
+            //null
         )
     }
 }

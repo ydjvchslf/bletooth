@@ -25,6 +25,16 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_topbar_arrow_left"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="30dp"/>
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
@@ -47,12 +57,12 @@
             app:layout_constraintBottom_toBottomOf="parent" >
 
             <include
-                layout="@layout/fragment_membership_exist"
-                android:visibility="@{viewModel.membershipDate == null ? View.GONE : View.VISIBLE}"/>
+                android:id="@+id/layout_exist"
+                layout="@layout/fragment_membership_exist"/>
 
             <include
-                layout="@layout/fragment_membership_not_exist"
-                android:visibility="@{viewModel.membershipDate == null ? View.VISIBLE : View.GONE}"/>
+                android:id="@+id/layout_not_exist"
+                layout="@layout/fragment_membership_not_exist"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

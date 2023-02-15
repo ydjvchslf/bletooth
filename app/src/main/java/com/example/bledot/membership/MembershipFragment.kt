@@ -40,12 +40,36 @@ class MembershipFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
 
         arg.membershipDate.let {
-            membershipViewModel.membershipDate = it
-            BleDebugLog.d(logTag, "membershipViewModel.membershipDate: ${membershipViewModel.membershipDate}")
+            BleDebugLog.d(logTag, "arg.membershipDate: $it")
+            if (it == null) { // 멤버십 미등록
+                membershipViewModel.membershipDate.value = ""
+            } else { // 멤버십 등록
+                membershipViewModel.membershipDate.value = it
+                membershipViewModel.checkMembershipDate()
+            }
+        }
+        // 멤버십 등록/미등록 판별
+        membershipViewModel.membershipDate.observe(viewLifecycleOwner) { date ->
+            if (date.isNotEmpty()) {
+                binding.layoutExist.layout.visibility = View.VISIBLE
+                binding.layoutNotExist.layout.visibility = View.INVISIBLE
+            } else {
+                binding.layoutExist.layout.visibility = View.INVISIBLE
+                binding.layoutNotExist.layout.visibility = View.VISIBLE
+            }
+        }
+        // 유효기간 유효/만료 판별
+        membershipViewModel.isValid.observe(viewLifecycleOwner) { isValid ->
+            if (isValid == true) {
+                binding.layoutExist.editTextMembership.text = membershipViewModel.membershipDate.value
+            } else {
+                binding.layoutExist.editTextMembership.visibility = View.INVISIBLE
+                binding.layoutExist.textViewExpired.visibility = View.VISIBLE
+            }
         }
 
-//        binding.backBtn.setOnClickListener {
-//            Navigation.findNavController(binding.root).navigate(MembershipFragmentDirections.actionMembershipFragmentToConfigFragment())
-//        }
+        binding.backBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(MembershipFragmentDirections.actionMembershipFragmentToConfigFragment())
+        }
     }
 }

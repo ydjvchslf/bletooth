@@ -12,6 +12,7 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -30,8 +31,7 @@
                 app:subText="@{`Check the subscription period.\nPlease re-register when the expiration date expires.`}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="visible"/>
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <TextView
                 android:id="@+id/textView_memNum"
@@ -50,9 +50,7 @@
                 app:layout_constraintTop_toBottomOf="@id/textView_memNum"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:textColor="@color/black"
-                android:text="2022-22-22 ~ 2022-33-33"
-                android:visibility="invisible"/>
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/textView_expired"
@@ -63,8 +61,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textColor="@color/main"
-                android:text="Membership expiration"
-                android:visibility="visible"/>
+                android:text="Membership expiration"/>
 
             <Button
                 android:id="@+id/reg_btn"
