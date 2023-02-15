@@ -64,6 +64,9 @@
         <action
             android:id="@+id/action_configFragment_to_withdrawalFragment"
             app:destination="@id/withdrawalFragment" />
+        <action
+            android:id="@+id/action_configFragment_to_membershipFragment"
+            app:destination="@id/membershipFragment" />
     </fragment>
 
     <fragment
@@ -100,6 +103,22 @@
         tools:layout="@layout/fragment_withdrawal">
         <action
             android:id="@+id/action_withdrawalFragment_to_configFragment"
+            app:destination="@id/configFragment"
+            app:popUpTo="@id/configFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/membershipFragment"
+        android:name="com.example.bledot.membership.MembershipFragment"
+        android:label="MembershipFragment"
+        tools:layout="@layout/fragment_membership">
+        <argument
+            android:name="membershipDate"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_membershipFragment_to_configFragment"
             app:destination="@id/configFragment"
             app:popUpTo="@id/configFragment"
             app:popUpToInclusive="true" />

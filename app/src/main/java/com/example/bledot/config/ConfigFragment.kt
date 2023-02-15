@@ -23,6 +23,7 @@ import com.example.bledot.R
 import com.example.bledot.activity.before.BeforeActivity
 import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.FragmentConfigBinding
+import com.example.bledot.membership.MembershipFragmentDirections
 import com.example.bledot.util.BleDebugLog
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -77,6 +78,11 @@ class ConfigFragment : Fragment() {
         // 탈퇴 버튼
         binding.leaveBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.withdrawalFragment)
+        }
+        // membership 버튼
+        binding.membershipBtn.setOnClickListener {
+            val membershipDate = configViewModel.crnUserInfo.membership
+            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToMembershipFragment(membershipDate))
         }
         // Logout 버튼
         binding.logoutBtn.setOnClickListener {

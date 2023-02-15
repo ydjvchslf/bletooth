@@ -160,7 +160,8 @@ class RemoteDataSource {
             "주소2",
             "주소3",
             "주소4",
-            "Korea"
+            "Korea",
+            "2222-33-33"
         )
     }
 }

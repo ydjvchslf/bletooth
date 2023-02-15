@@ -23,6 +23,7 @@ data class RemoteUserInfo(
     @SerializedName("address3") val address3: String,
     @SerializedName("address4") val address4: String,
     @SerializedName("country") val country: String,
+    @SerializedName("membership") val membership: String?,
 )
 
 fun RemoteUserInfo.toEntity() = UserInfoEntity (
@@ -39,5 +40,6 @@ fun RemoteUserInfo.toEntity() = UserInfoEntity (
     address2 = address2,
     address3 = address3,
     address4 = address4,
-    country = country
+    country = country,
+    membership = membership
 )
