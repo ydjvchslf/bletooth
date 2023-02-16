@@ -30,6 +30,7 @@ class RealtimeViewModel: ViewModel() {
     var isRecording = MutableLiveData(false)
     var filename = ""
     var fileFullName = ""
+    var isUploading = MutableLiveData(false)
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -155,17 +156,20 @@ class RealtimeViewModel: ViewModel() {
         viewModelScope.launch {
             val directory = File(fileFullName)
             var isSuccess = false
+            isUploading.value = true
 
             directory.let {
                 // userId, file 넣어서 Post 호출
                 remoteDataSource.uploadToServer("abc@naver.com", it) { result ->
                     if (result) {
                         BleDebugLog.d(logTag, "[${it.name}] 업로드 성공!")
+                        isUploading.value = false
                         // 업로드 성공 후 데이터 지우기
                         it.delete()
                         isSuccess = true
                     } else {
                         BleDebugLog.d(logTag, "[${it.name}] 업로드 실패")
+                        isUploading.value = false
                         isSuccess = false
                     }
                 }
