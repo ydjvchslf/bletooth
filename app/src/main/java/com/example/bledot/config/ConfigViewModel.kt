@@ -20,7 +20,7 @@ class ConfigViewModel : ViewModel() {
     fun getMyInfo(userInfo: (UserInfoEntity) -> Unit) {
         BleDebugLog.i(logTag, "getMyInfo-()")
         viewModelScope.launch  {
-            remoteDataSource.getUserInfo {
+            remoteDataSource.getUserInfo("userId") {
                 crnUserInfo = it
                 userInfo.invoke(it)
             }

@@ -25,7 +25,7 @@ class HomeViewModel : ViewModel() {
     private fun getMyInfo() {
         BleDebugLog.i(logTag, "getMyInfo-()")
         viewModelScope.launch  {
-            remoteDataSource.getUserInfo {
+            remoteDataSource.getUserInfo("userId") {
                 crnUserInfo = it
             }
         }

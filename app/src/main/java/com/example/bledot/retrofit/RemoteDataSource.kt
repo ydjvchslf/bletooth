@@ -78,7 +78,7 @@ class RemoteDataSource {
         }
     }
 
-    suspend fun getUserInfo(userCallback: (UserInfoEntity) -> Unit) {
+    suspend fun getUserInfo(userId: String, userCallback: (UserInfoEntity) -> Unit) {
         BleDebugLog.w(logTag, "getUserInfo-()")
         val sampleUser = sampleUserEntity()
         userCallback.invoke(sampleUser)
@@ -145,6 +145,11 @@ class RemoteDataSource {
         }
     }
 
+    suspend fun enrollMembership(inputMemNum: String, resultCallback: (Boolean) -> Unit) {
+        BleDebugLog.w(logTag, "enrollMembership-()")
+        resultCallback.invoke(true)
+    }
+
     private fun sampleUserEntity(): UserInfoEntity {
         return UserInfoEntity(
             "abc@naver.com",
@@ -161,8 +166,8 @@ class RemoteDataSource {
             "주소3",
             "주소4",
             "Korea",
-            "2222-33-33"
-            //null
+            //"2222-33-33"
+            null
         )
     }
 }
