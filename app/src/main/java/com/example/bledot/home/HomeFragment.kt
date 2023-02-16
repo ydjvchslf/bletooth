@@ -72,6 +72,7 @@ class HomeFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("Upload") { _, _ ->
                 // 데이터 하나씩 업로드
                 homeViewModel.uploadData { isUploaded ->
@@ -107,6 +108,7 @@ class HomeFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("Action") { _, _ -> }
         }
         builder.create().show()

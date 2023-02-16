@@ -94,6 +94,7 @@ class ConfigFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("YES") { _, _ ->
                 normalLogout()
                 googleLogout()

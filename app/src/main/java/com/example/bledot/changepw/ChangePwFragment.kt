@@ -166,6 +166,7 @@ class ChangePwFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("YES") { _, _ ->
                 Navigation.findNavController(binding.root).navigate(ChangePwFragmentDirections.actionChangePwFragmentToConfigFragment())
             }

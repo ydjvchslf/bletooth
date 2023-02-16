@@ -352,6 +352,7 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("YES") { _, _ ->
                 bleViewModel.BLE_STATE.postValue(BleState.SCANNING)
                 btScanningStatus.value = true

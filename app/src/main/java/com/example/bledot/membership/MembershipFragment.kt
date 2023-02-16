@@ -93,6 +93,7 @@ class MembershipFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("Action") { _, _ ->
                 membershipViewModel.registerMembership(memNum) { isRegistered ->
                     if (isRegistered) {
@@ -112,6 +113,7 @@ class MembershipFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("Action") { _, _ ->
                 // 등록된 멤버십으로 화면 새로고침
                 refreshView()

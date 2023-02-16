@@ -60,6 +60,7 @@ class WithdrawalFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("Action") { _, _ ->
                 // TODO:: 탈퇴처리
             }
@@ -72,6 +73,7 @@ class WithdrawalFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("Action") { _, _ -> }
         }
         builder.create().show()

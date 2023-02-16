@@ -241,6 +241,7 @@ class RealtimeFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("Action") { _, _ ->
                 resetTimer()
                 // TODO:: 서버 업로드
@@ -268,6 +269,7 @@ class RealtimeFragment : Fragment() {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
+            setCancelable(false)
             setPositiveButton("Action") { _, _ ->
                 // TODO:: 초기화
                 binding.realWebView.loadUrl("javascript:clearChart()")
