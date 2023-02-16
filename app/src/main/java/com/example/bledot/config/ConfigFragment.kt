@@ -81,8 +81,8 @@ class ConfigFragment : Fragment() {
         }
         // membership 버튼
         binding.membershipBtn.setOnClickListener {
-            val membershipDate = configViewModel.crnUserInfo.membership
-            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToMembershipFragment(membershipDate))
+            val crtUserInfo = configViewModel.crnUserInfo
+            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToMembershipFragment(crtUserInfo))
         }
         // Logout 버튼
         binding.logoutBtn.setOnClickListener {

@@ -114,9 +114,8 @@
         android:label="MembershipFragment"
         tools:layout="@layout/fragment_membership">
         <argument
-            android:name="membershipDate"
-            app:argType="string"
-            app:nullable="true" />
+            android:name="userInfo"
+            app:argType="com.example.bledot.data.UserInfoEntity" />
         <action
             android:id="@+id/action_membershipFragment_to_configFragment"
             app:destination="@id/configFragment"
