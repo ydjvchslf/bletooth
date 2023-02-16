@@ -389,13 +389,24 @@
                         <com.airbnb.lottie.LottieAnimationView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toTopOf="@id/ble_connecting_textView"
+                            app:lottie_fileName="circular-loading-bar.json"
+                            app:lottie_loop="true"
+                            app:lottie_autoPlay="true"/>
+
+                        <TextView
+                            android:id="@+id/ble_connecting_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:lottie_fileName="circular-loading-bar.json"
-                            app:lottie_loop="true"
-                            app:lottie_autoPlay="true"/>
+                            android:textSize="18sp"
+                            android:textColor="@color/main"
+                            android:text="Connecting..." />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
