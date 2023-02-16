@@ -23,6 +23,7 @@ import com.example.bledot.data.BleDevice
 import com.example.bledot.data.BleDevice.Companion.fromXsDeviceToBleDevice
 import com.example.bledot.databinding.FragmentBleBinding
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.appIsWorking
 import com.example.bledot.util.btScanningStatus
 import com.xsens.dot.android.sdk.interfaces.XsensDotScannerCallback
 import com.xsens.dot.android.sdk.models.XsensDotDevice
@@ -91,6 +92,7 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
             if (btScanningStatus.value == true) {
                 // 스캔 시작
                 bleViewModel.BLE_STATE.postValue(BleState.SCANNING)
+                appIsWorking.value = true
 
                 bleAdapter.clear()
                 bleViewModel.disconnectAllSensor()
@@ -103,16 +105,6 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
                 stopXsScanner()
             }
         }
-
-        // 어답터
-//        binding.recyclerView.apply {
-//            adapter = bleAdapter
-//        }
-//
-//        if (bleViewModel.mSensorList.value != null) {
-//            val list = BleDevice.fromHashMapList(bleViewModel.mScannedSensorList) as ArrayList // 스캔된 데이터 리스트
-//            bleAdapter.submitList(list) // 데이터 주입
-//        }
 
         // 클릭리스너 (연결/해제) 활용
         bleAdapter.clickListener = { _, index ->
@@ -129,18 +121,8 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
                 bleViewModel.connectSensor(xsDevice)
             } else { // 선택된 device 연결상태 or 다른 것이 연결 상태 -> 연결 끊기
                 BleDebugLog.d(logTag, "여기선 조작 불가")
-            //BleDebugLog.d(logTag, "=====연결끊기")
-                //bleViewModel.disconnectAllSensor {}
             }
         }
-
-//        device?.let {
-//            return
-//        }
-
-//        // 뷰모델 뷰 체크
-//        checkCrnState()
-
         // 연결 UI 업데이트
         bleViewModel.mConnectionState.observe(viewLifecycleOwner) { connectState ->
             if (connectState == 2) {
@@ -173,36 +155,6 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
             bleViewModel.disconnectAllSensor()
             bleViewModel.BLE_STATE.value = (BleState.NOT_SCANNED)
         }
-
-        /*
-        bleViewModel.BLE_STATE.observe(viewLifecycleOwner) { BleState ->
-            if (BleState == com.example.bledot.ble.BleState.SCAN_COMPLETE_CONNECTED) {
-                BleDebugLog.d(logTag, "BleState == SCAN_COMPLETE_CONNECTED")
-
-                val connectedDevice = bleViewModel.mConnectedXsDevice.value
-                connectedDevice?.let {
-                    val bleDevice = BleDevice.fromXsDeviceToBleDevice(it)
-                    val list = arrayListOf(bleDevice)
-                    binding.recyclerView.apply {
-                        adapter = bleAdapter
-                        bleAdapter.submitList(list)
-                    }
-                }
-            } else if (BleState == com.example.bledot.ble.BleState.SCAN_COMPLETE_DISCONNECTED) {
-                BleDebugLog.d(logTag, "BleState == TRYING_TO_DISCONNECT")
-                val connectedDevice = bleViewModel.mConnectedXsDevice.value
-                connectedDevice?.let {
-                    BleDebugLog.d(logTag, "${it.connectionState}")
-                    val bleDevice = BleDevice.fromXsDeviceToBleDevice(it)
-                    val list = arrayListOf(bleDevice)
-                    binding.recyclerView.apply {
-                        adapter = bleAdapter
-                        bleAdapter.submitList(list)
-                    }
-                }
-            }
-        }
-         */
     }
 
     private fun checkCrnState() {
@@ -285,10 +237,12 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
         activity?.runOnUiThread {
             if (mScannedSensorList.size == 0) {
                 bleViewModel.BLE_STATE.value = BleState.NOT_SCANNED
+                appIsWorking.value = false
                 BleDebugLog.d(logTag, "${bleViewModel.BLE_STATE.value}")
                 showDialog("NOT FOUNDED", "Try to scan again?")
             } else {
                 bleViewModel.BLE_STATE.value = BleState.SCAN_COMPLETE_DISCONNECTED
+                appIsWorking.value = false
                 BleDebugLog.d(logTag, "${bleViewModel.BLE_STATE.value}")
                 btScanningStatus.value = false
 
@@ -304,13 +258,13 @@ class BleFragment : Fragment(), XsensDotScannerCallback {
         }
     }
 
-    private fun autoStopXsScanner() { // 10초 후 자동 중지
+    private fun autoStopXsScanner() { // 5초 후 자동 중지
         timer?.schedule(object : TimerTask() {
             override fun run() {
                 BleDebugLog.i(logTag, "autoStopXsScanner-()")
                 stopXsScanner()
             }
-        }, 10000L) // 10 초
+        }, 5000L) // 5초
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

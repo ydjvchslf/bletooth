@@ -74,6 +74,7 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
         addDevice(xsDevice)
         xsDevice?.connect()
         BLE_STATE.value = BleState.TRYING
+        appIsWorking.value = true
     }
 
     fun disconnectAllSensor() {
@@ -185,6 +186,7 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             BLE_STATE.value = (BleState.SCAN_COMPLETE_DISCONNECTED)
         } else if (mConnectionState.value == 2) {
             BLE_STATE.value = (BleState.SCAN_COMPLETE_CONNECTED)
+            appIsWorking.value = false
         }
 
         BleDebugLog.d(logTag, "mConnectionState.value: ${mConnectionState.value}")
