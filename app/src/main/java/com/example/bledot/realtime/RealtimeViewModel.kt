@@ -10,6 +10,7 @@ import com.example.bledot.BuildConfig
 import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.KEY_LOGGER
+import com.example.bledot.util.appIsWorking
 import com.example.bledot.util.mLoggerList
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
@@ -157,6 +158,7 @@ class RealtimeViewModel: ViewModel() {
             val directory = File(fileFullName)
             var isSuccess = false
             isUploading.value = true
+            appIsWorking.value = true
 
             directory.let {
                 // userId, file 넣어서 Post 호출
@@ -164,12 +166,14 @@ class RealtimeViewModel: ViewModel() {
                     if (result) {
                         BleDebugLog.d(logTag, "[${it.name}] 업로드 성공!")
                         isUploading.value = false
+                        appIsWorking.value = false
                         // 업로드 성공 후 데이터 지우기
                         it.delete()
                         isSuccess = true
                     } else {
                         BleDebugLog.d(logTag, "[${it.name}] 업로드 실패")
                         isUploading.value = false
+                        appIsWorking.value = false
                         isSuccess = false
                     }
                 }

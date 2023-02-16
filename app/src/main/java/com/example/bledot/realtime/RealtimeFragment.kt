@@ -18,6 +18,7 @@ import com.example.bledot.ble.BleViewModel
 import com.example.bledot.data.XYZData
 import com.example.bledot.databinding.FragmentRealtimeBinding
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.appIsWorking
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.Legend.LegendVerticalAlignment
@@ -77,6 +78,10 @@ class RealtimeFragment : Fragment() {
         checkConnection()
         // 외장 메모리 용량 체크
         checkExternalStorage()
+        // 작업 중 화면 터치 불가
+        appIsWorking.observe(viewLifecycleOwner) { isWorking ->
+            preventTouchEvent(isWorking)
+        }
         // temp btn
         binding.tempBtn.setOnClickListener {
             activity?.runOnUiThread {
@@ -420,6 +425,19 @@ class RealtimeFragment : Fragment() {
 
     private fun checkExternalStorage() {
         realtimeViewModel.getExternalMemory()
+    }
+
+    private fun preventTouchEvent(isWorking: Boolean) {
+        BleDebugLog.i(logTag, "preventTouchEvent-()")
+        if (isWorking) {
+            binding.zeroing.isEnabled = false
+            binding.toggleBtn.isEnabled = false
+            binding.recordBtn.isEnabled = false
+        } else {
+            binding.zeroing.isEnabled = true
+            binding.toggleBtn.isEnabled = true
+            binding.recordBtn.isEnabled = true
+        }
     }
 
     override fun onDestroy() {

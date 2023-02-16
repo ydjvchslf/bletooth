@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.xsens.dot.android.sdk.utils.XsensDotLogger
 
 val btScanningStatus = MutableLiveData(false)
+val appIsWorking = MutableLiveData(false)
 // A list contains mac address and XsensDotLogger object
 val mLoggerList = MutableLiveData<ArrayList<HashMap<String, Any>>>()
 
