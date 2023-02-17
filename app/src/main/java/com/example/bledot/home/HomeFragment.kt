@@ -13,6 +13,7 @@ import androidx.navigation.Navigation
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentHomeBinding
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.appIsWorking
 
 
 class HomeFragment : Fragment() {
@@ -54,6 +55,11 @@ class HomeFragment : Fragment() {
 
         // 미전송 데이터 확인
         checkData()
+
+        // 작업 중 화면 터치 불가
+        appIsWorking.observe(viewLifecycleOwner) { isWorking ->
+            preventTouchEvent(isWorking)
+        }
     }
 
     private fun checkData() {
@@ -112,5 +118,20 @@ class HomeFragment : Fragment() {
             setPositiveButton("Action") { _, _ -> }
         }
         builder.create().show()
+    }
+
+    private fun preventTouchEvent(isWorking: Boolean) {
+        BleDebugLog.i(logTag, "preventTouchEvent-()")
+        if (isWorking) {
+            binding.listBtn.isEnabled = false
+            binding.deviceBtn.isEnabled = false
+            binding.recordBtn.isEnabled = false
+            binding.settingBtn.isEnabled = false
+        } else {
+            binding.listBtn.isEnabled = true
+            binding.deviceBtn.isEnabled = true
+            binding.recordBtn.isEnabled = true
+            binding.settingBtn.isEnabled = true
+        }
     }
 }

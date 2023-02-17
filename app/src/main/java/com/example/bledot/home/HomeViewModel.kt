@@ -1,11 +1,13 @@
 package com.example.bledot.home
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bledot.App
 import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.appIsWorking
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -16,6 +18,7 @@ class HomeViewModel : ViewModel() {
     private val remoteDataSource = RemoteDataSource()
     lateinit var crnUserInfo: UserInfoEntity
     private var path = ""
+    var isUploading = MutableLiveData(false)
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -73,6 +76,9 @@ class HomeViewModel : ViewModel() {
     fun uploadData(callBack: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "uploadData-()")
         viewModelScope.launch {
+            appIsWorking.value = true
+            isUploading.value = true
+
             val directory = File(path)
             val files = directory.listFiles()
             var isSuccess = false
@@ -92,6 +98,8 @@ class HomeViewModel : ViewModel() {
                 }
             }
             callBack.invoke(isSuccess)
+            isUploading.value = false
+            appIsWorking.value = false
         }
     }
 }
