@@ -36,6 +36,7 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var dateFlag = false
     private var weightFlag = false
     private var emailFlag = false
+    private var emailDuplicationFlag = false
     private var pwFlag = false
     private var phoneFlag = false
     private var addressFlag = false
@@ -72,9 +73,25 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         checkWeightGuide()
         checkEmailGuide()
         binding.emailCheckBtn.setOnClickListener {
-            // TODO:: 서버 email 유효체크 후 emailFlag = true
-            emailFlag = true
-            Toast.makeText(context, "emailFlag: $emailFlag", Toast.LENGTH_SHORT).show()
+            val inputEmail = binding.email.infoInputEditText.text.toString()
+            if (inputEmail.isNotEmpty() && emailFlag) {
+                signupViewModel.checkEmail(inputEmail) { isDuplicate ->
+                    BleDebugLog.d(logTag, "isDuplicate: $isDuplicate")
+                    if (isDuplicate) { // 중복됨
+                        binding.emailOkTextView.visibility = View.GONE
+                        binding.emailNotTextView.visibility = View.GONE
+                        binding.emailDuplicationTextView.visibility = View.VISIBLE
+                        emailDuplicationFlag = false
+                        Toast.makeText(context, "emailDuplicationFlag: $emailDuplicationFlag", Toast.LENGTH_SHORT).show()
+                    } else { // 사용 가능
+                        binding.emailOkTextView.visibility = View.VISIBLE
+                        binding.emailNotTextView.visibility = View.GONE
+                        binding.emailDuplicationTextView.visibility = View.GONE
+                        emailDuplicationFlag = true
+                        Toast.makeText(context, "emailDuplicationFlag: $emailDuplicationFlag", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
         checkPwGuide()
         checkPhoneGuide()
@@ -238,8 +255,10 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         binding.emailNotTextView.visibility = View.GONE
                         binding.email.infoInputEditText.background =
                             ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                        emailFlag = true
                     } else {
                         binding.emailNotTextView.visibility = View.VISIBLE
+                        binding.emailOkTextView.visibility = View.GONE
                         binding.email.infoInputEditText.background =
                             ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
                         emailFlag = false
@@ -398,7 +417,7 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun checkAllFlags() {
 //        Toast.makeText(context, "nameFlag: $nameFlag , dateFlag : $dateFlag ,&& weightFlag: $weightFlag , && emailFlag : $emailFlag ," +
 //                "&& pwFlag : $pwFlag ,&& phoneFlag : $phoneFlag ,&& addressFlag : $addressFlag ,&& agreeFlag: $agreeFlag ,", Toast.LENGTH_SHORT).show()
-        if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag) {
+        if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag && emailDuplicationFlag) {
             Toast.makeText(context, "모든조건 완성, Sign up 성공적", Toast.LENGTH_SHORT).show()
         } else {
             if (!nameFlag) {

@@ -1,8 +1,8 @@
-package com.example.bledot.data
+package com.example.bledot.data.request
 
 import com.google.gson.annotations.SerializedName
 
-data class RemoteFileData(
+data class RequestFileData(
     @SerializedName("files") val files: RemoteFile,
     @SerializedName("form") val form: RemoteForm
 )

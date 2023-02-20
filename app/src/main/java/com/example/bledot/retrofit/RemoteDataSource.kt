@@ -2,7 +2,8 @@ package com.example.bledot.retrofit
 
 import com.example.bledot.data.Product
 import com.example.bledot.data.UserInfoEntity
-import com.example.bledot.data.toEntity
+import com.example.bledot.data.request.RequestEmailPwData
+import com.example.bledot.data.response.toEntity
 import com.example.bledot.util.BleDebugLog
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -14,6 +15,32 @@ class RemoteDataSource {
 
     private val logTag = RemoteDataSource::class.simpleName
     private val retrofitService = RetrofitClient.retrofitService
+
+    suspend fun checkEmailDuplication(email: String, retCode: (Int?) -> Unit) {
+        BleDebugLog.w(logTag, "checkEmailDuplication-()")
+        val response = retrofitService.checkEmail(RequestEmailPwData(email, null))
+        return when (response) {
+            is Result.Success -> {
+                BleDebugLog.i(logTag, "Result Success!!")
+                when (response.data.resultCode) {
+                    200 -> { retCode.invoke(200) }
+                    -1 -> { retCode.invoke(-1) }
+                    else -> { retCode.invoke(null) }
+                }
+            }
+            is Result.ApiError -> {
+                BleDebugLog.i(logTag, "ApiError!!")
+                retCode.invoke(null)
+            }
+            is Result.NetworkError -> {
+                BleDebugLog.i(logTag, "NetworkError!!")
+                retCode.invoke(null)
+            }
+            else -> {
+                retCode.invoke(null)
+            }
+        }
+    }
 
     suspend fun getAllProducts(retCode: (Int) -> Unit): List<Product>? {
         BleDebugLog.w(logTag, "getAllProducts-()")
@@ -55,7 +82,7 @@ class RemoteDataSource {
                 BleDebugLog.i(logTag, "Api Success!!")
                 // response.code = 200, response.data = response.body()
                 val resBody = response.data
-                val statusCode = resBody.statusCode
+                val statusCode = resBody.resultCode
                 if (statusCode == 200) {
                     BleDebugLog.d(logTag, "로그인 성공!")
                     retCode.invoke(200, resBody.data?.toEntity())

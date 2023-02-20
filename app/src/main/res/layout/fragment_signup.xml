@@ -152,6 +152,14 @@
                     android:textColor="@color/red"
                     android:visibility="gone"/>
 
+                <TextView
+                    android:id="@+id/email_duplication_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="This email is not valid."
+                    android:textColor="@color/red"
+                    android:visibility="gone"/>
+
                 <Button
                     android:id="@+id/email_check_btn"
                     android:layout_width="300dp"

@@ -1,10 +1,11 @@
-package com.example.bledot.data
+package com.example.bledot.data.response
 
+import com.example.bledot.data.UserInfoEntity
 import com.google.gson.annotations.SerializedName
 
 data class RemoteDefaultData(
-    @SerializedName("statusCode") val statusCode: Int,
-    @SerializedName("resMessage") val resMessage: String,
+    @SerializedName("resultCode") val resultCode: Int,
+    @SerializedName("resultMessage") val resultMessage: String,
     @SerializedName("data") val data: RemoteUserInfo?,
 )
 

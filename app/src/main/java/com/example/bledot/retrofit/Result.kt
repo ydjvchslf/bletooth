@@ -1,6 +1,7 @@
 package com.example.bledot.retrofit
 
 import com.example.bledot.util.BleDebugLog
+import com.google.gson.Gson
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -24,15 +25,18 @@ class ResponseCall<T> constructor(
     override fun enqueue(callback: Callback<Result<T>>) {
         callDelegate.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
+                BleDebugLog.i(logTag, "onResponse-()")
                 when(response.code()) {
                     in 200..299 -> { // 200, response.body()
                         val resBody = response.body()
                         resBody?.let {
+                            BleDebugLog.httpResponse(Gson().toJson(resBody))
                             callback.onResponse(this@ResponseCall, Response.success(Result.Success(response.code(), it)))
                         }
                     }
                     in 400..409 -> {
-                        response.body()
+                        val resBody = response.body()
+                        BleDebugLog.httpResponse(Gson().toJson(resBody))
                         callback.onResponse(this@ResponseCall, Response.success(Result.ApiError(response.code(), response.message()))) // 400대, response.message()
                     }
                 }
@@ -54,6 +58,7 @@ class ResponseCall<T> constructor(
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
+                BleDebugLog.i(logTag, "onFailure-()")
                 BleDebugLog.e(t.toString())
                 callback.onResponse(this@ResponseCall, Response.success(Result.NetworkError(t)))
                 call.cancel()
