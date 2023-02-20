@@ -8,10 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bledot.App
 import com.example.bledot.BuildConfig
 import com.example.bledot.retrofit.RemoteDataSource
-import com.example.bledot.util.BleDebugLog
-import com.example.bledot.util.KEY_LOGGER
-import com.example.bledot.util.appIsWorking
-import com.example.bledot.util.mLoggerList
+import com.example.bledot.util.*
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
 import com.xsens.dot.android.sdk.utils.XsensDotLogger
@@ -104,7 +101,7 @@ class RealtimeViewModel: ViewModel() {
         }
     }
 
-    fun getExternalMemory() {
+    fun getExternalMemory(limitCallback: (Boolean?) -> Unit) {
         BleDebugLog.i(logTag, "getExternalMemory-()")
         val externalMemory = checkExternalStorageAllMemory()
         val externalAvailableMemory = checkExternalAvailableMemory()
@@ -115,6 +112,13 @@ class RealtimeViewModel: ViewModel() {
 
         externalAvailableMemory?.let {
             BleDebugLog.d(logTag, "available: ${getFileSize(it)}")
+        }
+
+        if (externalMemory != null && externalAvailableMemory != null) {
+            val limit = externalMemory.times(LIMIT_PERCENTAGE)
+            if (externalAvailableMemory < limit ) {
+                limitCallback.invoke(true)
+            }
         }
     }
 

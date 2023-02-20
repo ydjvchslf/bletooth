@@ -18,4 +18,6 @@ const val KEY_DATA = "KEY_DATA"
 const val BASE_URL = "http://httpbin.org"
 //const val BASE_URL = "http://192.168.1.250:8080"
 
+var LIMIT_PERCENTAGE = 0.05
+
 var userId = MutableLiveData("")

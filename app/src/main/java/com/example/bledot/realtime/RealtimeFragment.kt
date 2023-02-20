@@ -424,7 +424,11 @@ class RealtimeFragment : Fragment() {
     }
 
     private fun checkExternalStorage() {
-        realtimeViewModel.getExternalMemory()
+        realtimeViewModel.getExternalMemory { isLimit ->
+            if (isLimit == true) {
+                showDialogComplete("Warning", "Not enough phone storage space.")
+            }
+        }
     }
 
     private fun preventTouchEvent(isWorking: Boolean) {
@@ -438,6 +442,16 @@ class RealtimeFragment : Fragment() {
             binding.toggleBtn.isEnabled = true
             binding.recordBtn.isEnabled = true
         }
+    }
+
+    private fun showDialogComplete(title: String, subTitle: String) {
+        val builder = AlertDialog.Builder(context).apply {
+            setTitle(title)
+            setMessage(subTitle)
+            setCancelable(false)
+            setPositiveButton("Action") { _, _ -> }
+        }
+        builder.create().show()
     }
 
     override fun onDestroy() {
