@@ -79,12 +79,6 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
     // 상태바
     implementation "land.sungbin:systemuicontroller:1.0.0"
-    // firebase
-    implementation platform('com.google.firebase:firebase-bom:31.1.1')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-database'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
-    implementation 'com.google.firebase:firebase-auth:21.1.0'
     // lottie
     def lottieVersion = "5.2.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"

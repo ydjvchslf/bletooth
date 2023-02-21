@@ -21,10 +21,10 @@ import com.example.bledot.databinding.FragmentLoginBinding
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.userId
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.*
 
 
 class LoginFragment : Fragment() {
@@ -34,7 +34,6 @@ class LoginFragment : Fragment() {
     private val loginViewModel: LoginViewModel by activityViewModels()
 
     private var mGoogleSignInClient : GoogleSignInClient? = null
-    private var auth : FirebaseAuth? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +50,6 @@ class LoginFragment : Fragment() {
             .requestEmail()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
-        auth = FirebaseAuth.getInstance()
         return binding.root
     }
 
@@ -122,41 +120,33 @@ class LoginFragment : Fragment() {
 
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
-            BleDebugLog.d(logTag, "${result.data}")
             val data: Intent? = result.data
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            val account = task.getResult(ApiException::class.java)
-            firebaseAuthWithGoogle(account.idToken)
-        }
-    }
-
-    private fun checkAutoGoogle() {
-        auth?.currentUser?.getIdToken(true)?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                BleDebugLog.d(logTag, "autoGoogle-()")
-                val idToken = task.result.token
-                val email = auth?.currentUser?.email
-                BleDebugLog.d(logTag, "email: $email")
-                userId.value = email // 추후 Api 에서 필요한 {userId} 저장
-                activity?.startActivity(Intent(activity, MainActivity::class.java))
-                activity?.finish()
-            }
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String?) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth?.signInWithCredential(credential)?.addOnCompleteListener(requireActivity()) { task ->
-            if (task.isSuccessful) {
-                // 인증에 성공한 후, 현재 로그인된 유저의 정보를 가져올 수 있습니다.
-                val email = auth?.currentUser?.email
-                BleDebugLog.d(logTag, "idToken: $idToken, \n email: $email")
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val email = account.email
+                BleDebugLog.d(logTag, "googleEmail: $email")
+                // Signed in successfully, handle the user's account here
                 // 구글로그인 후, 유저정보 있는지 없는지 체크
                 email?.let {
                     userId.value = email // 추후 Api 에서 필요한 {userId} 저장
                     isCheckedUserInfo(it)
                 }
+            } catch (e: ApiException) {
+                // The Google Sign In failed, handle this here
             }
+        }
+    }
+
+    private fun checkAutoGoogle() {
+        BleDebugLog.i(logTag, "checkAutoGoogle-()")
+        val gsa: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(requireActivity())
+        gsa?.let {
+            BleDebugLog.d(logTag, "구글 로그인 이력 있음")
+            BleDebugLog.d(logTag, "email: ${gsa.email}")
+            userId.value = gsa.email // 추후 Api 에서 필요한 {userId} 저장
+            activity?.startActivity(Intent(activity, MainActivity::class.java))
+            activity?.finish()
         }
     }
 

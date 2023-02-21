@@ -20,10 +20,6 @@ import com.example.bledot.R
 import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.ActivityBeforeBinding
 import com.example.bledot.util.BleDebugLog
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
 import kotlin.system.exitProcess
 
 class BeforeActivity : AppCompatActivity() {
