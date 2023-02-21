@@ -1,23 +1,23 @@
 package com.example.bledot.activity.before
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
+import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.bledot.R
-import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.ActivityBeforeBinding
 import com.example.bledot.util.BleDebugLog
 import kotlin.system.exitProcess
@@ -83,15 +83,47 @@ class BeforeActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        when(requestCode){
+        when (requestCode) {
             PERMISSION_REQUEST -> {
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    BleDebugLog.d(logTag, "권한요청 승인")
-                }else{
-                    Toast.makeText(this, "권한요청 미승인 시 앱 종료됩니다", Toast.LENGTH_SHORT).show()
-                    exitProcess(0)
+//                grantResults.forEach {
+//                    BleDebugLog.d(logTag, "각 권한 허용 여부: $it") // 0 허용, -1 거부
+//                }
+                if (grantResults.contains(PackageManager.PERMISSION_DENIED)) {
+                    showDialogComplete("Warning", "The service is not available because required access has been denied.\n" +
+                            "Please change the required permission setting to On and run it again.")
                 }
+
+                BleDebugLog.d(logTag, "권한요청 모두 허용")
             }
+        }
+    }
+
+    private fun showDialogComplete(title: String, subTitle: String) {
+        val builder = AlertDialog.Builder(this).apply {
+            setTitle(title)
+            setMessage(subTitle)
+            setCancelable(false)
+            setPositiveButton("Go to Settings") { _, _ ->
+                toAppDetailSetting(this.context)
+                exitProcess(0)
+            }
+        }
+        builder.create().show()
+    }
+
+    private fun toAppDetailSetting(context: Context) {
+        try {
+            //Open the specific App Info page:
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.data = Uri.parse("package:" + context.packageName)
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            //Open the generic Apps page:
+            val intent = Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
         }
     }
 }
