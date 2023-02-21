@@ -48,22 +48,15 @@ class ConfigFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
         // 내 정보 보기
         configViewModel.getMyInfo {
             BleDebugLog.d(logTag, "userInfo: $it")
-            binding.myInfo.titleTextView.text = it.name
-            binding.myInfo.subTextView.text = it.email
-        }
-
-        binding.getBtn.setOnClickListener {
-            configViewModel.getProductList {
-                if (it == 200) {
-                    Toast.makeText(context, "200 OK", Toast.LENGTH_SHORT).show()
-                }
-            }
+            binding.infoNameTextView.text = it.name
+            binding.infoEmailTextView.text = it.email
         }
         // edit info 버튼
         binding.editInfoBtn.setOnClickListener {
