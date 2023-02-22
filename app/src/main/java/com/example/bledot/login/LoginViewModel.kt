@@ -16,22 +16,10 @@ class LoginViewModel: ViewModel() {
         BleDebugLog.i(logTag, "init-()")
     }
 
-    fun login(user: (Int?, UserInfoEntity?) -> Unit) {
-        BleDebugLog.i(logTag, "login-()")
+    fun normalLogin(email: String, pw: String, result: (Boolean) -> Unit) {
+        BleDebugLog.i(logTag, "normalLogin-()")
         viewModelScope.launch {
-            remoteDataSource.loginServer { retCode, userInfoEntity -> // 200 or 5555
-                when (retCode) {
-                    200 -> {
-                        user.invoke(200, userInfoEntity)
-                    }
-                    5555 -> {
-                        user.invoke(5555, null)
-                    }
-                    else -> {
-                        return@loginServer
-                    }
-                }
-            }
+            result.invoke(false)
         }
     }
 

@@ -74,7 +74,7 @@ class RemoteDataSource {
         }
     }
 
-    suspend fun loginServer(retCode: (Int?, UserInfoEntity?) -> Unit) {
+    suspend fun loginServer(email: String, pw: String, retCode: (Int?, UserInfoEntity?) -> Unit) {
         BleDebugLog.w(logTag, "login-()")
         val response = retrofitService.loginSuccess()
         when (response) {

@@ -2,6 +2,7 @@ package com.example.bledot.login
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -58,31 +59,7 @@ class LoginFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
         // 로그인 버튼
         binding.signInBtn.setOnClickListener {
-            if (isCheckedEmailAndPw()) {
-
-                val receivedEmail = binding.editTextEmail.text.toString()
-                val receivedPw = binding.editTextPw.text.toString()
-                // 일반 로그인 성공 후 Preference 저장
-                App.prefs.setString("email", receivedEmail)
-                userId.value = receivedEmail // 추후 Api 에서 필요한 {userId} 저장
-                activity?.startActivity(Intent(activity, MainActivity::class.java))
-                activity?.finish()
-                /*
-                loginViewModel.login { retCode, userInfo ->
-                    if (retCode == 200) {
-                        Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                        BleDebugLog.d(logTag, "userInfo: ${userInfo.toString()}")
-                        // mainActivity 띄우기
-                        activity?.startActivity(Intent(activity, MainActivity::class.java))
-                        // 정상 로그인 후, Before 액티비티 제거
-                        //activity?.finish()
-                    }
-                    if (retCode == 5555) {
-                        Toast.makeText(context, "계정 틀림, 로그인 에러!!", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                 */
-            }
+            processLogin()
         }
         // 비밀번호 찾기 버튼
         binding.findPwTextView.setOnClickListener {
@@ -103,12 +80,25 @@ class LoginFragment : Fragment() {
         checkAutoLogin()
     }
 
-    private fun isCheckedEmailAndPw(): Boolean {
-        return if (binding.editTextEmail.text.isEmpty() || binding.editTextPw.text.isEmpty()) {
-            Toast.makeText(context, "Email 과 Password 입력해주세요", Toast.LENGTH_SHORT).show()
-            false
-        } else {
-            true
+    private fun processLogin() {
+        BleDebugLog.i(logTag, "processLogin-()")
+
+        val inputEmail = binding.editTextEmail.text.toString()
+        val inputPw = binding.editTextPw.text.toString()
+        BleDebugLog.d(logTag, "inputEmail: $inputEmail, inputPw: $inputPw")
+
+        if (inputEmail.isNotEmpty() && inputPw.isNotEmpty()) {
+            loginViewModel.normalLogin(inputEmail, inputPw) {
+                if (it) {
+                    // 일반 로그인 성공 후 Preference 저장
+                    App.prefs.setString("email", inputEmail)
+                    userId.value = inputEmail // 추후 Api 에서 필요한 {userId} 저장
+                    activity?.startActivity(Intent(activity, MainActivity::class.java))
+                    activity?.finish()
+                } else {
+                    showDialogComplete("Notice", "Please check your email and password.")
+                }
+            }
         }
     }
 
@@ -171,5 +161,15 @@ class LoginFragment : Fragment() {
             activity?.startActivity(Intent(activity, MainActivity::class.java))
             activity?.finish()
         }
+    }
+
+    private fun showDialogComplete(title: String, subTitle: String) {
+        val builder = AlertDialog.Builder(context).apply {
+            setTitle(title)
+            setMessage(subTitle)
+            setCancelable(false)
+            setPositiveButton("Action") { _, _ -> }
+        }
+        builder.create().show()
     }
 }
