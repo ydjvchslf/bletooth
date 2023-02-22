@@ -37,4 +37,14 @@ class ConfigViewModel : ViewModel() {
             }
         }
     }
+
+    fun isGoogleUser(): Boolean {
+        BleDebugLog.i(logTag, "parseEmail-()")
+        val words = crnUserInfo.email.split("@")
+        BleDebugLog.d(logTag, "words[1]: ${words[1]}")
+        if (words[1] == "gmail.com") {
+            return true
+        }
+        return false
+    }
 }
