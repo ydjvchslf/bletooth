@@ -19,7 +19,13 @@ class LoginViewModel: ViewModel() {
     fun normalLogin(email: String, pw: String, result: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "normalLogin-()")
         viewModelScope.launch {
-            result.invoke(false)
+            remoteDataSource.loginServer(email, pw) { retCode ->
+                if (retCode == 200) {
+                    result.invoke(true)
+                } else { // -1, -2, -3, null
+                    result.invoke(false)
+                }
+            }
         }
     }
 

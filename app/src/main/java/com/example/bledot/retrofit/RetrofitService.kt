@@ -19,8 +19,8 @@ interface RetrofitService {
     @POST("member/checkEmail")
     suspend fun checkEmail(@Body reqEmailPwData: RequestEmailPwData): Result<RemoteDefaultData>
 
-    @GET("login_s")
-    suspend fun loginSuccess(): Result<RemoteDefaultData>
+    @POST("member/login")
+    suspend fun login(@Body reqEmailPwData: RequestEmailPwData): Result<RemoteDefaultData>
 
     @GET("user/{userId}")
     suspend fun getUser(): Result<RemoteDefaultData>

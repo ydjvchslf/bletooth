@@ -17,7 +17,8 @@ const val KEY_DATA = "KEY_DATA"
 //const val BASE_URL = "https://fakestoreapi.com"
 //const val BASE_URL = "http://httpbin.org"
 //const val BASE_URL = "http://192.168.1.250:8080"
-const val BASE_URL = "http://192.168.1.201:8991"
+//const val BASE_URL = "http://192.168.1.201:8991"
+const val BASE_URL = "http://192.168.1.53:8080"
 
 var LIMIT_PERCENTAGE = 0.05
 

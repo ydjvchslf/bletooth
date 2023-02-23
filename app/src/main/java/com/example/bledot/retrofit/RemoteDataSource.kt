@@ -5,9 +5,11 @@ import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.data.request.RequestEmailPwData
 import com.example.bledot.data.response.toEntity
 import com.example.bledot.util.BleDebugLog
+import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONObject
 import java.io.File
 
 
@@ -74,21 +76,38 @@ class RemoteDataSource {
         }
     }
 
-    suspend fun loginServer(email: String, pw: String, retCode: (Int?, UserInfoEntity?) -> Unit) {
+    suspend fun loginServer(email: String, pw: String, retCode: (Int?) -> Unit) {
         BleDebugLog.w(logTag, "login-()")
-        val response = retrofitService.loginSuccess()
+        val requestJsonData = JSONObject(Gson().toJson(RequestEmailPwData(email, pw)))
+        BleDebugLog.send(requestJsonData)
+
+        val response = retrofitService.login(RequestEmailPwData(email, pw))
         when (response) {
             is Result.Success -> { // Success<T>(val code: Int, val data: T)
                 BleDebugLog.i(logTag, "Api Success!!")
                 // response.code = 200, response.data = response.body()
                 val resBody = response.data
-                val statusCode = resBody.resultCode
-                if (statusCode == 200) {
-                    BleDebugLog.d(logTag, "로그인 성공!")
-                    retCode.invoke(200, resBody.data?.toEntity())
-                } else if (statusCode == 5555) {
-                    BleDebugLog.d(logTag, "로그인 실패!")
-                    retCode.invoke(5555, null)
+                val resCode = resBody.resultCode
+                val resMsg = resBody.resultMessage
+
+                when (resCode) {
+                    200 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        retCode.invoke(resCode)
+                    }
+                    -1 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        retCode.invoke(resCode)
+                    }
+                    -2 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        retCode.invoke(resCode)
+                    }
+                    -3 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        retCode.invoke(resCode)
+                    }
+                    else -> { retCode.invoke(null) }
                 }
             }
             is Result.ApiError -> { // ApiError<T>(val code: Int, val message: String)
