@@ -29,6 +29,8 @@
             android:layout_height="41dp"
             android:layout_marginTop="5dp"
             android:hint="Street address"
+            android:padding="5dp"
+            android:singleLine="true"
             android:background="@drawable/edittext_rounded_corner_rectangle"/>
 
         <EditText
@@ -37,6 +39,8 @@
             android:layout_height="41dp"
             android:layout_marginTop="5dp"
             android:hint="City"
+            android:padding="5dp"
+            android:singleLine="true"
             android:background="@drawable/edittext_rounded_corner_rectangle"/>
 
         <EditText
@@ -45,6 +49,8 @@
             android:layout_height="41dp"
             android:layout_marginTop="5dp"
             android:hint="State / Province / Regine"
+            android:padding="5dp"
+            android:singleLine="true"
             android:background="@drawable/edittext_rounded_corner_rectangle"/>
 
         <EditText
@@ -53,6 +59,8 @@
             android:layout_height="41dp"
             android:layout_marginTop="5dp"
             android:hint="Zip / PostCode"
+            android:padding="5dp"
+            android:singleLine="true"
             android:background="@drawable/edittext_rounded_corner_rectangle"/>
 
         <TextView

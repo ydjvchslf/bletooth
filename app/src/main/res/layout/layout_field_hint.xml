@@ -31,8 +31,10 @@
             android:layout_width="300dp"
             android:layout_height="41dp"
             android:layout_marginTop="5dp"
+            android:padding="5dp"
             android:background="@drawable/edittext_rounded_corner_rectangle"
-            android:hint="@{hint == null ? `` : hint}"/>
+            android:hint="@{hint == null ? `` : hint}"
+            android:singleLine="true" />
 
     </LinearLayout>
 
