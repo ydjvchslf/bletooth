@@ -363,7 +363,7 @@ class RealtimeFragment : Fragment() {
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged()
-        chart.setVisibleXRangeMaximum(50.0f)
+        chart.setVisibleXRangeMaximum(1000.0f)
         // this automatically refreshes the chart (calls invalidate())
         chart.moveViewTo(data.entryCount.toFloat(), 50f, YAxis.AxisDependency.LEFT)
     }
