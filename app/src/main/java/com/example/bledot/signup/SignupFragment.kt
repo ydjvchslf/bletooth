@@ -24,6 +24,9 @@ import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.databinding.FragmentSignupBinding
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.getCountry
+import com.example.bledot.util.getPathology
+import com.example.bledot.util.getRace
 import java.util.regex.Pattern
 
 
@@ -500,7 +503,6 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun processSignUp() {
         BleDebugLog.i(logTag, "processSignUp-()")
-        BleDebugLog.d(logTag, "")
         // 유저가 입력한 정보 모두 가져오기
         val name = binding.name.infoInputEditText.text.toString()
         val birth = binding.birth.infoInputEditText.text.toString()
@@ -539,44 +541,6 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
             if (isRegistered) {
                 // TODO:: 로그인 후 홈 화면으로 전환
             }
-        }
-    }
-
-    private fun getRace(race: String): Int {
-        BleDebugLog.i(logTag, "getRace-()")
-        return when (race) {
-            "Asian" -> { 0 }
-            "Hispanic" -> { 1 }
-            "American Indian or Alaska Native" -> { 2 }
-            "Black or African American" -> { 3 }
-            "White" -> { 4 }
-            "unknown" -> { 5 }
-            else -> { 6 }
-        }
-    }
-
-    private fun getPathology(path: String): Int {
-        BleDebugLog.i(logTag, "getPathology-()")
-        return when (path) {
-            "Ataxia" -> { 0 }
-            "Multiple sclerosis (MS)" -> { 1 }
-            "Multiple system atrophy (MSA)" -> { 2 }
-            "Parkinson\'s disease (PD)" -> { 3 }
-            "Stroke" -> { 4 }
-            "Other" -> { 5 }
-            else -> { 6 }
-        }
-    }
-
-    private fun getCountry(country: String): Int {
-        BleDebugLog.i(logTag, "getCountry-()")
-        return when (country) {
-            "Korea" -> { 0 }
-            "America" -> { 1 }
-            "Japan" -> { 2 }
-            "Chinese" -> { 3 }
-            "English" -> { 4 }
-            else -> { 5 }
         }
     }
 }

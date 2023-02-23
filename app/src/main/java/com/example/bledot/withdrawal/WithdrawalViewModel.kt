@@ -12,4 +12,10 @@ class WithdrawalViewModel : ViewModel() {
     init {
         BleDebugLog.i(logTag, "init-()")
     }
+
+    fun deleteAccount(email: String, result: (Boolean) -> Unit) {
+        BleDebugLog.i(logTag, "deleteAccount-()")
+        // TODO :: 탈퇴 api
+        result.invoke(true)
+    }
 }

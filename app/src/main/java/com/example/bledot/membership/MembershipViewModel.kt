@@ -32,6 +32,7 @@ class MembershipViewModel : ViewModel() {
     fun registerMembership(inputMemNum: String, result: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "registerMembership-()")
         viewModelScope.launch {
+            // TODO :: 멤버십 등록 api
             remoteDataSource.enrollMembership(inputMemNum) {
                 if (it) {
                     result.invoke(true)

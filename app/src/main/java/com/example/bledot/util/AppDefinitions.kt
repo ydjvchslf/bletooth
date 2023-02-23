@@ -23,3 +23,38 @@ const val BASE_URL = "http://192.168.1.53:8080"
 var LIMIT_PERCENTAGE = 0.05
 
 var userId = MutableLiveData("")
+
+fun getRace(race: String): Int {
+    return when (race) {
+        "Asian" -> { 0 }
+        "Hispanic" -> { 1 }
+        "American Indian or Alaska Native" -> { 2 }
+        "Black or African American" -> { 3 }
+        "White" -> { 4 }
+        "unknown" -> { 5 }
+        else -> { 6 }
+    }
+}
+
+fun getPathology(path: String): Int {
+    return when (path) {
+        "Ataxia" -> { 0 }
+        "Multiple sclerosis (MS)" -> { 1 }
+        "Multiple system atrophy (MSA)" -> { 2 }
+        "Parkinson\'s disease (PD)" -> { 3 }
+        "Stroke" -> { 4 }
+        "Other" -> { 5 }
+        else -> { 6 }
+    }
+}
+
+fun getCountry(country: String): Int {
+    return when (country) {
+        "Korea" -> { 0 }
+        "America" -> { 1 }
+        "Japan" -> { 2 }
+        "Chinese" -> { 3 }
+        "English" -> { 4 }
+        else -> { 5 }
+    }
+}

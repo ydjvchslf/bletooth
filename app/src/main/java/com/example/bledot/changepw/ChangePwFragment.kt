@@ -20,6 +20,7 @@ import com.example.bledot.databinding.FragmentChangePwBinding
 import com.example.bledot.editinfo.EditInfoFragmentDirections
 import com.example.bledot.login.LoginFragmentDirections
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.userId
 import java.util.*
 
 
@@ -154,8 +155,14 @@ class ChangePwFragment : Fragment() {
     private fun changePassword() {
         BleDebugLog.i(logTag, "changePassword-()")
         if (pwFlag1 && pwFlag2) {
-            // TODO:: 비밀번호 변경 Api
-            showDialog("Complete", "Your password has been changed.")
+            val email = userId.value.toString()
+            val inputPw = binding.pw.pw2EditText.text.toString()
+
+            changePwViewModel.changePw(email, inputPw) {
+                if (it) {
+                    showDialog("Complete", "Your password has been changed.")
+                }
+            }
         } else {
             Toast.makeText(context, "pwFlag1: $pwFlag1, pwFlag2: $pwFlag2", Toast.LENGTH_SHORT).show()
             return

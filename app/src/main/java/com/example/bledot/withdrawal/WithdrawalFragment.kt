@@ -16,6 +16,7 @@ import com.example.bledot.databinding.FragmentWithdrawalBinding
 import com.example.bledot.editinfo.EditInfoFragmentDirections
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.btScanningStatus
+import com.example.bledot.util.userId
 
 
 class WithdrawalFragment : Fragment() {
@@ -62,7 +63,12 @@ class WithdrawalFragment : Fragment() {
             setMessage(subTitle)
             setCancelable(false)
             setPositiveButton("Action") { _, _ ->
-                // TODO:: 탈퇴처리
+                // 탈퇴처리
+                withdrawalViewModel.deleteAccount(userId.value.toString()) {
+                    if (it) {
+                        // TODO :: 탈퇴처리 후 화면 전환 처리
+                    }
+                }
             }
             setNegativeButton("Cancel") { _, _ -> }
         }

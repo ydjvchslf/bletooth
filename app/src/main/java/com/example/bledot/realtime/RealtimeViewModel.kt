@@ -165,6 +165,7 @@ class RealtimeViewModel: ViewModel() {
             appIsWorking.value = true
 
             directory.let {
+                // TODO :: 서버 업로드 api
                 // userId, file 넣어서 Post 호출
                 remoteDataSource.uploadToServer("abc@naver.com", it) { result ->
                     if (result) {

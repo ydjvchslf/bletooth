@@ -49,17 +49,7 @@ class FindFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
         checkEmailGuide()
         binding.findPwBtn.setOnClickListener {
-            if(emailFlag) {
-                val userEmail = binding.editTextEmail.text.toString()
-                // TODO:: db에 존재하는 email 인지 확인
-                findViewModel.isValidEmail(userEmail) { isExist ->
-                    if (isExist) {
-                        showDialog("Complete", "[$userEmail]\nPassword reset mail has been sent.")
-                    } else {
-                        Toast.makeText(activity, "존재하지 않는 이메일입니다.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+            processFindPw()
         }
         binding.signInBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(FindFragmentDirections.actionFindFragmentToLoginFragment())
@@ -100,13 +90,30 @@ class FindFragment : Fragment() {
         })
     }
 
+    private fun processFindPw() {
+        BleDebugLog.i(logTag, "processFindPw-()")
+        if (emailFlag) {
+            val userEmail = binding.editTextEmail.text.toString()
+            findViewModel.isValidEmail(userEmail) { isExist ->
+                if (isExist) {
+                    findViewModel.requestResetPw(userEmail) {
+                        if (it == 200) {
+                            showDialog("Complete", "[$userEmail]\nPassword reset mail has been sent.")
+                        }
+                    }
+                } else {
+                    Toast.makeText(activity, "This email does not exist.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     private fun showDialog(title: String, subTitle: String) {
         val builder = AlertDialog.Builder(context).apply {
             setTitle(title)
             setMessage(subTitle)
             setCancelable(false)
             setPositiveButton("YES") { _, _ -> }
-            //setNegativeButton("NO") { _, _ -> }
         }
         builder.create().show()
     }

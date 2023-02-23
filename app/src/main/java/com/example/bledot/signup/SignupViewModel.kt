@@ -18,7 +18,7 @@ class SignupViewModel: ViewModel() {
 
     fun checkUserInfo(email: String?, isExist: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "checkUserInfo-()")
-        // TODO :: 구글 로그인 시, 유저 정보 있는지 없는지 체크
+        // TODO :: 구글 로그인 시, 유저 정보 있는지 없는지 체크 api
         isExist.invoke(false)
     }
 

@@ -85,6 +85,7 @@
                     app:hint="@{`YYYY/MM/DD`}" />
 
                 <include
+                    android:id="@+id/gender"
                     layout="@layout/layout_radio"
                     app:field="@{`Gender`}" />
 
@@ -104,11 +105,13 @@
                     app:field="@{`Pathology`}"/>
 
                 <include
+                    android:id="@+id/phone"
                     layout="@layout/layout_field_hint"
                     app:field="@{`Phone number`}"
                     app:hint="@{`+1 999 000 00 00`}" />
 
                 <include
+                    android:id="@+id/address"
                     layout="@layout/layout_address"
                     app:field="@{`Address`}" />
 

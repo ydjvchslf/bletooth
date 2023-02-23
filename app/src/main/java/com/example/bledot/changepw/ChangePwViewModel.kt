@@ -19,10 +19,17 @@ class ChangePwViewModel : ViewModel() {
 
     fun isCheckedPw(pw: Int, resultCallback: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "isCheckedPw-()")
+        // TODO :: 현재 비밀번호 유효 체크 api
         if (pw == 1111) {
             resultCallback.invoke(true)
         } else {
             resultCallback.invoke(false)
         }
+    }
+
+    fun changePw(email: String, pw: String, result: (Boolean) -> Unit) {
+        BleDebugLog.i(logTag, "changePw-()")
+        // TODO :: 비밀번호 수정 api
+        result.invoke(true)
     }
 }
