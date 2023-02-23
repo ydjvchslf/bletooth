@@ -2,20 +2,21 @@
 <resources>
 
     <string-array name="race_array">
-        <item>Korean</item>
-        <item>American</item>
-        <item>German</item>
-        <item>Japan</item>
-        <item>Chinese</item>
-        <item>English</item>
+        <item>Asian</item>
+        <item>Hispanic</item>
+        <item>American Indian or Alaska Native</item>
+        <item>Black or African American</item>
+        <item>White</item>
+        <item>unknown</item>
     </string-array>
 
     <string-array name="path_array">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
+        <item>Ataxia</item>
+        <item>Multiple sclerosis (MS)</item>
+        <item>Multiple system atrophy (MSA)</item>
+        <item>Parkinson\'s disease (PD)</item>
+        <item>Stroke</item>
+        <item>Other</item>
     </string-array>
 
     <string-array name="weight_array">

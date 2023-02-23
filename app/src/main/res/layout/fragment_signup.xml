@@ -104,6 +104,7 @@
                     android:visibility="invisible"/>
 
                 <include
+                    android:id="@+id/gender"
                     layout="@layout/layout_radio"
                         app:field="@{`Gender`}" />
 

@@ -21,6 +21,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.bledot.R
 import com.example.bledot.activity.main.MainActivity
+import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.databinding.FragmentSignupBinding
 import com.example.bledot.util.BleDebugLog
 import java.util.regex.Pattern
@@ -419,41 +420,42 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
 //                "&& pwFlag : $pwFlag ,&& phoneFlag : $phoneFlag ,&& addressFlag : $addressFlag ,&& agreeFlag: $agreeFlag ,", Toast.LENGTH_SHORT).show()
         if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag && emailDuplicationFlag) {
             Toast.makeText(context, "모든조건 완성, Sign up 성공적", Toast.LENGTH_SHORT).show()
+            processSignUp()
         } else {
             if (!nameFlag) {
-                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please fill out all items", Toast.LENGTH_SHORT).show()
                 binding.nameStateTextView.visibility = View.VISIBLE
                 binding.name.infoInputEditText.background =
                     ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
             } else if (!dateFlag) {
-                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please fill out all items", Toast.LENGTH_SHORT).show()
                 showBirthError()
             } else if (!weightFlag) {
-                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please fill out all items", Toast.LENGTH_SHORT).show()
                 binding.weightStateTextView.visibility = View.VISIBLE
                 binding.weightSpinner.weightEditText.background =
                     ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
             } else if (!emailFlag) {
                 if(binding.email.infoInputEditText.text.isEmpty()) {
-                    Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Please fill out all items", Toast.LENGTH_SHORT).show()
                     binding.emailNotTextView.visibility = View.VISIBLE
                     binding.email.infoInputEditText.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
                 } else {
-                    Toast.makeText(context, "이메일 중복체크를 해주세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Please check for email duplication", Toast.LENGTH_SHORT).show()
                 }
             } else if (!pwFlag) {
-                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please fill out all items", Toast.LENGTH_SHORT).show()
                 binding.pw.pwLimitTextView.visibility = View.VISIBLE
                 binding.pw.pw1EditText.background =
                     ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
             } else if (!phoneFlag) {
-                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please fill out all items", Toast.LENGTH_SHORT).show()
                 binding.phoneNotTextView.visibility = View.VISIBLE
                 binding.phone.infoInputEditText.background =
                     ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
             } else if (!addressFlag) {
-                Toast.makeText(context, "모든 항목을 적어주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please fill out all items", Toast.LENGTH_SHORT).show()
                 binding.address.addressNotTextView.visibility = View.VISIBLE
                 if(binding.address.address1.text.isEmpty()) {
                     binding.address.address1.background =
@@ -469,7 +471,7 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
                 }
             } else if (!agreeFlag) {
-                Toast.makeText(context, "동의 체크 해주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please check the consent.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -493,6 +495,88 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     pwFlag = true
                 }
             }
+        }
+    }
+
+    private fun processSignUp() {
+        BleDebugLog.i(logTag, "processSignUp-()")
+        BleDebugLog.d(logTag, "")
+        // 유저가 입력한 정보 모두 가져오기
+        val name = binding.name.infoInputEditText.text.toString()
+        val birth = binding.birth.infoInputEditText.text.toString()
+        val gender = if (binding.gender.femaleBtn.isChecked) 0 else 1
+        val weight = binding.weightSpinner.weightEditText.text.toString()
+        val weightUnit = if (binding.weightSpinner.spinner.selectedItem.toString() == "kg") 0 else 1
+        val race = getRace(binding.raceSpinner.spinner.selectedItem.toString()) // 0, 1, 2, 3, 4, 5, 6
+        val pathology = getPathology(binding.pathSpinner.spinner.selectedItem.toString())
+        val email = binding.email.infoInputEditText.text.toString()
+        val pw = binding.pw.pw2EditText.text.toString()
+        val phone = binding.phone.infoInputEditText.text.toString()
+        val address1 = binding.address.address1.text.toString()
+        val address2 = binding.address.address2.text.toString()
+        val address3 = binding.address.address3.text.toString()
+        val address4 = binding.address.address4.text.toString()
+        val country = getCountry(binding.countrySpinner.spinner.selectedItem.toString())
+        // UserInfoEntity 세팅
+        val userInfoEntity = UserInfoEntity(
+            email = email,
+            name = name,
+            birth = birth,
+            gender = gender.toString(),
+            weight = weight,
+            weightUnit = weightUnit.toString(),
+            race = race.toString(),
+            pathology = pathology.toString(),
+            phone = phone.toInt(),
+            address1 = address1,
+            address2 = address2,
+            address3 = address3,
+            address4 = address4,
+            country = country.toString(),
+            membership = null
+        )
+        signupViewModel.signUp(userInfoEntity) { isRegistered ->
+            if (isRegistered) {
+                // TODO:: 로그인 후 홈 화면으로 전환
+            }
+        }
+    }
+
+    private fun getRace(race: String): Int {
+        BleDebugLog.i(logTag, "getRace-()")
+        return when (race) {
+            "Asian" -> { 0 }
+            "Hispanic" -> { 1 }
+            "American Indian or Alaska Native" -> { 2 }
+            "Black or African American" -> { 3 }
+            "White" -> { 4 }
+            "unknown" -> { 5 }
+            else -> { 6 }
+        }
+    }
+
+    private fun getPathology(path: String): Int {
+        BleDebugLog.i(logTag, "getPathology-()")
+        return when (path) {
+            "Ataxia" -> { 0 }
+            "Multiple sclerosis (MS)" -> { 1 }
+            "Multiple system atrophy (MSA)" -> { 2 }
+            "Parkinson\'s disease (PD)" -> { 3 }
+            "Stroke" -> { 4 }
+            "Other" -> { 5 }
+            else -> { 6 }
+        }
+    }
+
+    private fun getCountry(country: String): Int {
+        BleDebugLog.i(logTag, "getCountry-()")
+        return when (country) {
+            "Korea" -> { 0 }
+            "America" -> { 1 }
+            "Japan" -> { 2 }
+            "Chinese" -> { 3 }
+            "English" -> { 4 }
+            else -> { 5 }
         }
     }
 }

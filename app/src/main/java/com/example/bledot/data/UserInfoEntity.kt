@@ -22,6 +22,9 @@ data class UserInfoEntity(
     val membership: String?
 ): Parcelable {
     override fun toString(): String {
-        return "email: $email, name: $name, phone: $phone"
+        return "email: $email, name: $name, birth: $birth, gender: $gender, " +
+                "weight: $weight, weightUnit: $weightUnit, race: $race, pathology: $pathology, " +
+                "phone: $phone, address1: $address1, address2: $address2, address3: $address3, " +
+                "address4: $address4, country: $country, membership: $membership"
     }
 }
