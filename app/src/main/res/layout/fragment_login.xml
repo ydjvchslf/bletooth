@@ -44,6 +44,7 @@
             android:layout_gravity="center"
             android:textSize="13sp"
             android:hint="Email"
+            android:text="a@abc.com"
             android:singleLine="true" />
 
         <EditText
@@ -59,6 +60,7 @@
             android:layout_gravity="center"
             android:textSize="13sp"
             android:hint="Password"
+            android:text="1234"
             android:inputType="textPassword"
             android:singleLine="true"/>
 
