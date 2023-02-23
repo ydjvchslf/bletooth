@@ -20,6 +20,9 @@ class RemoteDataSource {
 
     suspend fun checkEmailDuplication(email: String, retCode: (Int?) -> Unit) {
         BleDebugLog.w(logTag, "checkEmailDuplication-()")
+        val requestJsonData = JSONObject(Gson().toJson(RequestEmailPwData(email, null)))
+        BleDebugLog.send(requestJsonData)
+
         val response = retrofitService.checkEmail(RequestEmailPwData(email, null))
         return when (response) {
             is Result.Success -> {
