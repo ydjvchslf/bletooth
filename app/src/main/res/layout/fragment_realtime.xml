@@ -53,7 +53,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:text="Wearing a Vest "
-                android:thumb="@drawable/switch_thumb"
+                android:thumb="@drawable/switch_thumb_selector"
                 android:track="@drawable/switch_selector"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
