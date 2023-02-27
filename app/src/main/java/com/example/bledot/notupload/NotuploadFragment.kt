@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.bledot.R
+import com.example.bledot.adapter.DataAdapter
 import com.example.bledot.databinding.FragmentNotUploadedBinding
 import com.example.bledot.util.BleDebugLog
 
@@ -16,6 +17,8 @@ class NotuploadFragment: Fragment() {
     private val logTag = NotuploadFragment::class.simpleName
     private lateinit var binding: FragmentNotUploadedBinding
     private val notuploadViewModel: NotuploadViewModel by activityViewModels()
+    // 사용할 리사이클러뷰 생성
+    var dataAdapter = DataAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,5 +37,16 @@ class NotuploadFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+
+        notuploadViewModel.isExistData()
+
+        binding.recyclerView.apply {
+            adapter = dataAdapter
+            dataAdapter.submitList(notuploadViewModel.localFileList)
+        }
+    }
+
+    private fun checkData() {
+        BleDebugLog.i(logTag, "checkData-()")
     }
 }

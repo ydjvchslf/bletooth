@@ -32,6 +32,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="10dp"
                 android:button="@null"
                 android:background="@drawable/selector_checkbox_rec"/>
 
@@ -65,6 +66,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="10dp"
                 android:text="upload"
                 android:textColor="@color/white"
                 android:background="@drawable/blue_btn_rounded_corner_rectangle" />
@@ -78,7 +80,9 @@
             app:layout_constraintTop_toBottomOf="@id/layout_upper"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" >
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/layout_data_item">
 
         </androidx.recyclerview.widget.RecyclerView>
 
