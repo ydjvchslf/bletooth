@@ -45,8 +45,4 @@ class NotuploadFragment: Fragment() {
             dataAdapter.submitList(notuploadViewModel.localFileList)
         }
     }
-
-    private fun checkData() {
-        BleDebugLog.i(logTag, "checkData-()")
-    }
 }

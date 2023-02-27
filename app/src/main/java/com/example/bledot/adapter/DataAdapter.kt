@@ -8,6 +8,8 @@ import com.example.bledot.R
 import com.example.bledot.data.CSVData
 import com.example.bledot.databinding.LayoutDataItemBinding
 import com.example.bledot.util.BleDebugLog
+import java.util.*
+
 
 class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
 
@@ -24,7 +26,7 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
         // 리스너 콜백 등록
         item.setOnClickListener {
             val position = dataViewHolder.absoluteAdapterPosition
-            BleDebugLog.i(logTag, "클릭된 item name : ${csvDataList[position].name}")
+            BleDebugLog.i(logTag, "클릭된 item name: ${csvDataList[position].name}")
             clickListener?.invoke(csvDataList[position])
         }
 
@@ -44,7 +46,8 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
     @SuppressLint("NotifyDataSetChanged")
     fun submitList(csvDataList: ArrayList<CSVData>){
         this.csvDataList = csvDataList // 외부데이터를 adapter 데이터로 할당
-        BleDebugLog.d(logTag, "this.csvDataList: ${this.csvDataList}")
+        //BleDebugLog.d(logTag, "this.csvDataList (orig): ${this.csvDataList}")
+        sortArray(csvDataList)
         notifyDataSetChanged()
     }
 
@@ -52,5 +55,14 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
     fun clear() {
         csvDataList.clear()
         notifyDataSetChanged()
+    }
+
+    private fun sortArray(csvDataList: ArrayList<CSVData>) {
+        csvDataList.sortWith { o1, o2 ->
+            o1.name.compareTo(o2.name)
+        }
+        //BleDebugLog.d(logTag, "this.csvDataList (sorting): ${this.csvDataList}")
+        csvDataList.reverse()
+        //BleDebugLog.d(logTag, "this.csvDataList (reverse): ${this.csvDataList}")
     }
 }
