@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
         }
 
         // 미전송 데이터 확인
-        checkData()
+        //checkData()
 
         // 작업 중 화면 터치 불가
         appIsWorking.observe(viewLifecycleOwner) { isWorking ->

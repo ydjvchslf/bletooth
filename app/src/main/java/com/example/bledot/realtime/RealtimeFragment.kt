@@ -260,8 +260,6 @@ class RealtimeFragment : Fragment() {
             }
             setNegativeButton("Cancel") { _, _ ->
                 resetTimer()
-                // TODO:: 현재 데이터 삭제
-                realtimeViewModel.deleteData()
                 // 초기화
                 binding.realWebView.loadUrl("javascript:clearChart()")
                 checkConnection()
