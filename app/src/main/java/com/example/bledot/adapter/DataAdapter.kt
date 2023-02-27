@@ -21,13 +21,17 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
         // 연결할 레이아웃 설정
         val item = LayoutInflater.from(parent.context).inflate(R.layout.layout_data_item, parent, false)
-        val dataViewHolder = DataViewHolder(LayoutDataItemBinding.bind(item))
+        val dataViewHolder = DataViewHolder(LayoutDataItemBinding.bind(item), this)
 
         // 리스너 콜백 등록
         item.setOnClickListener {
+            dataViewHolder.checkbox.setOnCheckedChangeListener(null)
+
             val position = dataViewHolder.absoluteAdapterPosition
-            BleDebugLog.i(logTag, "클릭된 item name: ${csvDataList[position].name}")
+            BleDebugLog.i(logTag, "클릭된 item name: ${csvDataList[position].name}, isChecked: ${csvDataList[position].isChecked}")
             clickListener?.invoke(csvDataList[position])
+
+            dataViewHolder.checkbox.isChecked = !csvDataList[position].isChecked
         }
 
         return dataViewHolder

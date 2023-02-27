@@ -35,7 +35,7 @@ class NotuploadViewModel : ViewModel() {
 
         files?.forEach { file ->
             BleDebugLog.d(logTag, "file.name: ${file.name}")
-            localFileList.add(CSVData(file.name))
+            localFileList.add(CSVData(file.name, false))
         }
 
         val dataNum = localFileList.size

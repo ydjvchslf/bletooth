@@ -44,5 +44,23 @@ class NotuploadFragment: Fragment() {
             adapter = dataAdapter
             dataAdapter.submitList(notuploadViewModel.localFileList)
         }
+        // select all 버튼
+        binding.allCheckBox.setOnClickListener {
+            val isChecked = binding.allCheckBox.isChecked
+            BleDebugLog.d(logTag, "isChecked: $isChecked")
+            //dataAdapter.checkboxListener = isChecked
+        }
+        // select all 문구
+        binding.textViewSelectAll.setOnClickListener {
+
+        }
+        // delete 버튼
+        binding.deleteBtn.setOnClickListener {
+
+        }
+        // upload 버튼
+        binding.uploadBtn.setOnClickListener {
+
+        }
     }
 }
