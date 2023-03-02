@@ -64,7 +64,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/ic_recording_start"
+                android:background="@drawable/ic_recording_before"
                 android:visibility="@{viewModel.isRecording ? View.INVISIBLE : View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +75,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/ic_recording_stop"
+                android:background="@drawable/ic_recording_start"
                 android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -119,33 +119,38 @@
             <Button
                 android:id="@+id/zeroing"
                 android:layout_width="60dp"
-                android:layout_height="25dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/button_zeroing"
                 android:text="zero"
-                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/white"
+                android:background="@drawable/blue_btn_rounded_corner_rectangle"/>
 
             <Button
                 android:id="@+id/start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
                 android:text="start"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/record_textView"
-                />
+                android:layout_marginEnd="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/minute"
+                app:layout_constraintBottom_toBottomOf="@id/minute"
+                android:textColor="@color/white"
+                android:background="@drawable/black_btn_rounded_corner_rectangle"/>
 
             <Button
                 android:id="@+id/stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
                 android:text="stop"
-                app:layout_constraintStart_toEndOf="@id/start"
-                app:layout_constraintTop_toBottomOf="@id/record_textView" />
+                android:layout_marginStart="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/minute"
+                app:layout_constraintBottom_toBottomOf="@id/minute"
+                android:textColor="@color/white"
+                android:background="@drawable/black_btn_rounded_corner_rectangle"/>
 
             <Button
                 android:id="@+id/init"
@@ -242,11 +247,10 @@
                 android:id="@+id/temp_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
                 android:text="temp"
                 android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/record_textView" />
+                app:layout_constraintStart_toEndOf="@id/file_close_btn"
+                app:layout_constraintTop_toBottomOf="@id/start"/>
 
             <ScrollView
                 android:layout_width="match_parent"
