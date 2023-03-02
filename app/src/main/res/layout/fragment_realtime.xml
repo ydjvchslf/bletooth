@@ -90,7 +90,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/record_btn"
-                android:visibility="@{viewModel.isRecording ? View.INVISIBLE : View.VISIBLE}" />
+                android:visibility="invisible" />
 
             <!-- 분, 초 -->
             <TextView
