@@ -47,7 +47,12 @@ class RealtimeFragment : Fragment() {
     private var timerTask: Timer? = null
     // realTime chart
     private lateinit var chart: LineChart
+    private lateinit var chart2: LineChart
+    private lateinit var chart3: LineChart
+
     private lateinit var data: LineData
+    private lateinit var data2: LineData
+    private lateinit var data3: LineData
 
     private lateinit var set: LineDataSet
     private lateinit var set2: LineDataSet
@@ -65,6 +70,8 @@ class RealtimeFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
         chart = binding.lineChart
+        chart2 = binding.lineChart2
+        chart3 = binding.lineChart3
         return binding.root
     }
 
@@ -290,13 +297,22 @@ class RealtimeFragment : Fragment() {
         set3 = createSet3()
 
         val dataSets = arrayListOf<ILineDataSet>()
+        val dataSets2 = arrayListOf<ILineDataSet>()
+        val dataSets3 = arrayListOf<ILineDataSet>()
+
         dataSets.add(set)
-        dataSets.add(set2)
-        dataSets.add(set3)
+        dataSets2.add(set2)
+        dataSets3.add(set3)
 
         data = LineData(dataSets)
-        chart.data = data
+        data2 = LineData(dataSets2)
+        data3 = LineData(dataSets3)
 
+        chart.data = data
+        chart2.data = data2
+        chart3.data = data3
+
+        ///////////////////////////// chart1
         chart.apply {
             setDrawGridBackground(true)
             setGridBackgroundColor(Color.WHITE) // chart 배경색
@@ -314,36 +330,128 @@ class RealtimeFragment : Fragment() {
         }
 
         //X축
-        chart.xAxis.setDrawGridLines(true)
-        chart.xAxis.setDrawAxisLine(false)
+        chart.xAxis.apply {
+            setDrawGridLines(false)
+            setDrawAxisLine(false)
+            isEnabled = true
+            textColor = Color.WHITE
+        }
 
-        chart.xAxis.isEnabled = true
-        chart.xAxis.setDrawGridLines(false)
-
-        chart.xAxis.textColor = Color.WHITE
-
-        //Legend
-        val l = chart.legend
-        l.isEnabled = true
-        l.formSize = 10f // set the size of the legend forms/shapes
-        l.textSize = 12f
-        l.textColor = Color.BLACK // label color
-        //l.verticalAlignment = LegendVerticalAlignment.TOP // label 위치
+        chart.legend.apply {
+            isEnabled = true
+            formSize = 10f // set the size of the legend forms/shapes
+            textSize = 12f
+            textColor = Color.BLACK
+        }
 
         //Y축
-        val leftAxis = chart.axisLeft
-        leftAxis.isEnabled = true
-        leftAxis.textColor = Color.BLACK
-        leftAxis.setDrawGridLines(true)
-        leftAxis.gridColor = Color.BLACK
+        chart.axisLeft.apply {
+            isEnabled = true
+            textColor = Color.BLACK
+            setDrawGridLines(true)
+            gridColor = Color.BLACK
+        }
 
-        val rightAxis = chart.axisRight
-        rightAxis.isEnabled = false
+        chart.axisRight.apply {
+            isEnabled = false
+        }
 
+        /////////////////////// chart2
+        chart2.apply {
+            setDrawGridBackground(true)
+            setGridBackgroundColor(Color.WHITE) // chart 배경색
+            // description text
+            description.isEnabled = true
+            // touch gestures (false-비활성화)
+            setTouchEnabled(false)
+            // scaling and dragging (false-비활성화)
+            isDragEnabled = false
+            setScaleEnabled(false)
+            //auto scale
+            isAutoScaleMinMaxEnabled = false
+            // if disabled, scaling can be done on x- and y-axis separately
+            setPinchZoom(false)
+        }
+
+        //X축
+        chart2.xAxis.apply {
+            setDrawGridLines(false)
+            setDrawAxisLine(false)
+            isEnabled = true
+            textColor = Color.WHITE
+        }
+
+        chart2.legend.apply {
+            isEnabled = true
+            formSize = 10f // set the size of the legend forms/shapes
+            textSize = 12f
+            textColor = Color.BLACK
+        }
+
+        //Y축
+        chart2.axisLeft.apply {
+            isEnabled = true
+            textColor = Color.BLACK
+            setDrawGridLines(true)
+            gridColor = Color.BLACK
+        }
+
+        chart2.axisRight.apply {
+            isEnabled = false
+        }
+
+        /////////////////////////chart3
+        chart3.apply {
+            setDrawGridBackground(true)
+            setGridBackgroundColor(Color.WHITE) // chart 배경색
+            // description text
+            description.isEnabled = true
+            // touch gestures (false-비활성화)
+            setTouchEnabled(false)
+            // scaling and dragging (false-비활성화)
+            isDragEnabled = false
+            setScaleEnabled(false)
+            //auto scale
+            isAutoScaleMinMaxEnabled = false
+            // if disabled, scaling can be done on x- and y-axis separately
+            setPinchZoom(false)
+        }
+
+        //X축
+        chart3.xAxis.apply {
+            setDrawGridLines(false)
+            setDrawAxisLine(false)
+            isEnabled = true
+            textColor = Color.WHITE
+        }
+
+        chart3.legend.apply {
+            isEnabled = true
+            formSize = 10f // set the size of the legend forms/shapes
+            textSize = 12f
+            textColor = Color.BLACK
+        }
+
+        //Y축
+        chart3.axisLeft.apply {
+            isEnabled = true
+            textColor = Color.BLACK
+            setDrawGridLines(true)
+            gridColor = Color.BLACK
+        }
+
+        chart3.axisRight.apply {
+            isEnabled = false
+        }
+
+        /////===================/////
         addEntry(0.0, 0.0, 0.0)
-
         // don't forget to refresh the drawing
         chart.invalidate()
+        chart2.invalidate()
+        chart3.invalidate()
+        /////===================/////
+
     }
 
     private fun addEntry(num: Double, num2: Double, num3: Double) {
@@ -354,20 +462,29 @@ class RealtimeFragment : Fragment() {
         val entry3 = Entry(set3.entryCount.toFloat(), num3.toFloat())
 
         data.addEntry(entry, 0)
-        data.addEntry(entry2, 1)
-        data.addEntry(entry3, 2)
+        data2.addEntry(entry2, 0)
+        data3.addEntry(entry3, 0)
 
         data.notifyDataChanged()
+        data2.notifyDataChanged()
+        data3.notifyDataChanged()
 
         // let the chart know it's data has changed
         chart.notifyDataSetChanged()
+        chart2.notifyDataSetChanged()
+        chart3.notifyDataSetChanged()
+
         chart.setVisibleXRangeMaximum(1000.0f)
+        chart2.setVisibleXRangeMaximum(1000.0f)
+        chart3.setVisibleXRangeMaximum(1000.0f)
         // this automatically refreshes the chart (calls invalidate())
         chart.moveViewTo(data.entryCount.toFloat(), 50f, YAxis.AxisDependency.LEFT)
+        chart2.moveViewTo(data2.entryCount.toFloat(), 50f, YAxis.AxisDependency.LEFT)
+        chart3.moveViewTo(data3.entryCount.toFloat(), 50f, YAxis.AxisDependency.LEFT)
     }
 
     private fun createSet(): LineDataSet {
-        val set = LineDataSet(null, "Roll") // X
+        val set = LineDataSet(null, "X") // X Roll
         set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(243,101,75)
@@ -379,7 +496,7 @@ class RealtimeFragment : Fragment() {
     }
 
     private fun createSet2(): LineDataSet {
-        val set = LineDataSet(null, "Pitch") // Y
+        val set = LineDataSet(null, "Y") // Y Pitch
         set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(91,209,178)
@@ -391,7 +508,7 @@ class RealtimeFragment : Fragment() {
     }
 
     private fun createSet3(): LineDataSet {
-        val set = LineDataSet(null, "Yaw") // Z
+        val set = LineDataSet(null, "Z") // Z Yaw
         set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(23,145,253)
