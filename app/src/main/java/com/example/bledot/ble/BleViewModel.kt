@@ -13,7 +13,7 @@ import com.xsens.dot.android.sdk.models.FilterProfileInfo
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
 import com.xsens.dot.android.sdk.utils.XsensDotLogger
-class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCallback {
+class BleViewModel: ViewModel(), XsensDotDeviceCallback {
 
     private val logTag = BleViewModel::class.simpleName
     // 중복 체크되어 담긴 센서리스트
@@ -40,6 +40,9 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
     var data2Listener : ((XYZData) -> Unit)? = null
     // 50개 단위
     var xyzData50List = ArrayList<XYZData>()
+
+    // 현재 XYZData
+    var xyzData: XYZData? = null
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -157,24 +160,25 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
             val yEuler = String.format("%.6f", eulerAngles[1]).toDouble()
             val zEuler = String.format("%.6f", eulerAngles[2]).toDouble()
 
-            BleDebugLog.d(logTag, "xEuler: $xEuler, yEuler: $yEuler, zEuler: $zEuler")
+            xyzData = XYZData(xEuler, yEuler, zEuler)
+            BleDebugLog.d(logTag, "xyzData: $xyzData")
 
-            if (xyzData50List.size < 50) {
-                xyzData50List.add(XYZData(xEuler, yEuler, zEuler))
-                //if(xyzData50List.size == 20){
+            xyzData?.let {
+                if (xyzData50List.size < 50) {
+                    xyzData50List.add(XYZData(xEuler, yEuler, zEuler))
+                    //if(xyzData50List.size == 20){
                     data2Listener?.invoke(xyzData50List[xyzData50List.lastIndex])
-                //}
-            } else {
-                dataListener?.invoke(xyzData50List[xyzData50List.lastIndex])
-                xyzData50List.clear()
-            }
+                    //}
+                } else {
+                    dataListener?.invoke(xyzData50List[xyzData50List.lastIndex])
+                    xyzData50List.clear()
+                }
 
-            // 모듈러 연산
-
-            // data 파일에 업데이트
-            // 녹화 시작일 때만
-            if (isRecording && address != null) {
-                updateFiles(address, xsData)
+                // data 파일에 업데이트
+                // 녹화 시작일 때만
+                if (isRecording && address != null) {
+                    updateFiles(address, xsData)
+                }
             }
         }
     }
@@ -227,19 +231,10 @@ class BleViewModel: ViewModel(), XsensDotDeviceCallback, XsensDotMeasurementCall
         BleDebugLog.i(logTag, "onSyncStatusUpdate-()")
     }
 
-    fun makeResetZero(xsDevice: XsensDotDevice) {
+    fun makeResetZero(): XYZData? {
         BleDebugLog.i(logTag, "makeResetZero-()")
-        xsDevice.setXsensDotMeasurementCallback(this)
-        xsDevice.resetHeading()
-    }
-
-    // 센서 zero 인터페이스
-    override fun onXsensDotHeadingChanged(p0: String?, p1: Int, p2: Int) {
-        BleDebugLog.i(logTag, "onXsensDotHeadingChanged-()")
-    }
-    // 센서 zero 인터페이스
-    override fun onXsensDotRotLocalRead(p0: String?, p1: FloatArray?) {
-        BleDebugLog.i(logTag, "onXsensDotRotLocalRead-()")
+        BleDebugLog.d(logTag, "현재 XYZData: $xyzData")
+        return xyzData
     }
 
     // 센서 data 실시간 받아오면서 update

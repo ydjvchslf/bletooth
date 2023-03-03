@@ -58,6 +58,9 @@ class RealtimeFragment : Fragment() {
     private lateinit var set2: LineDataSet
     private lateinit var set3: LineDataSet
 
+    private var isZeroing = false
+    private var momentData: XYZData? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -146,7 +149,8 @@ class RealtimeFragment : Fragment() {
                     Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-                    bleViewModel.makeResetZero(bleViewModel.mConnectedXsDevice.value!!)
+                    momentData = bleViewModel.makeResetZero()
+                    isZeroing = true
                 }
             }
         }
@@ -169,8 +173,19 @@ class RealtimeFragment : Fragment() {
         // 실시간 data 리스너
         bleViewModel.dataListener = { xyzData ->
             BleDebugLog.d(logTag, "1번 그래프 Listener")
+            // zeroing 데이터 가공
+            val afterXYZData = XYZData(
+                xValue = xyzData.xValue - (momentData?.xValue ?: 0.0),
+                yValue = xyzData.yValue - (momentData?.yValue ?: 0.0),
+                zValue = xyzData.zValue - (momentData?.zValue ?: 0.0)
+            )
+
             if (webViewList.size < 10) {
-                webViewList.add(xyzData)
+                if (isZeroing) {
+                    webViewList.add(afterXYZData)
+                } else {
+                    webViewList.add(afterXYZData)
+                }
             } else { // size > 10
                 BleDebugLog.d(logTag, "webViewList.size: ${webViewList.size}")
                 val jsonArrayString = Gson().toJson(webViewList)
@@ -183,11 +198,27 @@ class RealtimeFragment : Fragment() {
 
         bleViewModel.data2Listener = { xyzData ->
             BleDebugLog.d(logTag, "2번 그래프 Listener")
-            activity?.runOnUiThread {
-                val xValue = xyzData.xValue
-                val yValue = xyzData.yValue
-                val zValue = xyzData.zValue
-                addEntry(xValue, yValue, zValue)
+            // zeroing 데이터 가공
+            val afterXYZData = XYZData(
+                xValue = xyzData.xValue - (momentData?.xValue ?: 0.0),
+                yValue = xyzData.yValue - (momentData?.yValue ?: 0.0),
+                zValue = xyzData.zValue - (momentData?.zValue ?: 0.0)
+            )
+
+            if (isZeroing) {
+                activity?.runOnUiThread {
+                    val xValue = afterXYZData.xValue
+                    val yValue = afterXYZData.yValue
+                    val zValue = afterXYZData.zValue
+                    addEntry(xValue, yValue, zValue)
+                }
+            } else {
+                activity?.runOnUiThread {
+                    val xValue = xyzData.xValue
+                    val yValue = xyzData.yValue
+                    val zValue = xyzData.zValue
+                    addEntry(xValue, yValue, zValue)
+                }
             }
         }
     }
@@ -545,6 +576,15 @@ class RealtimeFragment : Fragment() {
             setPositiveButton("Action") { _, _ -> }
         }
         builder.create().show()
+    }
+
+    private fun toAfterDate(before: XYZData) {
+        BleDebugLog.i(logTag, "toAfterDate-()")
+        BleDebugLog.d(logTag, "before: $before")
+        val beforeX = before.xValue
+        val beforeY = before.yValue
+        val beforeZ = before.zValue
+
     }
 
     override fun onDestroy() {
