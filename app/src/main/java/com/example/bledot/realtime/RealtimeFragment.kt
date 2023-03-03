@@ -104,7 +104,7 @@ class RealtimeFragment : Fragment() {
             realtimeViewModel.isWearingOption = isToggleValue
         }
         // recording start btn
-        binding.recordBtn.setOnClickListener {
+        binding.start.setOnClickListener {
             BleDebugLog.i(logTag, "녹화 Start Clicked-()")
 
             if (bleViewModel.mConnectedXsDevice.value == null) {
@@ -121,7 +121,7 @@ class RealtimeFragment : Fragment() {
             }
         }
         // recording stop btn
-        binding.icStopBtn.setOnClickListener {
+        binding.stop.setOnClickListener {
             BleDebugLog.i(logTag, "녹화 Stop Clicked-()")
 
             realtimeViewModel.isRecording.value = false
@@ -147,28 +147,6 @@ class RealtimeFragment : Fragment() {
                 }
                 else -> {
                     bleViewModel.makeResetZero(bleViewModel.mConnectedXsDevice.value!!)
-                }
-            }
-        }
-        // realtime start
-        binding.start.setOnClickListener {
-            when (bleViewModel.mConnectedXsDevice.value) {
-                null -> {
-                    Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    bleViewModel.startMeasure(bleViewModel.mConnectedXsDevice.value!!)
-                }
-            }
-        }
-        // realtime stop
-        binding.stop.setOnClickListener {
-            when (bleViewModel.mConnectedXsDevice.value) {
-                null -> {
-                    Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    bleViewModel.stopMeasure(bleViewModel.mConnectedXsDevice.value!!)
                 }
             }
         }
@@ -571,6 +549,7 @@ class RealtimeFragment : Fragment() {
 
     override fun onDestroy() {
         BleDebugLog.i(logTag, "resetTimer-()")
+        stopTimer()
         resetTimer()
         super.onDestroy()
     }
