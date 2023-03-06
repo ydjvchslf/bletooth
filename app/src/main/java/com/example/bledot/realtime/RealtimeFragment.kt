@@ -155,10 +155,11 @@ class RealtimeFragment : Fragment() {
             }
         }
         binding.fileSaveBtn.setOnClickListener {
-            bleViewModel.mConnectedXsDevice.value?.let {
-                realtimeViewModel.createFile(it)
-                bleViewModel.isRecording = true
-            }
+//            bleViewModel.mConnectedXsDevice.value?.let {
+//                realtimeViewModel.createFile(it)
+//                bleViewModel.isRecording = true
+//            }
+            realtimeViewModel.createFile2()
         }
         binding.fileCloseBtn.setOnClickListener {
             realtimeViewModel.closeFiles()

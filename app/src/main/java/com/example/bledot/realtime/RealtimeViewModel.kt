@@ -84,6 +84,20 @@ class RealtimeViewModel: ViewModel() {
         BleDebugLog.d(logTag, "${mLoggerList.value?.size}")
     }
 
+    fun createFile2() {
+        BleDebugLog.i(logTag, "createFile-()")
+        val dir: File? = App.context().getExternalFilesDir(null)
+        val filePath = dir?.absolutePath + File.separator
+        filename = SimpleDateFormat(
+                    "yyyyMMdd_HHmmss_SSS",
+                    Locale.getDefault()
+                ).format(Date()) +
+                ".csv"
+        fileFullName = filePath + filename
+        File(fileFullName).createNewFile()
+        BleDebugLog.d(logTag, "파일 [$filename] 생성 완료")
+    }
+
     /**
      * Close the data output stream.
      */
