@@ -17,7 +17,7 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
     private val logTag = DataAdapter::class.simpleName
     private var csvDataList = ArrayList<CSVData>()
 
-    var clickListener : ((CSVData) -> Unit)? = null
+    var clickListener : ((CSVData, Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
         // 연결할 레이아웃 설정
@@ -44,10 +44,10 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
             }
 
             // 리사이클러뷰 전체 선택 or 전체 해제 확인
-            checkCheckboxStatus()
+            val status = checkCheckboxStatus()
 
             BleDebugLog.i(logTag, "클릭후 item name: ${csvDataList[position].name}, isChecked: ${csvDataList[position].isChecked}")
-            clickListener?.invoke(csvDataList[position])
+            clickListener?.invoke(csvDataList[position], status)
         }
 
         return dataViewHolder
@@ -86,7 +86,10 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
         //BleDebugLog.d(logTag, "this.csvDataList (reverse): ${this.csvDataList}")
     }
 
-    private fun checkCheckboxStatus() {
+    private fun checkCheckboxStatus(): Boolean {
         BleDebugLog.i(logTag, "checkCheckboxStatus-()")
+        return csvDataList.all {
+            it.isChecked
+        }
     }
 }

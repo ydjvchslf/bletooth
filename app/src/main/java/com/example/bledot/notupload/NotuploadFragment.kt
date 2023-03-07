@@ -44,6 +44,11 @@ class NotuploadFragment: Fragment() {
             adapter = dataAdapter
             dataAdapter.submitList(notuploadViewModel.localFileList)
         }
+
+        dataAdapter.clickListener = { csvData, status ->
+            binding.allCheckBox.isChecked = status
+        }
+
         // select all 버튼
         binding.allCheckBox.setOnClickListener {
             val isChecked = binding.allCheckBox.isChecked
