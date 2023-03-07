@@ -61,6 +61,8 @@ class RealtimeFragment : Fragment() {
     private var isZeroing = false
     private var momentData: XYZData? = null
 
+    private var index = 1
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -114,12 +116,13 @@ class RealtimeFragment : Fragment() {
                 Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             realtimeViewModel.isRecording.value = true
             BleDebugLog.i(logTag, "isRecording: ${realtimeViewModel.isRecording.value}")
             binding.realWebView.loadUrl("javascript:clearChart()")
             startTimer()
             bleViewModel.mConnectedXsDevice.value?.let {
-                realtimeViewModel.createFile(it)
+                realtimeViewModel.createFile()
                 bleViewModel.isRecording = true
             }
         }
@@ -127,13 +130,18 @@ class RealtimeFragment : Fragment() {
         binding.stop.setOnClickListener {
             BleDebugLog.i(logTag, "녹화 Stop Clicked-()")
 
+            if (bleViewModel.mConnectedXsDevice.value == null) {
+                Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             realtimeViewModel.isRecording.value = false
-            bleViewModel.isRecording = true
+            bleViewModel.isRecording = false
             BleDebugLog.i(logTag, "isRecording: ${realtimeViewModel.isRecording.value}")
             stopTimer()
             bleViewModel.mConnectedXsDevice.value?.let {
                 bleViewModel.stopMeasure(it)
-                realtimeViewModel.closeFiles()
+                index = 1
             }
 
             // 현재 저장한 파일명 확실히 있는지 체크 후 dialog 에 표출하기
@@ -154,16 +162,12 @@ class RealtimeFragment : Fragment() {
                 }
             }
         }
-        binding.fileSaveBtn.setOnClickListener {
-//            bleViewModel.mConnectedXsDevice.value?.let {
-//                realtimeViewModel.createFile(it)
-//                bleViewModel.isRecording = true
-//            }
-            realtimeViewModel.createFile2()
-        }
-        binding.fileCloseBtn.setOnClickListener {
-            realtimeViewModel.closeFiles()
-        }
+//        binding.fileSaveBtn.setOnClickListener { // 임시
+//            realtimeViewModel.createFile2()
+//        }
+//        binding.fileCloseBtn.setOnClickListener { // 임시
+//            //realtimeViewModel.closeFiles()
+//        }
         // 웹뷰 js 인터페이스 연결
         binding.realWebView.apply {
             settings.javaScriptEnabled = true
@@ -221,7 +225,19 @@ class RealtimeFragment : Fragment() {
                     addEntry(xValue, yValue, zValue)
                 }
             }
+
+            // data 파일에 업데이트
+            // 녹화 시작일 때만
+            if (realtimeViewModel.isRecording.value == true) {
+                realtimeViewModel.updateFiles(afterXYZData, index)
+                index ++
+            }
         }
+//        binding.writeBtn.setOnClickListener { // 임시
+//            val afterXYZData = XYZData(33.4444444, 22.3333, -44.693475374)
+//            realtimeViewModel.updateFiles(afterXYZData, index)
+//            index ++
+//        }
     }
 
     @SuppressLint("SetTextI18n")

@@ -1,5 +1,6 @@
 package com.example.bledot.realtime
 
+import android.annotation.SuppressLint
 import android.os.Environment
 import android.os.StatFs
 import androidx.lifecycle.MutableLiveData
@@ -7,13 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bledot.App
 import com.example.bledot.BuildConfig
+import com.example.bledot.data.XYZData
 import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.*
 import com.xsens.dot.android.sdk.models.XsensDotDevice
 import com.xsens.dot.android.sdk.models.XsensDotPayload
 import com.xsens.dot.android.sdk.utils.XsensDotLogger
 import kotlinx.coroutines.launch
+import java.io.BufferedWriter
 import java.io.File
+import java.io.FileWriter
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,54 +41,7 @@ class RealtimeViewModel: ViewModel() {
         mLoggerList.value?.clear()
     }
 
-    fun createFile(xsDevice: XsensDotDevice) {
-        BleDebugLog.i(logTag, "createFile-()")
-        // Remove XsensDotLogger objects from list before start data logging.
-        mLoggerList.value?.clear()
-
-        val appVersion = BuildConfig.VERSION_NAME
-        val fwVersion = xsDevice.firmwareVersion
-        val address = xsDevice.address
-        val tag = xsDevice.tag.ifEmpty { xsDevice.name }
-
-        // Store log file in app internal folder.
-        // Don't need user to granted the storage permission.
-        val dir: File = App.context().getExternalFilesDir(null)!!
-        val filePath = dir.absolutePath + File.separator
-        filename = tag + "_" +
-                    SimpleDateFormat(
-                    "yyyyMMdd_HHmmss_SSS",
-                    Locale.getDefault()
-                    ).format(Date()) +
-                    ".csv"
-        fileFullName = filePath + filename
-        BleDebugLog.d(logTag, "파일 [$filename] 생성 완료")
-
-        val logger = XsensDotLogger(
-            App.context(),
-            XsensDotLogger.TYPE_CSV,
-            XsensDotPayload.PAYLOAD_TYPE_COMPLETE_EULER,
-            fileFullName,
-            tag,
-            fwVersion,
-            xsDevice.isSynced,
-            xsDevice.currentOutputRate,
-            xsDevice.filterProfileInfoList[0].name,
-            appVersion
-        )
-
-        // Use mac address as a key to find logger object.
-        val map = HashMap<String, Any>()
-        map["KEY_ADDRESS"] = address
-        map["KEY_LOGGER"] = logger
-        val postLoggerList = ArrayList<HashMap<String, Any>>()
-        postLoggerList.add(map)
-        mLoggerList.value = postLoggerList
-        BleDebugLog.d(logTag, "${mLoggerList.value}")
-        BleDebugLog.d(logTag, "${mLoggerList.value?.size}")
-    }
-
-    fun createFile2() {
+    fun createFile() {
         BleDebugLog.i(logTag, "createFile-()")
         val dir: File? = App.context().getExternalFilesDir(null)
         val filePath = dir?.absolutePath + File.separator
@@ -96,22 +53,48 @@ class RealtimeViewModel: ViewModel() {
         fileFullName = filePath + filename
         File(fileFullName).createNewFile()
         BleDebugLog.d(logTag, "파일 [$filename] 생성 완료")
+
+        csvFirst()
     }
 
-    /**
-     * Close the data output stream.
-     */
-    fun closeFiles() {
-        BleDebugLog.i(logTag, "closeFiles-()")
-        mLoggerList.value?.let {
-            for (map in it) {
-                // Call stop() function to flush and close the output stream.
-                // Data is kept in the stream buffer and write to file when the buffer is full.
-                // Call this function to write data to file whether the buffer is full or not.
-                val logger =
-                    map[KEY_LOGGER] as XsensDotLogger
-                logger.stop()
-            }
+    private fun csvFirst() {
+        BleDebugLog.i(logTag, "csvFirst-()")
+
+        val dir: File? = App.context().getExternalFilesDir(null)
+        val filePath = dir?.absolutePath + File.separator
+
+        val file = File(filePath, filename)
+        val bw = BufferedWriter(FileWriter(file))
+
+        try {
+            bw.write("time, paketNumber, Roll, Pitch, Yaw\n")
+            bw.flush()
+            bw.close()
+        }
+        catch (e: Exception) {
+            BleDebugLog.e("${e.message}")
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun updateFiles(afterXYZData: XYZData, index: Int) {
+        BleDebugLog.i(logTag, "updateFiles-()")
+
+        val parTime = SimpleDateFormat("yyyyMMddHH:mm:ss.sss").format(Calendar.getInstance().time)
+
+        val dir: File? = App.context().getExternalFilesDir(null)
+        val filePath = dir?.absolutePath + File.separator
+
+        val file = File(filePath, filename)
+        val bw = BufferedWriter(FileWriter(file, true))
+
+        try {
+            bw.write("$parTime, $index, ${afterXYZData.xValue}, ${afterXYZData.yValue}, ${afterXYZData.zValue}\n")
+            bw.flush()
+            bw.close()
+        }
+        catch (e: Exception) {
+            BleDebugLog.e("${e.message}")
         }
     }
 
