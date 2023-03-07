@@ -118,7 +118,7 @@
 
             <Button
                 android:id="@+id/zeroing"
-                android:layout_width="60dp"
+                android:layout_width="70dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="30dp"

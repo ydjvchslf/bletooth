@@ -157,6 +157,7 @@ class RealtimeFragment : Fragment() {
                     Toast.makeText(App.context(), "Please connect the device first.", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
+                    changeToZeroed()
                     momentData = bleViewModel.makeResetZero()
                     isZeroing = true
                 }
@@ -602,6 +603,18 @@ class RealtimeFragment : Fragment() {
         val beforeY = before.yValue
         val beforeZ = before.zValue
 
+    }
+
+    private fun changeToZeroed() {
+        BleDebugLog.i(logTag, "changeToZeroed-()")
+        binding.zeroing.text = "zeroed"
+        val timer = Timer()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                // Do your actual work here
+                binding.zeroing.text = "zero"
+            }
+        }, 2000L)
     }
 
     override fun onDestroy() {
