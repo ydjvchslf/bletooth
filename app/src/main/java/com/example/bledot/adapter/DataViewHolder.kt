@@ -9,6 +9,7 @@ class DataViewHolder(binding: LayoutDataItemBinding, private val adapter: DataAd
 
     private val logTag = DataViewHolder::class.simpleName ?: ""
 
+    var listItem = binding.listItem
     private var filename = binding.textViewFilename
     var checkbox = binding.checkbox
 
@@ -19,11 +20,12 @@ class DataViewHolder(binding: LayoutDataItemBinding, private val adapter: DataAd
     fun bind(csvData: CSVData) {
         BleDebugLog.i(logTag, "bind-()")
         filename.text = csvData.name
-        BleDebugLog.d(logTag, "초기 csvData: $csvData")
+        //checkbox.isChecked = csvData.isChecked
+        BleDebugLog.d(logTag, "csvData: $csvData")
 
-        checkbox.setOnClickListener {
-            checkbox.isChecked = !csvData.isChecked // 체크박스 클릭이 이상햄,,,,,,
-            BleDebugLog.d(logTag, "csvData: $csvData")
-        }
+//        checkbox.setOnClickListener {
+//            checkbox.isChecked = !csvData.isChecked // 체크박스 클릭이 이상햄,,,,,,
+//            BleDebugLog.d(logTag, "csvData: $csvData")
+//        }
     }
 }

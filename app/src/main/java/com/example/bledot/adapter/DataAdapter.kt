@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bledot.App
 import com.example.bledot.R
 import com.example.bledot.data.CSVData
 import com.example.bledot.databinding.LayoutDataItemBinding
@@ -25,15 +26,25 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
 
         // 리스너 콜백 등록
         item.setOnClickListener {
-            dataViewHolder.checkbox.setOnCheckedChangeListener(null)
+            BleDebugLog.i(logTag, "item Clicked-()")
+
+            //dataViewHolder.checkbox.setOnClickListener(null)
 
             val position = dataViewHolder.absoluteAdapterPosition
             csvDataList.apply {
                 val currentChecked = this[position].isChecked
                 this[position].isChecked = !currentChecked
 
-                dataViewHolder.checkbox.isChecked = !currentChecked
+                if (!currentChecked) {
+                    dataViewHolder.checkbox.setBackgroundResource(R.drawable.ic_checkbox_active)
+                } else {
+                    dataViewHolder.checkbox.setBackgroundResource(R.drawable.ic_checkbox_inactive)
+                }
+                //dataViewHolder.checkbox.isChecked = !currentChecked
             }
+
+            // 리사이클러뷰 전체 선택 or 전체 해제 확인
+            checkCheckboxStatus()
 
             BleDebugLog.i(logTag, "클릭후 item name: ${csvDataList[position].name}, isChecked: ${csvDataList[position].isChecked}")
             clickListener?.invoke(csvDataList[position])
@@ -73,5 +84,9 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
         //BleDebugLog.d(logTag, "this.csvDataList (sorting): ${this.csvDataList}")
         csvDataList.reverse()
         //BleDebugLog.d(logTag, "this.csvDataList (reverse): ${this.csvDataList}")
+    }
+
+    private fun checkCheckboxStatus() {
+        BleDebugLog.i(logTag, "checkCheckboxStatus-()")
     }
 }
