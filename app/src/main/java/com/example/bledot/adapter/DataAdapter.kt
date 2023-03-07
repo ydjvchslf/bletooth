@@ -15,7 +15,7 @@ import java.util.*
 class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
 
     private val logTag = DataAdapter::class.simpleName
-    private var csvDataList = ArrayList<CSVData>()
+    var csvDataList = ArrayList<CSVData>()
 
     var clickListener : ((CSVData, Boolean) -> Unit)? = null
 

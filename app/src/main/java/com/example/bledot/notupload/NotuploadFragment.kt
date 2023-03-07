@@ -53,6 +53,19 @@ class NotuploadFragment: Fragment() {
         binding.allCheckBox.setOnClickListener {
             val isChecked = binding.allCheckBox.isChecked
             BleDebugLog.d(logTag, "isChecked: $isChecked")
+
+            val status = checkItemStatus()
+            when (status) {
+                0 -> { // 리스트 아이템이 모두 선택 상태
+                    changeItemStatus(false)
+                }
+                1 -> { // 리스트 아이템이 모두 해제 상태
+                    changeItemStatus(true)
+                }
+                2 -> { // 일부만 선택 상태
+                    changeItemStatus(true)
+                }
+            }
             //dataAdapter.checkboxListener = isChecked
         }
         // select all 문구
@@ -67,5 +80,23 @@ class NotuploadFragment: Fragment() {
         binding.uploadBtn.setOnClickListener {
 
         }
+    }
+
+    private fun checkItemStatus(): Int {
+        BleDebugLog.i(logTag, "checkItemStatus-()")
+        val foundCheckedItem = dataAdapter.csvDataList.all {
+            it.isChecked
+        }
+        return if (foundCheckedItem) 0 else 1
+    }
+
+    private fun changeItemStatus(status: Boolean) {
+        BleDebugLog.i(logTag, "changeItemStatus-()")
+        dataAdapter.csvDataList.replaceAll {
+            it.isChecked = status
+            it
+        }
+
+        dataAdapter.submitList(dataAdapter.csvDataList)
     }
 }
