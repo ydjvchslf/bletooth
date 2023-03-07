@@ -19,8 +19,10 @@ class DataViewHolder(binding: LayoutDataItemBinding, private val adapter: DataAd
     fun bind(csvData: CSVData) {
         BleDebugLog.i(logTag, "bind-()")
         filename.text = csvData.name
+        BleDebugLog.d(logTag, "초기 csvData: $csvData")
 
         checkbox.setOnClickListener {
+            checkbox.isChecked = !csvData.isChecked // 체크박스 클릭이 이상햄,,,,,,
             BleDebugLog.d(logTag, "csvData: $csvData")
         }
     }

@@ -28,10 +28,15 @@ class DataAdapter: RecyclerView.Adapter<DataViewHolder>() {
             dataViewHolder.checkbox.setOnCheckedChangeListener(null)
 
             val position = dataViewHolder.absoluteAdapterPosition
-            BleDebugLog.i(logTag, "클릭된 item name: ${csvDataList[position].name}, isChecked: ${csvDataList[position].isChecked}")
-            clickListener?.invoke(csvDataList[position])
+            csvDataList.apply {
+                val currentChecked = this[position].isChecked
+                this[position].isChecked = !currentChecked
 
-            dataViewHolder.checkbox.isChecked = !csvDataList[position].isChecked
+                dataViewHolder.checkbox.isChecked = !currentChecked
+            }
+
+            BleDebugLog.i(logTag, "클릭후 item name: ${csvDataList[position].name}, isChecked: ${csvDataList[position].isChecked}")
+            clickListener?.invoke(csvDataList[position])
         }
 
         return dataViewHolder
