@@ -82,6 +82,13 @@ class NotuploadFragment: Fragment() {
             val dataList = dataAdapter.csvDataList
             notuploadViewModel.checkSelectedData(dataList, true)
         }
+        // delete or upload 후 리사이클러뷰 갱신
+        notuploadViewModel.isUpdate.observe(viewLifecycleOwner) { isUpdated ->
+            if (isUpdated) {
+                dataAdapter.submitList(notuploadViewModel.localFileList)
+                notuploadViewModel.isUpdate.value = false
+            }
+        }
     }
 
     private fun checkItemStatus(): Int {

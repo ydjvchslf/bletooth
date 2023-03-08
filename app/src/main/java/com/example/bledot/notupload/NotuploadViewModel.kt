@@ -1,5 +1,6 @@
 package com.example.bledot.notupload
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bledot.App
 import com.example.bledot.data.CSVData
@@ -11,6 +12,7 @@ class NotuploadViewModel : ViewModel() {
     private val logTag = NotuploadViewModel::class.simpleName
     private var path = ""
     var localFileList = ArrayList<CSVData>()
+    var isUpdate = MutableLiveData(false)
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -74,5 +76,34 @@ class NotuploadViewModel : ViewModel() {
     private fun deleteLocalData(selectedList: ArrayList<CSVData>) {
         BleDebugLog.i(logTag, "deleteLocalData-()")
 
+        val directory = File(path)
+        val files = directory.listFiles()
+
+        val remainFileList = arrayListOf<File>()
+
+        files?.forEach { file ->
+            if (file.isFile) {
+                val fileName = file.name
+                if (selectedList.any { it.name == fileName }) {
+                    val deleted = file.delete()
+                    if (deleted) {
+                        BleDebugLog.d(logTag, "$fileName deleted successfully")
+                    } else {
+                        BleDebugLog.d(logTag, "Failed to delete $fileName")
+                    }
+                } else {
+                    remainFileList.add(file) // Add the file to the new list
+                }
+            }
+        }
+
+        localFileList.clear()
+        remainFileList.forEach { file ->
+            localFileList.add(CSVData(file.name, false))
+        }
+
+        BleDebugLog.d(logTag, "삭제 후 localFileList: $localFileList")
+        isExistData()
+        isUpdate.value = true
     }
 }
