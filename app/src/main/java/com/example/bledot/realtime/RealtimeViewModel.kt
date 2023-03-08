@@ -67,7 +67,7 @@ class RealtimeViewModel: ViewModel() {
         val bw = BufferedWriter(FileWriter(file))
 
         try {
-            bw.write("time, paketNumber, Roll, Pitch, Yaw\n")
+            bw.write("time, packetNumber, Roll, Pitch, Yaw\n")
             bw.flush()
             bw.close()
         }
