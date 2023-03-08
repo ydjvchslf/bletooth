@@ -74,11 +74,13 @@ class NotuploadFragment: Fragment() {
         }
         // delete 버튼
         binding.deleteBtn.setOnClickListener {
-
+            val dataList = dataAdapter.csvDataList
+            notuploadViewModel.checkSelectedData(dataList, false)
         }
         // upload 버튼
         binding.uploadBtn.setOnClickListener {
-
+            val dataList = dataAdapter.csvDataList
+            notuploadViewModel.checkSelectedData(dataList, true)
         }
     }
 

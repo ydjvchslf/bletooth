@@ -1,6 +1,5 @@
 package com.example.bledot.notupload
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bledot.App
 import com.example.bledot.data.CSVData
@@ -43,5 +42,37 @@ class NotuploadViewModel : ViewModel() {
         BleDebugLog.d(logTag, "dataNum: $dataNum")
 
         //unloaded.invoke(dataNum)
+    }
+    // 선택된 아이템이 뭔지 확인 작업
+    fun checkSelectedData(originalList: ArrayList<CSVData>, cmd: Boolean) {
+        BleDebugLog.i(logTag, "checkSelectedData-()")
+
+        val specificValue = true
+        val selectedList = ArrayList<CSVData>()
+
+        for (i in originalList) {
+            if (i.isChecked == specificValue) {
+                selectedList.add(i)
+            }
+        }
+
+        BleDebugLog.d(logTag, "selectedList: $selectedList")
+        if (selectedList.size == 0) { return }
+
+        if (cmd) {
+            uploadLocalData(selectedList)
+        } else {
+            deleteLocalData(selectedList)
+        }
+    }
+
+    private fun uploadLocalData(selectedList: ArrayList<CSVData>) {
+        BleDebugLog.i(logTag, "uploadLocalData-()")
+
+    }
+
+    private fun deleteLocalData(selectedList: ArrayList<CSVData>) {
+        BleDebugLog.i(logTag, "deleteLocalData-()")
+
     }
 }
