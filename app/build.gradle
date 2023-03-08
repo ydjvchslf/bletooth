@@ -84,4 +84,6 @@ dependencies {
     implementation "com.airbnb.android:lottie:$lottieVersion"
     // MPAndroid Chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    // viewModel ktx
+    implementation 'androidx.fragment:fragment-ktx:1.5.5'
 }
