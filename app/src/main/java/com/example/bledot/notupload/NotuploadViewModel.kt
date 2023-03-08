@@ -15,6 +15,7 @@ class NotuploadViewModel : ViewModel() {
 
     init {
         BleDebugLog.i(logTag, "init-()")
+        BleDebugLog.d(logTag, "dataNum: ${localFileList.size}")
     }
 
     // 미전송 데이터 존재 확인
