@@ -15,7 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
+        <!-- No data 문구 -->
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_noData"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{viewModel.localFileList.size() == 0 ? View.VISIBLE : View.GONE}">
@@ -32,10 +34,11 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- 선택 칸 & 리사이클러 뷰 함께 묶은 layout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.localFileList.size() != 0 ? View.VISIBLE : View.GONE}" >
+            android:visibility="@{viewModel.localFileList.size() == 0 ? View.GONE : View.VISIBLE}">
 
             <!-- 선택 칸 -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +49,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/scrollView">
+                app:layout_constraintBottom_toTopOf="@id/scrollView" >
 
                 <CheckBox
                     android:id="@+id/all_checkBox"
@@ -119,6 +122,36 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
             </ScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Uploading 문구 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.isUploading() == true ? View.VISIBLE : View.GONE}">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/ble_connecting_textView"
+                    app:lottie_fileName="circular-loading-bar.json"
+                    app:lottie_loop="true"
+                    app:lottie_autoPlay="true"/>
+
+                <TextView
+                    android:id="@+id/ble_connecting_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textSize="18sp"
+                    android:textColor="@color/main"
+                    android:text="Uploading..." />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
