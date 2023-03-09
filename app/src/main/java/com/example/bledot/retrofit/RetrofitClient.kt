@@ -1,6 +1,7 @@
 package com.example.bledot.retrofit
 
 import com.example.bledot.util.BASE_URL
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -26,7 +27,7 @@ object RetrofitClient {
         .addCallAdapterFactory(ResponseAdapterFactory())
         .baseUrl(BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
         .build()
 
     val retrofitService: RetrofitService = retrofit.create(RetrofitService::class.java)
