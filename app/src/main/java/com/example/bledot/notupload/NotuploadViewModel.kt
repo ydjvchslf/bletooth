@@ -94,19 +94,19 @@ class NotuploadViewModel : ViewModel() {
                     val fileName = file.name
                     if (selectedList.any { it.name == fileName }) {
                         // 업로드 성공
-                        BleDebugLog.d(logTag, "[${file.name}] 업로드 성공!")
-                        isUploading.value = false
-                        appIsWorking.value = false
-                        file.delete()
-                        isSuccess = true
+//                        BleDebugLog.d(logTag, "[${file.name}] 업로드 성공!")
+//                        isUploading.value = false
+//                        appIsWorking.value = false
+//                        file.delete()
+//                        isSuccess = true
 
                         // 업로드 실패
 //                        BleDebugLog.d(logTag, "[${file.name}] 업로드 실패")
 //                        isUploading.value = false
 //                        appIsWorking.value = false
 //                        isSuccess = false
-                        /*
-                        remoteDataSource.uploadToServer("abc@naver.com", file) { result ->
+
+                        remoteDataSource.uploadToServer("a@abc.com", file) { result ->
                             if (result) {
                                 BleDebugLog.d(logTag, "[${file.name}] 업로드 성공!")
                                 isUploading.value = false
@@ -116,12 +116,12 @@ class NotuploadViewModel : ViewModel() {
                                 isSuccess = true
                             } else {
                                 BleDebugLog.d(logTag, "[${file.name}] 업로드 실패")
+                                remainFileList.add(file) // Add the file to the new list
                                 isUploading.value = false
                                 appIsWorking.value = false
                                 isSuccess = false
                             }
                         }
-                        */
                     } else {
                         remainFileList.add(file) // Add the file to the new list
                     }
@@ -158,6 +158,7 @@ class NotuploadViewModel : ViewModel() {
                     if (deleted) {
                         BleDebugLog.d(logTag, "$fileName deleted successfully")
                     } else {
+                        remainFileList.add(file) // Add the file to the new list
                         BleDebugLog.d(logTag, "Failed to delete $fileName")
                     }
                 } else {
