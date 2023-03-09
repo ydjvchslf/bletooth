@@ -26,7 +26,7 @@ interface RetrofitService {
     suspend fun getUser(): Result<RemoteDefaultData>
 
     @Multipart
-    @POST("post")
+    @POST("data/send")
     suspend fun uploadData(
         @Part email: MultipartBody.Part,
         @Part file: MultipartBody.Part
