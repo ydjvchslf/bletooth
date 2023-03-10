@@ -14,12 +14,7 @@ const val KEY_LOGGER = "KEY_LOGGER"
 const val KEY_TAG = "KEY_TAG"
 const val KEY_DATA = "KEY_DATA"
 
-//const val BASE_URL = "https://fakestoreapi.com"
-//const val BASE_URL = "http://httpbin.org"
-//const val BASE_URL = "http://192.168.1.250:8080"
-//const val BASE_URL = "http://192.168.1.201:8991"
-//const val BASE_URL = "http://192.168.1.53:8080"
-const val BASE_URL = "http://1.214.117.218:8888"
+const val BASE_URL = "http://www.propriologics.com:8888"
 
 var LIMIT_PERCENTAGE = 0.05
 
