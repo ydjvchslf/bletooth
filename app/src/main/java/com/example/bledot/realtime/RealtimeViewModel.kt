@@ -67,7 +67,7 @@ class RealtimeViewModel: ViewModel() {
         val bw = BufferedWriter(FileWriter(file))
 
         try {
-            bw.write("time, packetNumber, Roll, Pitch, Yaw\n")
+            bw.write("time,packetNumber,Roll,Pitch,Yaw\n")
             bw.flush()
             bw.close()
         }
@@ -89,7 +89,7 @@ class RealtimeViewModel: ViewModel() {
         val bw = BufferedWriter(FileWriter(file, true))
 
         try {
-            bw.write("$parTime, $index, ${afterXYZData.xValue}, ${afterXYZData.yValue}, ${afterXYZData.zValue}\n")
+            bw.write("$parTime,$index,${afterXYZData.xValue},${afterXYZData.yValue},${afterXYZData.zValue}\n")
             bw.flush()
             bw.close()
         }
