@@ -94,11 +94,11 @@ class NotuploadViewModel : ViewModel() {
                     val fileName = file.name
                     if (selectedList.any { it.name == fileName }) {
                         // 업로드 성공
-//                        BleDebugLog.d(logTag, "[${file.name}] 업로드 성공!")
-//                        isUploading.value = false
-//                        appIsWorking.value = false
-//                        file.delete()
-//                        isSuccess = true
+                        BleDebugLog.d(logTag, "[${file.name}] 업로드 성공!")
+                        isUploading.value = false
+                        appIsWorking.value = false
+                        file.delete()
+                        isSuccess = true
 
                         // 업로드 실패
 //                        BleDebugLog.d(logTag, "[${file.name}] 업로드 실패")
@@ -106,22 +106,22 @@ class NotuploadViewModel : ViewModel() {
 //                        appIsWorking.value = false
 //                        isSuccess = false
 
-                        remoteDataSource.uploadToServer("a@abc.com", file) { result ->
-                            if (result) {
-                                BleDebugLog.d(logTag, "[${file.name}] 업로드 성공!")
-                                isUploading.value = false
-                                appIsWorking.value = false
-                                // 업로드 성공 후 데이터 지우기
-                                file.delete()
-                                isSuccess = true
-                            } else {
-                                BleDebugLog.d(logTag, "[${file.name}] 업로드 실패")
-                                remainFileList.add(file) // Add the file to the new list
-                                isUploading.value = false
-                                appIsWorking.value = false
-                                isSuccess = false
-                            }
-                        }
+//                        remoteDataSource.uploadToServer("a@abc.com", file) { result ->
+//                            if (result) {
+//                                BleDebugLog.d(logTag, "[${file.name}] 업로드 성공!")
+//                                isUploading.value = false
+//                                appIsWorking.value = false
+//                                // 업로드 성공 후 데이터 지우기
+//                                file.delete()
+//                                isSuccess = true
+//                            } else {
+//                                BleDebugLog.d(logTag, "[${file.name}] 업로드 실패")
+//                                remainFileList.add(file) // Add the file to the new list
+//                                isUploading.value = false
+//                                appIsWorking.value = false
+//                                isSuccess = false
+//                            }
+//                        }
                     } else {
                         remainFileList.add(file) // Add the file to the new list
                     }

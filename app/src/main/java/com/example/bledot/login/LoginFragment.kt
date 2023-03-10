@@ -88,17 +88,22 @@ class LoginFragment : Fragment() {
         BleDebugLog.d(logTag, "inputEmail: $inputEmail, inputPw: $inputPw")
 
         if (inputEmail.isNotEmpty() && inputPw.isNotEmpty()) {
-            loginViewModel.normalLogin(inputEmail, inputPw) {
-                if (it) {
-                    // 일반 로그인 성공 후 Preference 저장
+             //일반 로그인 성공 후 Preference 저장
                     App.prefs.setString("email", inputEmail)
                     userId.value = inputEmail // 추후 Api 에서 필요한 {userId} 저장
                     activity?.startActivity(Intent(activity, MainActivity::class.java))
                     activity?.finish()
-                } else {
-                    showDialogComplete("Notice", "Please check your email and password.")
-                }
-            }
+//            loginViewModel.normalLogin(inputEmail, inputPw) {
+//                if (it) {
+//                    // 일반 로그인 성공 후 Preference 저장
+//                    App.prefs.setString("email", inputEmail)
+//                    userId.value = inputEmail // 추후 Api 에서 필요한 {userId} 저장
+//                    activity?.startActivity(Intent(activity, MainActivity::class.java))
+//                    activity?.finish()
+//                } else {
+//                    showDialogComplete("Notice", "Please check your email and password.")
+//                }
+//            }
         }
     }
 

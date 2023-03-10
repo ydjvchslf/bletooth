@@ -202,7 +202,7 @@ class RemoteDataSource {
     private fun sampleUserEntity(): UserInfoEntity {
         return UserInfoEntity(
             "abc@naver.com",
-            "용미경",
+            "테스트",
             "1991-09-14",
             "Female",
             "55",

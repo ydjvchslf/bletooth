@@ -283,14 +283,15 @@ class RealtimeFragment : Fragment() {
             setCancelable(false)
             setPositiveButton("Action") { _, _ ->
                 resetTimer()
+                showCompleteDialog("Complete", "The data uploaded to the server.")
                 // TODO:: 서버 업로드
-                realtimeViewModel.uploadToServer {
-                    if (it) {
-                        showCompleteDialog("Complete", "The data uploaded to the server.")
-                    } else {
-                        showCompleteDialog("Warning", "The data failed to upload to the server.")
-                    }
-                }
+//                realtimeViewModel.uploadToServer {
+//                    if (it) {
+//                        showCompleteDialog("Complete", "The data uploaded to the server.")
+//                    } else {
+//                        showCompleteDialog("Warning", "The data failed to upload to the server.")
+//                    }
+//                }
             }
             setNegativeButton("Cancel") { _, _ ->
                 resetTimer()
