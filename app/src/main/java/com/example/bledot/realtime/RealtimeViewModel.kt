@@ -164,7 +164,7 @@ class RealtimeViewModel: ViewModel() {
             directory.let {
                 // TODO :: 서버 업로드 api
                 // userId, file 넣어서 Post 호출
-                remoteDataSource.uploadToServer("abc@naver.com", it) { result ->
+                remoteDataSource.uploadToServer("abcd@naver.com", it) { result ->
                     if (result) {
                         BleDebugLog.d(logTag, "[${it.name}] 업로드 성공!")
                         isUploading.value = false
