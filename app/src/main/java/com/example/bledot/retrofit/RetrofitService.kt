@@ -1,7 +1,7 @@
 package com.example.bledot.retrofit
 
 import com.example.bledot.data.Product
-import com.example.bledot.data.request.RequestEmailPwData
+import com.example.bledot.data.request.RequestCommonData
 import com.example.bledot.data.request.RequestFileData
 import com.example.bledot.data.response.RemoteDefaultData
 import okhttp3.MultipartBody
@@ -13,11 +13,11 @@ interface RetrofitService {
     suspend fun getProductList(): Result<List<Product>>
 
     @POST("member/checkEmail")
-    suspend fun checkEmail(@Body reqEmailPwData: RequestEmailPwData): Result<RemoteDefaultData>
+    suspend fun checkEmail(@Body reqCmmData: RequestCommonData): Result<RemoteDefaultData>
 
     @Headers("Content-Type: application/json")
     @POST("login")
-    suspend fun login(@Body reqEmailPwData: RequestEmailPwData): Result<RemoteDefaultData>
+    suspend fun login(@Body reqCmmData: RequestCommonData): Result<RemoteDefaultData>
 
     @GET("user/{userId}")
     suspend fun getUser(): Result<RemoteDefaultData>

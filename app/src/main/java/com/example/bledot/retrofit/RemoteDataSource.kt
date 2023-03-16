@@ -2,11 +2,11 @@ package com.example.bledot.retrofit
 
 import com.example.bledot.data.Product
 import com.example.bledot.data.UserInfoEntity
-import com.example.bledot.data.request.RequestEmailPwData
-import com.example.bledot.data.response.toEntity
+import com.example.bledot.data.request.RequestCommonData
 import com.example.bledot.util.BleDebugLog
 import com.google.gson.Gson
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
@@ -20,10 +20,11 @@ class RemoteDataSource {
 
     suspend fun checkEmailDuplication(email: String, retCode: (Int?) -> Unit) {
         BleDebugLog.w(logTag, "checkEmailDuplication-()")
-        val requestJsonData = JSONObject(Gson().toJson(RequestEmailPwData(email, null)))
+        val reqData = toReqCmmData(email, null, null, null)
+        val requestJsonData = JSONObject(Gson().toJson(reqData))
         BleDebugLog.send(requestJsonData)
 
-        val response = retrofitService.checkEmail(RequestEmailPwData(email, null))
+        val response = retrofitService.checkEmail(reqData)
         return when (response) {
             is Result.Success -> {
                 BleDebugLog.i(logTag, "Result Success!!")
@@ -81,10 +82,11 @@ class RemoteDataSource {
 
     suspend fun loginServer(email: String, pw: String, retCode: (Int?) -> Unit) {
         BleDebugLog.w(logTag, "login-()")
-        val requestJsonData = JSONObject(Gson().toJson(RequestEmailPwData(email, pw)))
+        val reqData = toReqCmmData(email, "email", pw, null)
+        val requestJsonData = JSONObject(Gson().toJson(reqData))
         BleDebugLog.send(requestJsonData)
 
-        val response = retrofitService.login(RequestEmailPwData(email, pw))
+        val response = retrofitService.login(reqData)
         when (response) {
             is Result.Success -> { // Success<T>(val code: Int, val data: T)
                 BleDebugLog.i(logTag, "Api Success!!")
@@ -165,7 +167,7 @@ class RemoteDataSource {
         // multipart 작업
         val formId = MultipartBody.Part.createFormData("email", email)
 
-        val requestBody = RequestBody.create(MediaType.parse("text/csv"), file)
+        val requestBody = RequestBody.create("text/csv".toMediaTypeOrNull(), file)
         val multipartBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
 
         val response = retrofitService.uploadData(formId, multipartBody)
@@ -217,6 +219,17 @@ class RemoteDataSource {
             "Korea",
             //"2222-33-33"
             null
+        )
+    }
+
+    private fun toReqCmmData(email: String, vender: String?,
+                             pwd: String?, token: String?): RequestCommonData {
+        BleDebugLog.w(logTag, "toReqCmmData-()")
+        return RequestCommonData(
+            email = email,
+            vender = vender,
+            pwd = pwd,
+            token = token
         )
     }
 }
