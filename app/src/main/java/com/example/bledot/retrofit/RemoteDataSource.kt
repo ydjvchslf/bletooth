@@ -21,8 +21,6 @@ class RemoteDataSource {
     suspend fun checkEmailDuplication(email: String, retCode: (Int?) -> Unit) {
         BleDebugLog.w(logTag, "checkEmailDuplication-()")
         val reqData = toReqCmmData(email, null, null, null)
-        val requestJsonData = JSONObject(Gson().toJson(reqData))
-        BleDebugLog.send(requestJsonData)
 
         val response = retrofitService.checkEmail(reqData)
         return when (response) {
@@ -83,8 +81,6 @@ class RemoteDataSource {
     suspend fun loginServer(email: String, pw: String, retCode: (Int?) -> Unit) {
         BleDebugLog.w(logTag, "login-()")
         val reqData = toReqCmmData(email, "email", pw, null)
-        val requestJsonData = JSONObject(Gson().toJson(reqData))
-        BleDebugLog.send(requestJsonData)
 
         val response = retrofitService.login(reqData)
         when (response) {

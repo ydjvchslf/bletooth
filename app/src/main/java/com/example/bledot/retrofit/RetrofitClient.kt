@@ -1,6 +1,7 @@
 package com.example.bledot.retrofit
 
 import com.example.bledot.util.BASE_URL
+import com.example.bledot.util.BleDebugLog
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -11,7 +12,9 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     //로그 설정
-    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+    private val loggingInterceptor = HttpLoggingInterceptor { message ->
+        BleDebugLog.httpResponse(message)
+    }.apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 

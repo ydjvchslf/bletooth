@@ -30,13 +30,13 @@ class ResponseCall<T> constructor(
                     in 200..299 -> { // 200, response.body()
                         val resBody = response.body()
                         resBody?.let {
-                            BleDebugLog.httpResponse(Gson().toJson(resBody))
+                            //BleDebugLog.httpResponse(Gson().toJson(resBody))
                             callback.onResponse(this@ResponseCall, Response.success(Result.Success(response.code(), it)))
                         }
                     }
                     in 400..409 -> {
                         val resBody = response.body()
-                        BleDebugLog.httpResponse(Gson().toJson(resBody))
+                        //BleDebugLog.httpResponse(Gson().toJson(resBody))
                         callback.onResponse(this@ResponseCall, Response.success(Result.ApiError(response.code(), response.message()))) // 400대, response.message()
                     }
                 }
