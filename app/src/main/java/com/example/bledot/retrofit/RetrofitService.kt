@@ -5,11 +5,7 @@ import com.example.bledot.data.request.RequestEmailPwData
 import com.example.bledot.data.request.RequestFileData
 import com.example.bledot.data.response.RemoteDefaultData
 import okhttp3.MultipartBody
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import retrofit2.http.*
 
 interface RetrofitService {
 
@@ -19,7 +15,8 @@ interface RetrofitService {
     @POST("member/checkEmail")
     suspend fun checkEmail(@Body reqEmailPwData: RequestEmailPwData): Result<RemoteDefaultData>
 
-    @POST("member/login")
+    @Headers("Content-Type: application/json")
+    @POST("login")
     suspend fun login(@Body reqEmailPwData: RequestEmailPwData): Result<RemoteDefaultData>
 
     @GET("user/{userId}")
