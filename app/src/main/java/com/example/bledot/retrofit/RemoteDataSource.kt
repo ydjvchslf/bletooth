@@ -78,7 +78,51 @@ class RemoteDataSource {
         }
     }
 
-    suspend fun loginServer(email: String, pw: String, retCode: (Int?) -> Unit) {
+    suspend fun registerServer(userInfo: UserInfoEntity, resResult: (Int?, String?) -> Unit) {
+        BleDebugLog.w(logTag, "registerServer-()")
+        val reqRegData = UserInfoEntity.fromUserEntityToReqData(userInfo)
+
+        val response = retrofitService.signUp(reqRegData)
+        when (response) {
+            is Result.Success -> { // Success<T>(val code: Int, val data: T)
+                BleDebugLog.i(logTag, "Api Success!!")
+                // response.code = 200, response.data = response.body()
+                val resBody = response.data
+                val resCode = resBody.resultCode
+                val resMsg = resBody.resultMessage
+                val token = resBody.token
+
+                when (resCode) {
+                    200 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        resResult.invoke(resCode, token)
+                    }
+                    -1 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        resResult.invoke(resCode, null)
+                    }
+                    -2 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        resResult.invoke(resCode, null)
+                    }
+                    else -> { resResult.invoke(null, null) }
+                }
+            }
+            is Result.ApiError -> { // ApiError<T>(val code: Int, val message: String)
+                BleDebugLog.i(logTag, "ApiError!!")
+                // response.code = 400대, response.message()
+                BleDebugLog.d(logTag, "Error Code: [${response.code}], message: ${response.message}")
+            }
+            is Result.NetworkError -> { // NetworkError<T>(val throwable: Throwable)
+                BleDebugLog.i(logTag, "NetworkError!!")
+                // throwable
+                BleDebugLog.d(logTag, "${response.throwable}")
+            }
+            else -> { }
+        }
+    }
+
+    suspend fun loginServer(email: String, pw: String?, retCode: (Int?, String?) -> Unit) {
         BleDebugLog.w(logTag, "login-()")
         val reqData = toReqCmmData(email, "email", pw, null)
 
@@ -90,25 +134,26 @@ class RemoteDataSource {
                 val resBody = response.data
                 val resCode = resBody.resultCode
                 val resMsg = resBody.resultMessage
+                val token = resBody.token
 
                 when (resCode) {
                     200 -> {
                         BleDebugLog.d(logTag, resMsg)
-                        retCode.invoke(resCode)
+                        retCode.invoke(resCode, token)
                     }
                     -1 -> {
                         BleDebugLog.d(logTag, resMsg)
-                        retCode.invoke(resCode)
+                        retCode.invoke(resCode, null)
                     }
                     -2 -> {
                         BleDebugLog.d(logTag, resMsg)
-                        retCode.invoke(resCode)
+                        retCode.invoke(resCode, null)
                     }
                     -3 -> {
                         BleDebugLog.d(logTag, resMsg)
-                        retCode.invoke(resCode)
+                        retCode.invoke(resCode, null)
                     }
-                    else -> { retCode.invoke(null) }
+                    else -> { retCode.invoke(null, null) }
                 }
             }
             is Result.ApiError -> { // ApiError<T>(val code: Int, val message: String)
@@ -207,13 +252,14 @@ class RemoteDataSource {
             "1",
             "korean",
             "감기",
-            315679995,
+            "race",
             "주소1",
             "주소2",
             "주소3",
             "주소4",
             "Korea",
-            //"2222-33-33"
+            "11921",
+            "korea",
             null
         )
     }

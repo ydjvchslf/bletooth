@@ -419,6 +419,8 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun checkAllFlags() {
+        BleDebugLog.i(logTag, "checkAllFlags-()")
+        BleDebugLog.d(logTag, "arg.email: ${arg.email}")
 //        Toast.makeText(context, "nameFlag: $nameFlag , dateFlag : $dateFlag ,&& weightFlag: $weightFlag , && emailFlag : $emailFlag ," +
 //                "&& pwFlag : $pwFlag ,&& phoneFlag : $phoneFlag ,&& addressFlag : $addressFlag ,&& agreeFlag: $agreeFlag ,", Toast.LENGTH_SHORT).show()
         if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag && emailDuplicationFlag) {
@@ -503,44 +505,62 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun processSignUp() {
         BleDebugLog.i(logTag, "processSignUp-()")
+
         // 유저가 입력한 정보 모두 가져오기
         val name = binding.name.infoInputEditText.text.toString()
         val birth = binding.birth.infoInputEditText.text.toString()
-        val gender = if (binding.gender.femaleBtn.isChecked) 0 else 1
+        val gender = if (binding.gender.femaleBtn.isChecked) "female" else "male"
         val weight = binding.weightSpinner.weightEditText.text.toString()
-        val weightUnit = if (binding.weightSpinner.spinner.selectedItem.toString() == "kg") 0 else 1
-        val race = getRace(binding.raceSpinner.spinner.selectedItem.toString()) // 0, 1, 2, 3, 4, 5, 6
-        val pathology = getPathology(binding.pathSpinner.spinner.selectedItem.toString())
-        val email = binding.email.infoInputEditText.text.toString()
+        val weightUnit = if (binding.weightSpinner.spinner.selectedItem.toString() == "kg") "kg" else "lb"
+        val race = binding.raceSpinner.spinner.selectedItem.toString()
+        val pathology = binding.pathSpinner.spinner.selectedItem.toString()
+
+        //val isGoogleEmail = arg.email => null (abc@naver.com) / abc@gmail.com
+        val inputEmail = if (arg.email == null) { binding.email.infoInputEditText.text.toString() } else { arg.email } // TODO:: 일반 회원가입시에만 존재
+        //parseEmail(arg.email)
+        val vender = if (arg.email == null) { "email" } else { "google" }
         val pw = binding.pw.pw2EditText.text.toString()
         val phone = binding.phone.infoInputEditText.text.toString()
         val address1 = binding.address.address1.text.toString()
         val address2 = binding.address.address2.text.toString()
         val address3 = binding.address.address3.text.toString()
         val address4 = binding.address.address4.text.toString()
-        val country = getCountry(binding.countrySpinner.spinner.selectedItem.toString())
+        val country = binding.countrySpinner.spinner.selectedItem.toString()
         // UserInfoEntity 세팅
         val userInfoEntity = UserInfoEntity(
-            email = email,
+            email = inputEmail.toString(),
+            vender = vender,
+            pwd = pw,
             name = name,
             birth = birth,
-            gender = gender.toString(),
+            gender = gender,
             weight = weight,
-            weightUnit = weightUnit.toString(),
-            race = race.toString(),
-            pathology = pathology.toString(),
-            phone = phone.toInt(),
+            weightUnit = weightUnit,
+            race = race,
+            pathology = pathology,
+            phone = phone,
             address1 = address1,
             address2 = address2,
             address3 = address3,
-            address4 = address4,
-            country = country.toString(),
+            zipCode = address4,
+            country = country,
             membership = null
         )
-        signupViewModel.signUp(userInfoEntity) { isRegistered ->
+        signupViewModel.signUp(userInfoEntity) { isRegistered, token ->
             if (isRegistered) {
-                // TODO:: 로그인 후 홈 화면으로 전환
+                // TODO:: 토큰 저장 후, 로그인 후 홈 화면으로 전환
+                BleDebugLog.d(logTag, "회원 가입, db 저장 성공!")
             }
         }
+    }
+
+    fun parseEmail(email: String) {
+        BleDebugLog.i(logTag, "parseEmail-()")
+//        val words = email?.split("@")
+//        BleDebugLog.d(logTag, "words[1]: ${words?.get(1)}")
+//        if (words[1] == "gmail.com") {
+//            return true
+//        }
+//        return false
     }
 }

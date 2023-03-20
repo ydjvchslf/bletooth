@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class RemoteDefaultData(
     @SerializedName("resultCode") val resultCode: Int,
     @SerializedName("resultMessage") val resultMessage: String,
+    @SerializedName("Authorization") val token: String?,
     @SerializedName("data") val data: RemoteUserInfo?,
 )
 

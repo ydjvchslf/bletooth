@@ -37,12 +37,18 @@ class SignupViewModel: ViewModel() {
         }
     }
 
-    fun signUp(user: UserInfoEntity, isRegistered: (Boolean) -> Unit) {
+    fun signUp(user: UserInfoEntity, isRegistered: (Boolean, String?) -> Unit) {
         BleDebugLog.i(logTag, "signUp-()")
         BleDebugLog.d(logTag, "[user]: $user")
         viewModelScope.launch {
             // TODO:: 회원가입 api
-            isRegistered.invoke(true)
+            remoteDataSource.registerServer(user) { retCode, token ->
+                if (retCode == 200) {
+                    isRegistered.invoke(true, token)
+                } else {
+                    isRegistered.invoke(false, null)
+                }
+            }
         }
     }
 
