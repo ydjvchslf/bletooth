@@ -106,7 +106,7 @@
                 <include
                     android:id="@+id/gender"
                     layout="@layout/layout_radio"
-                        app:field="@{`Gender`}" />
+                    app:field="@{`Gender`}" />
 
                 <include
                     android:id="@+id/weight_spinner"
