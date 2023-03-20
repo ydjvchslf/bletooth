@@ -421,10 +421,15 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private fun checkAllFlags() {
         BleDebugLog.i(logTag, "checkAllFlags-()")
         BleDebugLog.d(logTag, "arg.email: ${arg.email}")
-//        Toast.makeText(context, "nameFlag: $nameFlag , dateFlag : $dateFlag ,&& weightFlag: $weightFlag , && emailFlag : $emailFlag ," +
-//                "&& pwFlag : $pwFlag ,&& phoneFlag : $phoneFlag ,&& addressFlag : $addressFlag ,&& agreeFlag: $agreeFlag ,", Toast.LENGTH_SHORT).show()
+        arg.email?.let { // 구글 로그인으로 넘어온 유저는 이메일 중복체크 넘어감
+            emailDuplicationFlag = true
+        }
+
+        BleDebugLog.d(logTag, "nameFlag: $nameFlag , dateFlag : $dateFlag ,&& weightFlag: $weightFlag , && emailFlag : $emailFlag ," +
+                "&& pwFlag : $pwFlag ,&& phoneFlag : $phoneFlag ,&& addressFlag : $addressFlag ,&& agreeFlag: $agreeFlag, && emailDuplicationFlag: $emailDuplicationFlag")
+
         if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag && emailDuplicationFlag) {
-            Toast.makeText(context, "모든조건 완성, Sign up 성공적", Toast.LENGTH_SHORT).show()
+            BleDebugLog.d(logTag, "모든조건 완성, Sign up 성공적")
             processSignUp()
         } else {
             if (!nameFlag) {
@@ -505,7 +510,6 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun processSignUp() {
         BleDebugLog.i(logTag, "processSignUp-()")
-
         // 유저가 입력한 정보 모두 가져오기
         val name = binding.name.infoInputEditText.text.toString()
         val birth = binding.birth.infoInputEditText.text.toString()
@@ -514,12 +518,9 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val weightUnit = if (binding.weightSpinner.spinner.selectedItem.toString() == "kg") "kg" else "lb"
         val race = binding.raceSpinner.spinner.selectedItem.toString()
         val pathology = binding.pathSpinner.spinner.selectedItem.toString()
-
-        //val isGoogleEmail = arg.email => null (abc@naver.com) / abc@gmail.com
-        val inputEmail = if (arg.email == null) { binding.email.infoInputEditText.text.toString() } else { arg.email } // TODO:: 일반 회원가입시에만 존재
-        //parseEmail(arg.email)
+        val inputEmail = if (arg.email == null) { binding.email.infoInputEditText.text.toString() } else { arg.email }
         val vender = if (arg.email == null) { "email" } else { "google" }
-        val pw = binding.pw.pw2EditText.text.toString()
+        val pw = if (arg.email == null) { binding.pw.pw2EditText.text.toString() } else { null }
         val phone = binding.phone.infoInputEditText.text.toString()
         val address1 = binding.address.address1.text.toString()
         val address2 = binding.address.address2.text.toString()
@@ -546,21 +547,12 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
             country = country,
             membership = null
         )
+
         signupViewModel.signUp(userInfoEntity) { isRegistered, token ->
             if (isRegistered) {
                 // TODO:: 토큰 저장 후, 로그인 후 홈 화면으로 전환
                 BleDebugLog.d(logTag, "회원 가입, db 저장 성공!")
             }
         }
-    }
-
-    fun parseEmail(email: String) {
-        BleDebugLog.i(logTag, "parseEmail-()")
-//        val words = email?.split("@")
-//        BleDebugLog.d(logTag, "words[1]: ${words?.get(1)}")
-//        if (words[1] == "gmail.com") {
-//            return true
-//        }
-//        return false
     }
 }
