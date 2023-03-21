@@ -46,8 +46,7 @@ class SignupViewModel: ViewModel() {
             remoteDataSource.registerServer(user) { retCode, token ->
                 if (retCode == 200) {
                     // TODO :: token, email -> Pref 저장
-                    //App.prefs.setString("token", "$token")
-                    App.prefs.setString("token", "token::signUp")
+                    App.prefs.setString("token", "$token")
                     App.prefs.setString("email", user.email)
                     isRegistered.invoke(true)
                 } else {

@@ -9,7 +9,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 sealed class Result<T> {
-    class Success<T>(val code: Int, val data: T) : Result<T>()
+    class Success<T>(val code: Int, val data: T, val token: String?) : Result<T>()
     class ApiError<T>(val code: Int, val message: String?) : Result<T>()
     class NetworkError<T>(val throwable: Throwable) : Result<T>()
     // 최종 결과 response
@@ -30,8 +30,8 @@ class ResponseCall<T> constructor(
                     in 200..299 -> { // 200, response.body()
                         val resBody = response.body()
                         resBody?.let {
-                            //BleDebugLog.httpResponse(Gson().toJson(resBody))
-                            callback.onResponse(this@ResponseCall, Response.success(Result.Success(response.code(), it)))
+                            //BleDebugLog.d(logTag, "토큰왔니? => ${response.headers()["Authorization"]}")
+                            callback.onResponse(this@ResponseCall, Response.success(Result.Success(response.code(), it, response.headers()["Authorization"])))
                         }
                     }
                     in 400..409 -> {
