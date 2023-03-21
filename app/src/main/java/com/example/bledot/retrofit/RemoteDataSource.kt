@@ -4,6 +4,7 @@ import com.example.bledot.data.Product
 import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.data.request.RequestCommonData
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.isGoogleUser
 import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -124,7 +125,12 @@ class RemoteDataSource {
 
     suspend fun loginServer(email: String, pw: String?, retCode: (Int?, String?) -> Unit) {
         BleDebugLog.w(logTag, "login-()")
-        val reqData = toReqCmmData(email, "email", pw, null)
+        val reqData = toReqCmmData(
+            email,
+            if (isGoogleUser(email)) { "google" } else { "email" },
+            pw,
+            null
+        )
 
         val response = retrofitService.login(reqData)
         when (response) {

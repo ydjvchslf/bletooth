@@ -18,7 +18,7 @@ const val BASE_URL = "http://www.propriologics.com:8888"
 
 var LIMIT_PERCENTAGE = 0.05
 
-var userId = MutableLiveData("")
+var userId = MutableLiveData("") // TODO:: Preference 쓰면서 이거 안써도 될 듯함
 
 fun getRace(race: String): Int {
     return when (race) {
@@ -53,4 +53,12 @@ fun getCountry(country: String): Int {
         "English" -> { 4 }
         else -> { 5 }
     }
+}
+
+fun isGoogleUser(email: String): Boolean {
+    val words = email.split("@")
+    if (words[1]  == "gmail.com") {
+        return true
+    }
+    return false
 }
