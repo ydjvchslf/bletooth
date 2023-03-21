@@ -99,12 +99,13 @@ class ConfigFragment : Fragment() {
     @SuppressLint("CommitPrefEdits", "ApplySharedPref")
     private fun normalLogout() {
         BleDebugLog.i(logTag, "normalLogout-()")
-        // 일반로그인 경우, pref 초기화
-        val preEmail = App.prefs.getString("email", "no history")
-        BleDebugLog.d(logTag, "preEmail: $preEmail")
-        if (preEmail != "no history") { // 일반로그인 상태
+        // Pref 초기화
+        val token = App.prefs.getString("token", "no token")
+        BleDebugLog.d(logTag, "초기화 전 token: $token")
+        if (token != "no token") {
             val prefs : SharedPreferences? = context?.getSharedPreferences("prefs_name", Context.MODE_PRIVATE)
             val editor = prefs?.edit()
+            editor?.remove("token")
             editor?.remove("email")
             editor?.clear()
             editor?.commit()

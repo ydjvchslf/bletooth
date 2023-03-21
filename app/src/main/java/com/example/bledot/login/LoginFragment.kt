@@ -74,7 +74,7 @@ class LoginFragment : Fragment() {
             googleLogin()
         }
         // 구글 자동로그인
-        checkAutoGoogle()
+        //checkAutoGoogle()
 
         // 일반 자동로그인
         checkAutoLogin()
@@ -88,11 +88,6 @@ class LoginFragment : Fragment() {
         BleDebugLog.d(logTag, "inputEmail: $inputEmail, inputPw: $inputPw")
 
         if (inputEmail.isNotEmpty() && inputPw.isNotEmpty()) {
-             //일반 로그인 성공 후 Preference 저장
-//                    App.prefs.setString("email", inputEmail)
-//                    userId.value = inputEmail // 추후 Api 에서 필요한 {userId} 저장
-//                    activity?.startActivity(Intent(activity, MainActivity::class.java))
-//                    activity?.finish()
             loginViewModel.normalLogin(inputEmail, inputPw) {
                 if (it) {
                     // 일반 로그인 성공 후 Preference 저장
@@ -148,8 +143,15 @@ class LoginFragment : Fragment() {
     private fun isCheckedUserInfo(email: String) {
         loginViewModel.checkUserInfo(email) { isExist ->
             if (isExist) {
-                activity?.startActivity(Intent(activity, MainActivity::class.java))
-                activity?.finish()
+                // 구글(소셜) 로그인 api
+                loginViewModel.googleLogin(email) { result ->
+                    if (result) {
+                        activity?.startActivity(Intent(activity, MainActivity::class.java))
+                        activity?.finish()
+                    } else {
+                        // TODO:: 계정은 있는데, 구글 로그인 실패. 다시 시도 요청?
+                    }
+                }
             } else {
                 val navAction = LoginFragmentDirections.actionLoginFragmentToSignUpFragment(email)
                 Navigation.findNavController(binding.root).navigate(navAction)
@@ -158,11 +160,12 @@ class LoginFragment : Fragment() {
     }
 
     private fun checkAutoLogin() {
+        BleDebugLog.i(logTag, "checkAutoLogin-()")
         // 일반 로그인 > 자동 로그인 체크
-        val preEmail = App.prefs.getString("email", "no history")
-        BleDebugLog.d(logTag, "preEmail: $preEmail")
-        if(preEmail != "no history") {
-            userId.value = preEmail // 추후 Api 에서 필요한 {userId} 저장
+        val isToken = App.prefs.getString("token", "no token")
+        BleDebugLog.d(logTag, "isToken: $isToken")
+        if(isToken != "no token") {
+            //userId.value = preEmail // 추후 Api 에서 필요한 {userId} 저장
             activity?.startActivity(Intent(activity, MainActivity::class.java))
             activity?.finish()
         }

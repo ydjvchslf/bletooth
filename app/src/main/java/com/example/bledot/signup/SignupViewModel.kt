@@ -2,6 +2,7 @@ package com.example.bledot.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bledot.App
 import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.BleDebugLog
@@ -37,16 +38,20 @@ class SignupViewModel: ViewModel() {
         }
     }
 
-    fun signUp(user: UserInfoEntity, isRegistered: (Boolean, String?) -> Unit) {
+    fun signUp(user: UserInfoEntity, isRegistered: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "signUp-()")
         BleDebugLog.d(logTag, "[user]: $user")
         viewModelScope.launch {
             // TODO:: 회원가입 api
             remoteDataSource.registerServer(user) { retCode, token ->
                 if (retCode == 200) {
-                    isRegistered.invoke(true, token)
+                    // TODO :: token, email -> Pref 저장
+                    //App.prefs.setString("token", "$token")
+                    App.prefs.setString("token", "token::signUp")
+                    App.prefs.setString("email", user.email)
+                    isRegistered.invoke(true)
                 } else {
-                    isRegistered.invoke(false, null)
+                    isRegistered.invoke(false)
                 }
             }
         }

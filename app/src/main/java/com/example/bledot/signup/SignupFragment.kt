@@ -23,10 +23,7 @@ import com.example.bledot.R
 import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.databinding.FragmentSignupBinding
-import com.example.bledot.util.BleDebugLog
-import com.example.bledot.util.getCountry
-import com.example.bledot.util.getPathology
-import com.example.bledot.util.getRace
+import com.example.bledot.util.*
 import java.util.regex.Pattern
 
 
@@ -548,10 +545,13 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
             membership = null
         )
 
-        signupViewModel.signUp(userInfoEntity) { isRegistered, token ->
+        signupViewModel.signUp(userInfoEntity) { isRegistered ->
             if (isRegistered) {
-                // TODO:: 토큰 저장 후, 로그인 후 홈 화면으로 전환
+                // TODO:: 로그인 후 홈 화면으로 전환
                 BleDebugLog.d(logTag, "회원 가입, db 저장 성공!")
+                //userId.value = userInfoEntity.email
+                activity?.startActivity(Intent(activity, MainActivity::class.java))
+                activity?.finish()
             }
         }
     }

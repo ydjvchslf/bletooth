@@ -1,6 +1,9 @@
 package com.example.bledot.home
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +13,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import com.example.bledot.App
 import com.example.bledot.R
+import com.example.bledot.activity.before.BeforeActivity
 import com.example.bledot.databinding.FragmentHomeBinding
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.appIsWorking
+import com.example.bledot.util.userId
 
 
 class HomeFragment : Fragment() {
@@ -39,6 +45,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+        // token 값 확인
+        checkToken()
         // 버튼 > 네비게이션
         binding.listBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(HomeFragmentDirections.actionHomeFragmentToListFragment())
@@ -133,5 +141,12 @@ class HomeFragment : Fragment() {
             binding.recordBtn.isEnabled = true
             binding.settingBtn.isEnabled = true
         }
+    }
+
+    private fun checkToken() {
+        BleDebugLog.i(logTag, "checkToken-()")
+        val token = App.prefs.getString("token", "no token")
+        BleDebugLog.d(logTag, "홈화면 token: $token")
+        // if (!isGoogleUser()) { App.prefs.setString("email", "${userId.value}") } // 일반 로그인만 pref 에 email 저장
     }
 }
