@@ -63,7 +63,6 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
-        BleDebugLog.d(logTag, "name: ${binding.name.infoInputEditText.text}")
         // 구글로 넘어온 유저
         checkGoogleUser()
 
@@ -484,24 +483,18 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun checkGoogleUser() {
-        if(arg.email != null) {
+        if (arg.email != null) {
             Toast.makeText(context, "arg.email: ${arg.email}", Toast.LENGTH_SHORT).show()
-            signupViewModel.checkUserInfo(arg.email) { isExist ->
-                if (isExist) {
-                    activity?.startActivity(Intent(activity, MainActivity::class.java))
-                } else {
-                    // Sign up 이메일 채우기, pw 삭제
-                    binding.email.infoInputEditText.apply {
-                        setText(arg.email)
-                        isEnabled = false
-                    }
-                    emailFlag = true
-                    binding.emailCheckBtn.visibility = View.GONE
-
-                    binding.pw.root.visibility = View.GONE
-                    pwFlag = true
-                }
+            // Sign up 이메일 채우기, pw 삭제
+            binding.email.infoInputEditText.apply {
+                setText(arg.email)
+                isEnabled = false
             }
+            emailFlag = true
+            binding.emailCheckBtn.visibility = View.GONE
+
+            binding.pw.root.visibility = View.GONE
+            pwFlag = true
         }
     }
 

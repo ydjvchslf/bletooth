@@ -142,7 +142,7 @@ class LoginFragment : Fragment() {
 
     private fun isCheckedUserInfo(email: String) {
         loginViewModel.checkUserInfo(email) { isExist ->
-            if (isExist) {
+            if (isExist) { // 유저 정보 O -> 로그인 api
                 // 구글(소셜) 로그인 api
                 loginViewModel.googleLogin(email) { result ->
                     if (result) {
@@ -152,7 +152,7 @@ class LoginFragment : Fragment() {
                         // TODO:: 계정은 있는데, 구글 로그인 실패. 다시 시도 요청?
                     }
                 }
-            } else {
+            } else { // 유저 정보 X -> 회원가입 화면으로 이동
                 val navAction = LoginFragmentDirections.actionLoginFragmentToSignUpFragment(email)
                 Navigation.findNavController(binding.root).navigate(navAction)
             }

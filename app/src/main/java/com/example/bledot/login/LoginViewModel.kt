@@ -54,6 +54,6 @@ class LoginViewModel: ViewModel() {
     fun checkUserInfo(email: String, isExist: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "checkUserInfo-()")
         // TODO:: 유저정보 유무 체크 api (/member/isExist)
-        isExist.invoke(true)
+        isExist.invoke(false)
     }
 }

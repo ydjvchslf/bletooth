@@ -146,7 +146,9 @@ class HomeFragment : Fragment() {
     private fun checkToken() {
         BleDebugLog.i(logTag, "checkToken-()")
         val token = App.prefs.getString("token", "no token")
+        val email = App.prefs.getString("email", "no email")
         BleDebugLog.d(logTag, "홈화면 token: $token")
+        BleDebugLog.d(logTag, "홈화면 email: $email")
         // if (!isGoogleUser()) { App.prefs.setString("email", "${userId.value}") } // 일반 로그인만 pref 에 email 저장
     }
 }
