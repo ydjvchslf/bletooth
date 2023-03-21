@@ -47,6 +47,34 @@ class RemoteDataSource {
         }
     }
 
+    suspend fun checkAlreadyUser(email: String, result: (Boolean?) -> Unit) {
+        BleDebugLog.w(logTag, "checkAlreadyUser-()")
+        val reqData = toReqCmmData(email, null, null, null)
+
+        val response = retrofitService.checkUserInfoExist(reqData)
+        return when (response) {
+            is Result.Success -> {
+                BleDebugLog.i(logTag, "Result Success!!")
+                when (response.data.resultCode) {
+                    200 -> { result.invoke(true) }
+                    -1 -> { result.invoke(false) }
+                    else -> { result.invoke(null) }
+                }
+            }
+            is Result.ApiError -> {
+                BleDebugLog.i(logTag, "ApiError!!")
+                result.invoke(null)
+            }
+            is Result.NetworkError -> {
+                BleDebugLog.i(logTag, "NetworkError!!")
+                result.invoke(null)
+            }
+            else -> {
+                result.invoke(null)
+            }
+        }
+    }
+
     suspend fun getAllProducts(retCode: (Int) -> Unit): List<Product>? {
         BleDebugLog.w(logTag, "getAllProducts-()")
         val response = retrofitService.getProductList()

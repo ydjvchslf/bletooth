@@ -53,7 +53,17 @@ class LoginViewModel: ViewModel() {
 
     fun checkUserInfo(email: String, isExist: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "checkUserInfo-()")
-        // TODO:: 유저정보 유무 체크 api (/member/isExist)
-        isExist.invoke(false)
+        viewModelScope.launch {
+            remoteDataSource.checkAlreadyUser(email) { result ->
+                result ?: return@checkAlreadyUser
+                result.let {
+                    if (it) { // 이미 가입 회원
+                        isExist.invoke(true)
+                    } else { // 미가입 회원
+                        isExist.invoke(false)
+                    }
+                }
+            }
+        }
     }
 }

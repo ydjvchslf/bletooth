@@ -16,6 +16,9 @@ interface RetrofitService {
     @POST("member/checkEmail")
     suspend fun checkEmail(@Body reqCmmData: RequestCommonData): Result<RemoteDefaultData>
 
+    @POST("member/isExist")
+    suspend fun checkUserInfoExist(@Body reqCmmData: RequestCommonData): Result<RemoteDefaultData>
+
     @Headers("Content-Type: application/json")
     @POST("login")
     suspend fun login(@Body reqCmmData: RequestCommonData): Result<RemoteDefaultData>
