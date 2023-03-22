@@ -120,7 +120,7 @@ class RemoteDataSource {
                 val resBody = response.data
                 val resCode = resBody.resultCode
                 val resMsg = resBody.resultMessage
-                val token = response.token
+                val token = resBody.token
 
                 when (resCode) {
                     200 -> {
@@ -169,7 +169,7 @@ class RemoteDataSource {
                 val resBody = response.data
                 val resCode = resBody.resultCode
                 val resMsg = resBody.resultMessage
-                val token = response.token
+                val token = resBody.token
 
                 when (resCode) {
                     200 -> {
