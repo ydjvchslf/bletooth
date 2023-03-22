@@ -27,8 +27,11 @@ interface RetrofitService {
     @POST("member/register")
     suspend fun signUp(@Body reqRegData: RequestRegData): Result<RemoteDefaultData>
 
-    @GET("user/{userId}")
-    suspend fun getUser(): Result<RemoteDefaultData>
+    @POST("member/getUserInfo")
+    suspend fun getUser(
+        @Header("Authorization") token: String?,
+        @Body reqRegData: RequestCommonData
+    ): Result<RemoteDefaultData>
 
     @Multipart
     @POST("data/send")

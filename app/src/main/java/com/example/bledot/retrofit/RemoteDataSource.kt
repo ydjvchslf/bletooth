@@ -3,6 +3,7 @@ package com.example.bledot.retrofit
 import com.example.bledot.data.Product
 import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.data.request.RequestCommonData
+import com.example.bledot.data.response.toEntity
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.isGoogleUser
 import com.google.gson.Gson
@@ -204,22 +205,28 @@ class RemoteDataSource {
         }
     }
 
-    suspend fun getUserInfo(userId: String, userCallback: (UserInfoEntity) -> Unit) {
+    suspend fun getUserInfo(token: String, email: String, userCallback: (UserInfoEntity?) -> Unit) {
         BleDebugLog.w(logTag, "getUserInfo-()")
-        val sampleUser = sampleUserEntity()
-        userCallback.invoke(sampleUser)
-    /*
-        val response = retrofitService.getUser()
+        val reqData = toReqCmmData(email, null, null, null)
+
+        val response = retrofitService.getUser(token, reqData)
         when (response) {
             is Result.Success -> {
                 BleDebugLog.i(logTag, "Api Success!!")
                 val resBody = response.data
-                val statusCode = resBody.statusCode
-                if (statusCode == 200) {
-                    BleDebugLog.d(logTag, "userInfo 가져오기 성공")
-                    val remoteUserInfo = resBody.data
-                    val userInfoEntity = remoteUserInfo?.toEntity()
-                    userCallback.invoke(userInfoEntity)
+                val resCode = resBody.resultCode
+                val resMsg = resBody.resultMessage
+
+                when (resCode) {
+                    200 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        userCallback.invoke(resBody.toEntity())
+                    }
+                    -1 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        userCallback.invoke(null)
+                    }
+                    else -> { userCallback.invoke(null) }
                 }
             }
             is Result.ApiError -> {
@@ -233,7 +240,7 @@ class RemoteDataSource {
             }
             else -> { }
         }
-    */
+
     }
 
     suspend fun uploadToServer(email: String, file: File, resultCallback: (Boolean) -> Unit) {

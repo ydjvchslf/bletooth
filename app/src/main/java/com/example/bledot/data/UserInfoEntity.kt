@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class UserInfoEntity(
     val email: String,
-    val vender: String,
+    val vender: String?,
     val pwd: String?,
     val name: String,
     val birth: String,
@@ -29,7 +29,7 @@ data class UserInfoEntity(
         fun fromUserEntityToReqData(userInfo: UserInfoEntity): RequestRegData {
             return RequestRegData(
                 email = userInfo.email,
-                vender = userInfo.vender,
+                vender = userInfo.vender.toString(),
                 pwd = userInfo.pwd,
                 userNm = userInfo.name,
                 birth = userInfo.birth,
