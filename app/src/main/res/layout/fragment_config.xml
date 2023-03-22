@@ -136,7 +136,7 @@
                     app:layout_constraintBottom_toTopOf="@id/membership_btn"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/grey_btn_rounded_corner_rectangle"
-                    android:visibility="@{viewModel.isGoogleUser() == true ? View.GONE : View.VISIBLE}">
+                    android:visibility="@{viewModel.isShowPwChange() == true ? View.VISIBLE : View.GONE}">
 
                     <ImageView
                         android:id="@+id/ic_device"
