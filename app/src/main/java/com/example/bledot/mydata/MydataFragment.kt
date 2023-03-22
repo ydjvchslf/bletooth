@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -54,6 +54,7 @@ class MydataFragment: Fragment() {
             settings.displayZoomControls = false
             loadUrl("$BASE_URL/test/activityListWebView", headers)
             WebView.setWebContentsDebuggingEnabled(true)
+            webViewClient = WebViewClient()
         }
     }
 }
