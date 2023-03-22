@@ -60,8 +60,8 @@ class ConfigFragment : Fragment() {
         }
         // edit info 버튼
         binding.editInfoBtn.setOnClickListener {
-            val crtUserInfo = configViewModel.crnUserInfo
-            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToEditInfoFragment(crtUserInfo))
+            //val crtUserInfo = configViewModel.crnUserInfo
+            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToEditInfoFragment())
         }
         // change pw 버튼
         binding.changePwBtn.setOnClickListener {
@@ -73,8 +73,8 @@ class ConfigFragment : Fragment() {
         }
         // membership 버튼
         binding.membershipBtn.setOnClickListener {
-            val crtUserInfo = configViewModel.crnUserInfo
-            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToMembershipFragment(crtUserInfo))
+            //val crtUserInfo = configViewModel.crnUserInfo
+            Navigation.findNavController(binding.root).navigate(ConfigFragmentDirections.actionConfigFragmentToMembershipFragment())
         }
         // Logout 버튼
         binding.logoutBtn.setOnClickListener {
