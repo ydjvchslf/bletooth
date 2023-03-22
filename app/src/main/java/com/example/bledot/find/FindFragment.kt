@@ -93,14 +93,10 @@ class FindFragment : Fragment() {
     private fun processFindPw() {
         BleDebugLog.i(logTag, "processFindPw-()")
         if (emailFlag) {
-            val userEmail = binding.editTextEmail.text.toString()
-            findViewModel.isValidEmail(userEmail) { isExist ->
-                if (isExist) {
-                    findViewModel.requestResetPw(userEmail) {
-                        if (it == 200) {
-                            showDialog("Complete", "[$userEmail]\nPassword reset mail has been sent.")
-                        }
-                    }
+            val inputEmail = binding.editTextEmail.text.toString()
+            findViewModel.requestResetPw(inputEmail) { isSent ->
+                if (isSent) {
+                    showDialog("Complete", "[$inputEmail]\nPassword reset mail has been sent.")
                 } else {
                     Toast.makeText(activity, "This email does not exist.", Toast.LENGTH_SHORT).show()
                 }

@@ -320,26 +320,45 @@ class RemoteDataSource {
         }
     }
 
-    private fun sampleUserEntity(): UserInfoEntity {
-        return UserInfoEntity(
-            "abc@naver.com",
-            "테스트",
-            "1991-09-14",
-            "Female",
-            "55",
-            "1",
-            "korean",
-            "감기",
-            "race",
-            "주소1",
-            "주소2",
-            "주소3",
-            "주소4",
-            "Korea",
-            "11921",
-            "korea",
-            null
-        )
+    suspend fun findPassword(email: String, result: (Boolean) -> Unit) {
+        BleDebugLog.w(logTag, "findPassword-()")
+        val reqData = toReqCmmData(email, null, null, null)
+
+        val response = retrofitService.findPassword(reqData)
+        when (response) {
+            is Result.Success -> {
+                BleDebugLog.i(logTag, "Api Success!!")
+                val resBody = response.data
+                val resCode = resBody.resultCode
+                val resMsg = resBody.resultMessage
+
+                when (resCode) {
+                    200 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        result.invoke(true)
+                    }
+                    -1 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        result.invoke(false)
+                    }
+                    -2 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        result.invoke(false)
+                    }
+                    else -> { result.invoke(false) }
+                }
+            }
+            is Result.ApiError -> {
+                BleDebugLog.i(logTag, "ApiError!!")
+                BleDebugLog.d(logTag, "Error Code: [${response.code}], message: ${response.message}")
+            }
+            is Result.NetworkError -> {
+                BleDebugLog.i(logTag, "NetworkError!!")
+                // throwable
+                BleDebugLog.d(logTag, "${response.throwable}")
+            }
+            else -> { }
+        }
     }
 
     private fun toReqCmmData(email: String, vender: String?,

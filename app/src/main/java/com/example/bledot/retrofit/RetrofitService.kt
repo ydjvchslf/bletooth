@@ -45,4 +45,7 @@ interface RetrofitService {
         @Header("Authorization") token: String?,
         @Body reqRegData: RequestCommonData
     ): Result<RemoteDefaultData>
+
+    @POST("member/findPassword")
+    suspend fun findPassword(@Body reqRegData: RequestCommonData): Result<RemoteDefaultData>
 }
