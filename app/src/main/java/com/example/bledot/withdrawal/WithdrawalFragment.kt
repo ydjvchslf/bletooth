@@ -1,6 +1,9 @@
 package com.example.bledot.withdrawal
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +12,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import com.example.bledot.App
 import com.example.bledot.R
+import com.example.bledot.activity.before.BeforeActivity
 import com.example.bledot.ble.BleState
 import com.example.bledot.databinding.FragmentHomeBinding
 import com.example.bledot.databinding.FragmentWithdrawalBinding
@@ -17,6 +22,8 @@ import com.example.bledot.editinfo.EditInfoFragmentDirections
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.btScanningStatus
 import com.example.bledot.util.userId
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 
 class WithdrawalFragment : Fragment() {
@@ -64,9 +71,9 @@ class WithdrawalFragment : Fragment() {
             setCancelable(false)
             setPositiveButton("Action") { _, _ ->
                 // 탈퇴처리
-                withdrawalViewModel.deleteAccount(userId.value.toString()) {
-                    if (it) {
-                        // TODO :: 탈퇴처리 후 화면 전환 처리
+                withdrawalViewModel.deleteAccount { isDeleted ->
+                    if (isDeleted) {
+                        processWithdrawal()
                     }
                 }
             }
@@ -83,5 +90,33 @@ class WithdrawalFragment : Fragment() {
             setPositiveButton("Action") { _, _ -> }
         }
         builder.create().show()
+    }
+
+    // 서버 탈퇴 처리 성공 > 로그아웃, 토큰 지우기, 로그인 초기 화면 띄우기
+    private fun processWithdrawal() {
+        BleDebugLog.i(logTag, "processWithdrawal-()")
+        // Pref 초기화
+        val token = App.prefs.getString("token", "no token")
+        BleDebugLog.d(logTag, "초기화 전 token: $token")
+        if (token != "no token") {
+            val prefs: SharedPreferences? =
+                context?.getSharedPreferences("prefs_name", Context.MODE_PRIVATE)
+            val editor = prefs?.edit()
+            editor?.remove("token")
+            editor?.remove("email")
+            editor?.clear()
+            editor?.commit()
+
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+
+            val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+            mGoogleSignInClient.signOut()
+
+            activity?.startActivity(Intent(activity, BeforeActivity::class.java))
+            activity?.finish()
+        }
     }
 }

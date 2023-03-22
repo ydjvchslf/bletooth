@@ -283,6 +283,43 @@ class RemoteDataSource {
         resultCallback.invoke(true)
     }
 
+    suspend fun withdrawAccount(token: String, email: String, result: (Boolean) -> Unit) {
+        BleDebugLog.w(logTag, "withdrawAccount-()")
+        val reqData = toReqCmmData(email, null, null, null)
+
+        val response = retrofitService.deleteAccount(token, reqData)
+        when (response) {
+            is Result.Success -> {
+                BleDebugLog.i(logTag, "Api Success!!")
+                val resBody = response.data
+                val resCode = resBody.resultCode
+                val resMsg = resBody.resultMessage
+
+                when (resCode) {
+                    200 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        result.invoke(true)
+                    }
+                    -1 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        result.invoke(false)
+                    }
+                    else -> { result.invoke(false) }
+                }
+            }
+            is Result.ApiError -> {
+                BleDebugLog.i(logTag, "ApiError!!")
+                BleDebugLog.d(logTag, "Error Code: [${response.code}], message: ${response.message}")
+            }
+            is Result.NetworkError -> {
+                BleDebugLog.i(logTag, "NetworkError!!")
+                // throwable
+                BleDebugLog.d(logTag, "${response.throwable}")
+            }
+            else -> { }
+        }
+    }
+
     private fun sampleUserEntity(): UserInfoEntity {
         return UserInfoEntity(
             "abc@naver.com",

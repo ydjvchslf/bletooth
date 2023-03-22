@@ -39,4 +39,10 @@ interface RetrofitService {
         @Part email: MultipartBody.Part,
         @Part file: MultipartBody.Part
     ): Result<RequestFileData>
+
+    @POST("member/withdrawal")
+    suspend fun deleteAccount(
+        @Header("Authorization") token: String?,
+        @Body reqRegData: RequestCommonData
+    ): Result<RemoteDefaultData>
 }
