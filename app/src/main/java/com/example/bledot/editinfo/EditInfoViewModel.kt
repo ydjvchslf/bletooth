@@ -34,7 +34,7 @@ class EditInfoViewModel : ViewModel() {
         }
     }
 
-    fun editUserInfo(email:String, userInfo: UserInfoEntity, result: (Boolean) -> Unit) {
+    fun editUserInfo(result: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "editUserInfo-()")
         // TODO :: 회원정보 수정 api
         result.invoke(true)

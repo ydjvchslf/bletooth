@@ -21,7 +21,6 @@ import com.example.bledot.databinding.FragmentChangePwBinding
 import com.example.bledot.editinfo.EditInfoFragmentDirections
 import com.example.bledot.login.LoginFragmentDirections
 import com.example.bledot.util.BleDebugLog
-import com.example.bledot.util.userId
 import java.util.*
 
 

@@ -21,7 +21,6 @@ import com.example.bledot.databinding.FragmentWithdrawalBinding
 import com.example.bledot.editinfo.EditInfoFragmentDirections
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.btScanningStatus
-import com.example.bledot.util.userId
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 

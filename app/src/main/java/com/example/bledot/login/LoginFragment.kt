@@ -20,7 +20,6 @@ import com.example.bledot.R
 import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.FragmentLoginBinding
 import com.example.bledot.util.BleDebugLog
-import com.example.bledot.util.userId
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -92,7 +91,6 @@ class LoginFragment : Fragment() {
                 if (it) {
                     // 일반 로그인 성공 후 Preference 저장
                     App.prefs.setString("email", inputEmail)
-                    userId.value = inputEmail // 추후 Api 에서 필요한 {userId} 저장
                     activity?.startActivity(Intent(activity, MainActivity::class.java))
                     activity?.finish()
                 } else {
@@ -119,7 +117,6 @@ class LoginFragment : Fragment() {
                 // Signed in successfully, handle the user's account here
                 // 구글로그인 후, 유저정보 있는지 없는지 체크
                 email?.let {
-                    userId.value = email // 추후 Api 에서 필요한 {userId} 저장
                     isCheckedUserInfo(it)
                 }
             } catch (e: ApiException) {
@@ -134,7 +131,6 @@ class LoginFragment : Fragment() {
         gsa?.let {
             BleDebugLog.d(logTag, "구글 로그인 이력 있음")
             BleDebugLog.d(logTag, "email: ${gsa.email}")
-            userId.value = gsa.email // 추후 Api 에서 필요한 {userId} 저장
             activity?.startActivity(Intent(activity, MainActivity::class.java))
             activity?.finish()
         }
@@ -165,7 +161,6 @@ class LoginFragment : Fragment() {
         val isToken = App.prefs.getString("token", "no token")
         BleDebugLog.d(logTag, "isToken: $isToken")
         if(isToken != "no token") {
-            //userId.value = preEmail // 추후 Api 에서 필요한 {userId} 저장
             activity?.startActivity(Intent(activity, MainActivity::class.java))
             activity?.finish()
         }

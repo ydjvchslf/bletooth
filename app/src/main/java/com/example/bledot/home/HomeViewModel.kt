@@ -16,7 +16,6 @@ class HomeViewModel : ViewModel() {
 
     private val logTag = HomeViewModel::class.simpleName
     private val remoteDataSource = RemoteDataSource()
-    lateinit var crnUserInfo: UserInfoEntity
     private var path = ""
     var isUploading = MutableLiveData(false)
 
@@ -28,9 +27,7 @@ class HomeViewModel : ViewModel() {
     private fun getMyInfo() {
         BleDebugLog.i(logTag, "getMyInfo-()")
         viewModelScope.launch  {
-            remoteDataSource.getUserInfo("userId") {
-                crnUserInfo = it
-            }
+
         }
     }
 

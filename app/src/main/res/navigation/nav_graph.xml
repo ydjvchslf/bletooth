@@ -86,9 +86,6 @@
         android:name="com.example.bledot.editinfo.EditInfoFragment"
         android:label="fragment_edit_info"
         tools:layout="@layout/fragment_edit_info" >
-        <argument
-            android:name="userInfo"
-            app:argType="com.example.bledot.data.UserInfoEntity" />
         <action
             android:id="@+id/action_editInfoFragment_to_configFragment"
             app:destination="@id/configFragment"
@@ -113,9 +110,6 @@
         android:name="com.example.bledot.membership.MembershipFragment"
         android:label="MembershipFragment"
         tools:layout="@layout/fragment_membership">
-        <argument
-            android:name="userInfo"
-            app:argType="com.example.bledot.data.UserInfoEntity" />
         <action
             android:id="@+id/action_membershipFragment_to_configFragment"
             app:destination="@id/configFragment"

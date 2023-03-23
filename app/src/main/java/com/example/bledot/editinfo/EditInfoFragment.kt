@@ -22,8 +22,6 @@ class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private val logTag = EditInfoFragment::class.simpleName
     private lateinit var binding: FragmentEditInfoBinding
     private val editInfoViewModel: EditInfoViewModel by activityViewModels()
-    // Config 에서 넘어온 userInfo
-    private val arg: EditInfoFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +41,8 @@ class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
         makeDropdownMenu()
-        settingCrtUserInfo(arg)
+        //settingCrtUserInfo(arg)
+        getUserInfo()
 
         binding.backBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(EditInfoFragmentDirections.actionEditInfoFragmentToConfigFragment())
@@ -80,13 +79,25 @@ class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onNothingSelected(p0: AdapterView<*>?) { }
 
-    // TODO :: 기존 유저 정보 세팅
-    private fun settingCrtUserInfo(arg: EditInfoFragmentArgs) {
+    private fun getUserInfo() {
+        BleDebugLog.i(logTag, "getUserInfo-()")
+        editInfoViewModel.getUserFromServer { userInfo ->
+            BleDebugLog.d(logTag, "정상적으로 userInfo 가져왔음")
+            userInfo?.let { settingCrtUserInfo(it) }
+        }
+    }
+    //TODO :: 기존 유저 정보 세팅, 일부만 완료 (spinner, 진단 날짜 빠짐, 디자인 나온 이후 할 것)
+    private fun settingCrtUserInfo(userInfo: UserInfoEntity) {
         BleDebugLog.i(logTag, "settingCrtUserInfo-()")
-        val userInfo = arg.userInfo
+
         binding.name.infoInputEditText.setText(userInfo.name)
         binding.birth.infoInputEditText.setText(userInfo.birth)
         binding.weightSpinner.weightEditText.setText(userInfo.weight)
+        binding.phone.infoInputEditText.setText(userInfo.phone)
+        binding.address.address1.setText(userInfo.address1)
+        binding.address.address2.setText(userInfo.address2)
+        binding.address.address3.setText(userInfo.address3)
+        binding.address.address4.setText(userInfo.zipCode)
     }
 
     private fun processEditInfo() {
@@ -105,25 +116,8 @@ class EditInfoFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val address3 = binding.address.address3.text.toString()
         val address4 = binding.address.address4.text.toString()
         val country = getCountry(binding.countrySpinner.spinner.selectedItem.toString())
-        // UserInfoEntity 세팅
-        val userInfoEntity = UserInfoEntity(
-            email = userId.value.toString(),
-            name = name,
-            birth = birth,
-            gender = gender.toString(),
-            weight = weight,
-            weightUnit = weightUnit.toString(),
-            race = race.toString(),
-            pathology = pathology.toString(),
-            phone = phone.toInt(),
-            address1 = address1,
-            address2 = address2,
-            address3 = address3,
-            address4 = address4,
-            country = country.toString(),
-            membership = null
-        )
-        editInfoViewModel.editUserInfo(userId.value.toString(), userInfoEntity) { isEdited ->
+        // TODO:: UserInfoEntity 세팅
+        editInfoViewModel.editUserInfo { isEdited ->
             if (isEdited) {
                 // TODO:: 수정 완료 후 화면 처리
             }

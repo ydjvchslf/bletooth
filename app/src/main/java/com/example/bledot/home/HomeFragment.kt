@@ -19,7 +19,6 @@ import com.example.bledot.activity.before.BeforeActivity
 import com.example.bledot.databinding.FragmentHomeBinding
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.appIsWorking
-import com.example.bledot.util.userId
 
 
 class HomeFragment : Fragment() {
@@ -149,6 +148,5 @@ class HomeFragment : Fragment() {
         val email = App.prefs.getString("email", "no email")
         BleDebugLog.d(logTag, "홈화면 token: $token")
         BleDebugLog.d(logTag, "홈화면 email: $email")
-        // if (!isGoogleUser()) { App.prefs.setString("email", "${userId.value}") } // 일반 로그인만 pref 에 email 저장
     }
 }

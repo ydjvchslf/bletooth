@@ -542,7 +542,6 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
             if (isRegistered) {
                 // TODO:: 로그인 후 홈 화면으로 전환
                 BleDebugLog.d(logTag, "회원 가입, db 저장 성공!")
-                //userId.value = userInfoEntity.email
                 activity?.startActivity(Intent(activity, MainActivity::class.java))
                 activity?.finish()
             }

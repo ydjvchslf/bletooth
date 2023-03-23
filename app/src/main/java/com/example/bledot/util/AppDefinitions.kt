@@ -14,11 +14,10 @@ const val KEY_LOGGER = "KEY_LOGGER"
 const val KEY_TAG = "KEY_TAG"
 const val KEY_DATA = "KEY_DATA"
 
-const val BASE_URL = "http://www.propriologics.com:8888"
+//const val BASE_URL = "http://www.propriologics.com:8888"
+const val BASE_URL = "http://192.168.1.53:8080"
 
 var LIMIT_PERCENTAGE = 0.05
-
-var userId = MutableLiveData("") // TODO:: Preference 쓰면서 이거 안써도 될 듯함
 
 fun getRace(race: String): Int {
     return when (race) {
