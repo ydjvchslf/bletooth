@@ -46,11 +46,7 @@ class MembershipViewModel : ViewModel() {
     fun getUserInfo(email: String) {
         BleDebugLog.i(logTag, "getUserInfo-()")
         viewModelScope.launch {
-            remoteDataSource.getUserInfo(email) { userInfoEntity ->
-                //membershipDate.value = userInfoEntity.membership
-                membershipDate.value = "2022/02/16 ~ 2023/02/15"
-                isValid.value = true
-            }
+
         }
     }
 }

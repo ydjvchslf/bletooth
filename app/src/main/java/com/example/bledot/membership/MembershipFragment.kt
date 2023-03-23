@@ -19,8 +19,6 @@ class MembershipFragment : Fragment() {
     private val logTag = MembershipFragment::class.simpleName
     private lateinit var binding: FragmentMembershipBinding
     private val membershipViewModel: MembershipViewModel by activityViewModels()
-    // Config 에서 넘어온 userInfo
-    private val arg: MembershipFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,15 +38,15 @@ class MembershipFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
 
-        arg.userInfo.membership.let {
-            BleDebugLog.d(logTag, "arg.membershipDate: $it")
-            if (it == null) { // 멤버십 미등록
-                membershipViewModel.membershipDate.value = ""
-            } else { // 멤버십 등록
-                membershipViewModel.membershipDate.value = it
-                membershipViewModel.checkMembershipDate()
-            }
-        }
+//        arg.userInfo.membership.let {
+//            BleDebugLog.d(logTag, "arg.membershipDate: $it")
+//            if (it == null) { // 멤버십 미등록
+//                membershipViewModel.membershipDate.value = ""
+//            } else { // 멤버십 등록
+//                membershipViewModel.membershipDate.value = it
+//                membershipViewModel.checkMembershipDate()
+//            }
+//        }
         // 멤버십 등록/미등록 판별
         membershipViewModel.membershipDate.observe(viewLifecycleOwner) { date ->
             if (date.isNotEmpty()) {
@@ -124,6 +122,6 @@ class MembershipFragment : Fragment() {
 
     private fun refreshView() {
         BleDebugLog.i(logTag, "refreshView-()")
-        membershipViewModel.getUserInfo(arg.userInfo.email)
+        //membershipViewModel.getUserInfo(arg.userInfo.email)
     }
 }
