@@ -4,5 +4,6 @@ data class RequestCommonData(
     val email: String,
     val vender: String?,
     val pwd: String?,
-    val token: String?
+    val currentPwd: String?,
+    val newPwd: String?
 )

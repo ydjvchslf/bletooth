@@ -29,7 +29,7 @@ interface RetrofitService {
 
     @POST("member/getUserInfo")
     suspend fun getUser(
-        @Header("Authorization") token: String?,
+        @Header("Authorization") token: String,
         @Body reqRegData: RequestCommonData
     ): Result<RemoteDefaultData>
 
@@ -42,10 +42,16 @@ interface RetrofitService {
 
     @POST("member/withdrawal")
     suspend fun deleteAccount(
-        @Header("Authorization") token: String?,
+        @Header("Authorization") token: String,
         @Body reqRegData: RequestCommonData
     ): Result<RemoteDefaultData>
 
     @POST("member/findPassword")
     suspend fun findPassword(@Body reqRegData: RequestCommonData): Result<RemoteDefaultData>
+
+    @POST("member/updatePassword")
+    suspend fun updatePassword(
+        @Header("Authorization") token: String,
+        @Body reqRegData: RequestCommonData
+    ): Result<RemoteDefaultData>
 }

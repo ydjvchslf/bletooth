@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
+import com.example.bledot.App
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentChangePwBinding
 import com.example.bledot.editinfo.EditInfoFragmentDirections
@@ -53,13 +54,15 @@ class ChangePwFragment : Fragment() {
         BleDebugLog.i(logTag, "onViewCreated-()")
         binding.pw.pw1EditText.hint = "New Password"
         binding.pw.pw2EditText.hint = "Confirm Password"
-        binding.currentPw.infoInputEditText.inputType = (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD)
+        binding.currentPw.infoInputEditText.inputType = (InputType.TYPE_TEXT_VARIATION_PASSWORD)
 
-        checkCrtPw() // 현재 비밀번호 맞는지 확인
+        //checkCrtPw() // 현재 비밀번호 맞는지 확인
         checkPwGuide() // 새로운 비밀번호 맞는지 확인
         // 비밀번호 변경 버튼
         binding.changeBtn.setOnClickListener {
-            changePassword()
+            if (checkCurrentPw()) { // 현재 비밀번호 맞는지 확인)
+                changePassword()
+            }
         }
         // 뒤로가기 버튼
         binding.backBtn.setOnClickListener {
@@ -105,6 +108,15 @@ class ChangePwFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun checkCurrentPw(): Boolean {
+        BleDebugLog.i(logTag, "checkCurrentPw-()")
+        val crnPw = binding.currentPw.infoInputEditText.text
+        if (crnPw.isNotEmpty()) {
+            pwFlag1 = true
+        }
+        return true
     }
 
     private fun checkPwGuide() {
@@ -155,12 +167,17 @@ class ChangePwFragment : Fragment() {
     private fun changePassword() {
         BleDebugLog.i(logTag, "changePassword-()")
         if (pwFlag1 && pwFlag2) {
-            val email = userId.value.toString()
-            val inputPw = binding.pw.pw2EditText.text.toString()
+            val crtPw = binding.currentPw.infoInputEditText.text.toString()
+            val newPw = binding.pw.pw2EditText.text.toString()
 
-            changePwViewModel.changePw(email, inputPw) {
-                if (it) {
+            changePwViewModel.changePassword(crtPw, newPw) { isChanged, msg ->
+                if (isChanged) {
                     showDialog("Complete", "Your password has been changed.")
+                } else {
+                    msg?.let { // 현재 비밀번호 틀린 경우
+                        binding.crtNotTextView.visibility = View.VISIBLE
+                        binding.crtPwTextView.visibility = View.GONE
+                    }
                 }
             }
         } else {

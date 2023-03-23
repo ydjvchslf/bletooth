@@ -22,7 +22,7 @@ class RemoteDataSource {
 
     suspend fun checkEmailDuplication(email: String, retCode: (Int?) -> Unit) {
         BleDebugLog.w(logTag, "checkEmailDuplication-()")
-        val reqData = toReqCmmData(email, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null)
 
         val response = retrofitService.checkEmail(reqData)
         return when (response) {
@@ -50,7 +50,7 @@ class RemoteDataSource {
 
     suspend fun checkAlreadyUser(email: String, result: (Boolean?) -> Unit) {
         BleDebugLog.w(logTag, "checkAlreadyUser-()")
-        val reqData = toReqCmmData(email, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null)
 
         val response = retrofitService.checkUserInfoExist(reqData)
         return when (response) {
@@ -154,12 +154,7 @@ class RemoteDataSource {
 
     suspend fun loginServer(email: String, pw: String?, retCode: (Int?, String?) -> Unit) {
         BleDebugLog.w(logTag, "login-()")
-        val reqData = toReqCmmData(
-            email,
-            if (isGoogleUser(email)) { "google" } else { "email" },
-            pw,
-            null
-        )
+        val reqData = toReqCmmData( email, if (isGoogleUser(email)) { "google" } else { "email" }, pw, null, null)
 
         val response = retrofitService.login(reqData)
         when (response) {
@@ -207,7 +202,7 @@ class RemoteDataSource {
 
     suspend fun getUserInfo(token: String, email: String, userCallback: (UserInfoEntity?) -> Unit) {
         BleDebugLog.w(logTag, "getUserInfo-()")
-        val reqData = toReqCmmData(email, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null)
 
         val response = retrofitService.getUser(token, reqData)
         when (response) {
@@ -285,7 +280,7 @@ class RemoteDataSource {
 
     suspend fun withdrawAccount(token: String, email: String, result: (Boolean) -> Unit) {
         BleDebugLog.w(logTag, "withdrawAccount-()")
-        val reqData = toReqCmmData(email, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null)
 
         val response = retrofitService.deleteAccount(token, reqData)
         when (response) {
@@ -322,7 +317,7 @@ class RemoteDataSource {
 
     suspend fun findPassword(email: String, result: (Boolean) -> Unit) {
         BleDebugLog.w(logTag, "findPassword-()")
-        val reqData = toReqCmmData(email, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null)
 
         val response = retrofitService.findPassword(reqData)
         when (response) {
@@ -361,14 +356,52 @@ class RemoteDataSource {
         }
     }
 
-    private fun toReqCmmData(email: String, vender: String?,
-                             pwd: String?, token: String?): RequestCommonData {
+    suspend fun updatePassword(token: String, email: String, crtPw: String, newPw: String, result: (Boolean, String?) -> Unit) {
+        BleDebugLog.w(logTag, "updatePassword-()")
+        val reqData = toReqCmmData(email, null, null, crtPw, newPw)
+
+        val response = retrofitService.updatePassword(token, reqData)
+        when (response) {
+            is Result.Success -> {
+                BleDebugLog.i(logTag, "Api Success!!")
+                val resBody = response.data
+                val resCode = resBody.resultCode
+                val resMsg = resBody.resultMessage
+
+                when (resCode) {
+                    200 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        result.invoke(true, null)
+                    }
+                    -2 -> {
+                        BleDebugLog.d(logTag, "resMsg: $resMsg")
+                        result.invoke(false, resMsg)
+                    }
+                    else -> { result.invoke(false, null) }
+                }
+            }
+            is Result.ApiError -> {
+                BleDebugLog.i(logTag, "ApiError!!")
+                BleDebugLog.d(logTag, "Error Code: [${response.code}], message: ${response.message}")
+            }
+            is Result.NetworkError -> {
+                BleDebugLog.i(logTag, "NetworkError!!")
+                // throwable
+                BleDebugLog.d(logTag, "${response.throwable}")
+            }
+            else -> { }
+        }
+    }
+
+    private fun toReqCmmData(email: String, vender: String?, pwd: String?,
+                             currentPwd: String?, newPwd: String?): RequestCommonData {
         BleDebugLog.w(logTag, "toReqCmmData-()")
         return RequestCommonData(
             email = email,
             vender = vender,
             pwd = pwd,
-            token = token
+            currentPwd = currentPwd,
+            newPwd = newPwd
         )
     }
 }
