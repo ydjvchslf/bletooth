@@ -86,4 +86,9 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     // viewModel ktx
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
+    // MQTT eclipse
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+    // MQTT hannesa2
+    implementation 'com.github.hannesa2:paho.mqtt.android:3.5.1'
+
 }
