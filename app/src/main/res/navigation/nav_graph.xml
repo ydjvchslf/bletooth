@@ -30,6 +30,10 @@
             app:destination="@id/configFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <!-- 임시 -->
+        <action
+            android:id="@+id/action_homeFragment_to_tempFragment"
+            app:destination="@id/tempFragment" />
     </fragment>
 
     <fragment
@@ -115,6 +119,14 @@
             app:destination="@id/configFragment"
             app:popUpTo="@id/configFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- 임시 -->
+    <fragment
+        android:id="@+id/tempFragment"
+        android:name="com.example.bledot.temp.TempFragment"
+        android:label="TempFragment"
+        tools:layout="@layout/fragment_temp">
     </fragment>
 
 </navigation>

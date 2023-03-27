@@ -59,6 +59,10 @@ class HomeFragment : Fragment() {
         binding.settingBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(HomeFragmentDirections.actionHomeFragmentToConfigFragment())
         }
+        // 임시 버튼
+        binding.tempBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(HomeFragmentDirections.actionHomeFragmentToTempFragment())
+        }
 
         // 미전송 데이터 확인
         //checkData()

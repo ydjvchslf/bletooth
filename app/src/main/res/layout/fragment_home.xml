@@ -64,6 +64,16 @@
                 app:layout_constraintBottom_toBottomOf="@id/ic_logo"
                 android:src="@drawable/ic_anchor_logics" />
 
+            <Button
+                android:id="@+id/temp_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/ic_logo_name"
+                app:layout_constraintTop_toTopOf="@id/ic_logo"
+                app:layout_constraintBottom_toBottomOf="@id/ic_logo"
+                android:layout_marginStart="30dp"
+                android:text="tempt" />
+
             <TextView
                 android:id="@+id/info_textView"
                 android:layout_width="wrap_content"
