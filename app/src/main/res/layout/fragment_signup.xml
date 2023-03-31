@@ -132,6 +132,20 @@
                     app:field="@{`Pathology`}"/>
 
                 <include
+                    android:id="@+id/diag_date"
+                    layout="@layout/layout_field_hint"
+                    app:field="@{`Date of diagnosis`}"
+                    app:hint="@{`YYYY/MM/DD`}"/>
+
+                <TextView
+                    android:id="@+id/diag_state_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please follow the input format"
+                    android:textColor="@color/red"
+                    android:visibility="invisible"/>
+
+                <include
                     android:id="@+id/email"
                     layout="@layout/layout_field_hint"
                     app:field="@{`Email`}"
@@ -212,8 +226,8 @@
                     app:field="@{`Address`}" />
 
                 <include
-                    android:id="@+id/country_spinner"
-                    layout="@layout/layout_race_country_spinner"
+                    android:id="@+id/country_picker"
+                    layout="@layout/layout_race_country_picker"
                     app:field="@{`Country`}"/>
 
                 <LinearLayout

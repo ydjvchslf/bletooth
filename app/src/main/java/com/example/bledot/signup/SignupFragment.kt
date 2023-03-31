@@ -36,6 +36,7 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var nameFlag = false
     private var dateFlag = false
     private var weightFlag = false
+    private var diagnosisFlag = false
     private var emailFlag = false
     private var emailDuplicationFlag = false
     private var pwFlag = false
@@ -44,8 +45,6 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var agreeFlag = false
     //구글 로그인으로 넘어온 유저 email
     private val arg: SignupFragmentArgs by navArgs()
-
-    val REG = "\\d{4}/(0[1-9]|1[012])/(0[1-9]|[12][0-9]|3[01])"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,13 +81,13 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         binding.emailNotTextView.visibility = View.GONE
                         binding.emailDuplicationTextView.visibility = View.VISIBLE
                         emailDuplicationFlag = false
-                        Toast.makeText(context, "emailDuplicationFlag: $emailDuplicationFlag", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "emailDuplicationFlag: $emailDuplicationFlag", Toast.LENGTH_SHORT).show()
                     } else { // 사용 가능
                         binding.emailOkTextView.visibility = View.VISIBLE
                         binding.emailNotTextView.visibility = View.GONE
                         binding.emailDuplicationTextView.visibility = View.GONE
                         emailDuplicationFlag = true
-                        Toast.makeText(context, "emailDuplicationFlag: $emailDuplicationFlag", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "emailDuplicationFlag: $emailDuplicationFlag", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -97,6 +96,7 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         checkPhoneGuide()
         checkAddressGuide()
         checkAgreeGuide()
+        checkDiagnosisGuide()
 
         binding.signUpBtn.setOnClickListener {
             checkAllFlags()
@@ -117,11 +117,6 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val adapter = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, raceSize) }
         adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.raceSpinner.spinner.adapter = adapter
-
-        val countrySize = resources.getStringArray(R.array.country_array)
-        val ctryAdapter = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, countrySize) }
-        adapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.countrySpinner.spinner.adapter = ctryAdapter
 
         val weightSize = resources.getStringArray(R.array.weight_array)
         val weightAdapter = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, weightSize) }
@@ -209,6 +204,55 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     binding.birth.infoInputEditText.background =
                         ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
                     dateFlag = true
+                }
+            }
+        })
+    }
+
+    private fun checkDiagnosisGuide() {
+        binding.diagDate.infoInputEditText.inputType = InputType.TYPE_CLASS_NUMBER
+        binding.diagDate.infoInputEditText.filters = arrayOf(InputFilter.LengthFilter(10))
+
+        binding.diagDate.infoInputEditText.addTextChangedListener(object: TextWatcher{
+            @SuppressLint("SetTextI18n")
+            override fun onTextChanged(p0: CharSequence?, start: Int, before: Int, count: Int) {
+                if (binding.diagDate.infoInputEditText.isFocusable && p0.toString() != "") {
+                    val textlength = binding.diagDate.infoInputEditText.text.toString().length
+                    if (textlength == 4 && before != 1) {
+                        binding.diagDate.infoInputEditText.setText(binding.diagDate.infoInputEditText.text.toString() + "/")
+                        binding.diagDate.infoInputEditText.setSelection(binding.diagDate.infoInputEditText.text.length)
+                        showDiagnosisError()
+                    } else if (textlength == 7 && before != 1) {
+                        binding.diagDate.infoInputEditText.setText(binding.diagDate.infoInputEditText.text.toString() + "/")
+                        binding.diagDate.infoInputEditText.setSelection(binding.diagDate.infoInputEditText.text.length)
+                        showDiagnosisError()
+                    } else if (textlength == 5 && !binding.diagDate.infoInputEditText.text.toString().contains("/")) {
+                        binding.diagDate.infoInputEditText.setText(binding.diagDate.infoInputEditText.text.toString()
+                            .substring(0, 4) + "/" + binding.diagDate.infoInputEditText.text.toString()
+                            .substring(4))
+                        binding.diagDate.infoInputEditText.setSelection(binding.diagDate.infoInputEditText.text.length)
+                        showDiagnosisError()
+                    } else if (textlength == 8 && binding.diagDate.infoInputEditText.text.toString().substring(7, 8) != "/") {
+                        binding.diagDate.infoInputEditText.setText(
+                            binding.diagDate.infoInputEditText.text.toString()
+                                .substring(0, 7) + "/" + binding.diagDate.infoInputEditText.text.toString()
+                                .substring(7))
+                        binding.diagDate.infoInputEditText.setSelection(binding.diagDate.infoInputEditText.text.length)
+                        showDiagnosisError()
+                    } else if (textlength != 10) {
+                        showDiagnosisError()
+                    }
+                }
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+            override fun afterTextChanged(p0: Editable?) {
+                val inputText = binding.diagDate.infoInputEditText.text.toString()
+                val result = Pattern.matches(REG, inputText)
+                if(result) {
+                    binding.diagStateTextView.visibility = View.INVISIBLE
+                    binding.diagDate.infoInputEditText.background =
+                        ResourcesCompat.getDrawable(resources, R.drawable.edittext_rounded_corner_rectangle, null)
+                    diagnosisFlag = true
                 }
             }
         })
@@ -414,6 +458,13 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         dateFlag = false
     }
 
+    private fun showDiagnosisError() {
+        binding.diagStateTextView.visibility = View.VISIBLE
+        binding.diagDate.infoInputEditText.background =
+            ResourcesCompat.getDrawable(resources, R.drawable.red_edittext_rounded_corner_rectangle, null)
+        diagnosisFlag = false
+    }
+
     private fun checkAllFlags() {
         BleDebugLog.i(logTag, "checkAllFlags-()")
         BleDebugLog.d(logTag, "arg.email: ${arg.email}")
@@ -422,9 +473,9 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         BleDebugLog.d(logTag, "nameFlag: $nameFlag , dateFlag : $dateFlag ,&& weightFlag: $weightFlag , && emailFlag : $emailFlag ," +
-                "&& pwFlag : $pwFlag ,&& phoneFlag : $phoneFlag ,&& addressFlag : $addressFlag ,&& agreeFlag: $agreeFlag, && emailDuplicationFlag: $emailDuplicationFlag")
+                "&& pwFlag : $pwFlag ,&& phoneFlag : $phoneFlag ,&& addressFlag : $addressFlag ,&& agreeFlag: $agreeFlag, && emailDuplicationFlag: $emailDuplicationFlag, && diagnosisFlag: $diagnosisFlag")
 
-        if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag && emailDuplicationFlag) {
+        if ( nameFlag && dateFlag && weightFlag && emailFlag && pwFlag && phoneFlag && addressFlag && agreeFlag && emailDuplicationFlag && diagnosisFlag) {
             BleDebugLog.d(logTag, "모든조건 완성, Sign up 성공적")
             processSignUp()
         } else {
@@ -478,6 +529,9 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 }
             } else if (!agreeFlag) {
                 Toast.makeText(context, "Please check the consent.", Toast.LENGTH_SHORT).show()
+            } else if (!diagnosisFlag) {
+                Toast.makeText(context, "Please fill out all items", Toast.LENGTH_SHORT).show()
+                showDiagnosisError()
             }
         }
     }
@@ -505,9 +559,10 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val birth = binding.birth.infoInputEditText.text.toString()
         val gender = if (binding.gender.femaleBtn.isChecked) "female" else "male"
         val weight = binding.weightSpinner.weightEditText.text.toString()
-        val weightUnit = if (binding.weightSpinner.spinner.selectedItem.toString() == "kg") "kg" else "lb"
+        val weightUnit = if (binding.weightSpinner.spinner.selectedItem.toString() == "kg") "kg" else "lbs"
         val race = binding.raceSpinner.spinner.selectedItem.toString()
         val pathology = binding.pathSpinner.spinner.selectedItem.toString()
+        val diagDate = binding.diagDate.infoInputEditText.text.toString()
         val inputEmail = if (arg.email == null) { binding.email.infoInputEditText.text.toString() } else { arg.email }
         val vender = if (arg.email == null) { "email" } else { "google" }
         val pw = if (arg.email == null) { binding.pw.pw2EditText.text.toString() } else { null }
@@ -516,7 +571,7 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val address2 = binding.address.address2.text.toString()
         val address3 = binding.address.address3.text.toString()
         val address4 = binding.address.address4.text.toString()
-        val country = binding.countrySpinner.spinner.selectedItem.toString()
+        val country = binding.countryPicker.picker.selectedCountryName
         // UserInfoEntity 세팅
         val userInfoEntity = UserInfoEntity(
             email = inputEmail.toString(),
@@ -529,6 +584,7 @@ class SignupFragment : Fragment(), AdapterView.OnItemSelectedListener {
             weightUnit = weightUnit,
             race = race,
             pathology = pathology,
+            diagDate = diagDate,
             phone = phone,
             address1 = address1,
             address2 = address2,

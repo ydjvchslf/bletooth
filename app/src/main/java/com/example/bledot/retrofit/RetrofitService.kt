@@ -27,6 +27,13 @@ interface RetrofitService {
     @POST("member/register")
     suspend fun signUp(@Body reqRegData: RequestRegData): Result<RemoteDefaultData>
 
+    @Headers("Content-Type: application/json")
+    @POST("member/saveUserInfo")
+    suspend fun edit(
+        @Header("Authorization") token: String,
+        @Body reqRegData: RequestRegData
+    ): Result<RemoteDefaultData>
+
     @POST("member/getUserInfo")
     suspend fun getUser(
         @Header("Authorization") token: String,

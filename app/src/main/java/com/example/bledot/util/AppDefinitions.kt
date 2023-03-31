@@ -19,7 +19,9 @@ const val BASE_URL = "http://192.168.1.53:8080"
 
 var LIMIT_PERCENTAGE = 0.05
 
-fun getRace(race: String): Int {
+val REG = "\\d{4}/(0[1-9]|1[012])/(0[1-9]|[12][0-9]|3[01])"
+
+fun getRace(race: String): Int? {
     return when (race) {
         "Asian" -> { 0 }
         "Hispanic" -> { 1 }
@@ -27,11 +29,11 @@ fun getRace(race: String): Int {
         "Black or African American" -> { 3 }
         "White" -> { 4 }
         "unknown" -> { 5 }
-        else -> { 6 }
+        else -> { null }
     }
 }
 
-fun getPathology(path: String): Int {
+fun getPathology(path: String): Int? {
     return when (path) {
         "Ataxia" -> { 0 }
         "Multiple sclerosis (MS)" -> { 1 }
@@ -39,18 +41,7 @@ fun getPathology(path: String): Int {
         "Parkinson\'s disease (PD)" -> { 3 }
         "Stroke" -> { 4 }
         "Other" -> { 5 }
-        else -> { 6 }
-    }
-}
-
-fun getCountry(country: String): Int {
-    return when (country) {
-        "Korea" -> { 0 }
-        "America" -> { 1 }
-        "Japan" -> { 2 }
-        "Chinese" -> { 3 }
-        "English" -> { 4 }
-        else -> { 5 }
+        else -> { null }
     }
 }
 

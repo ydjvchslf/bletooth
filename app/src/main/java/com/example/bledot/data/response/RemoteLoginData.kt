@@ -21,6 +21,7 @@ data class RemoteDefaultData(
     @SerializedName("state") val address3: String?,
     @SerializedName("postcode") val zipCode: String?,
     @SerializedName("country") val country: String?,
+    @SerializedName("diaDt") val diagDate: String?,
 )
 
 fun RemoteDefaultData.toEntity() = UserInfoEntity (
@@ -34,6 +35,7 @@ fun RemoteDefaultData.toEntity() = UserInfoEntity (
     weightUnit = weightUnit.toString(),
     race = race.toString(),
     pathology = pathology.toString(),
+    diagDate = diagDate.toString(),
     phone = phone.toString(),
     address1 = address1.toString(),
     address2 = address2.toString(),

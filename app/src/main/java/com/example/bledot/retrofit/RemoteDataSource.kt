@@ -393,6 +393,44 @@ class RemoteDataSource {
         }
     }
 
+    suspend fun editUser(token: String, userInfo: UserInfoEntity, resResult: (Int?) -> Unit) {
+        BleDebugLog.w(logTag, "editUser-()")
+        val reqRegData = UserInfoEntity.fromUserEntityToReqData(userInfo)
+
+        val response = retrofitService.edit(token, reqRegData)
+        when (response) {
+            is Result.Success -> { // Success<T>(val code: Int, val data: T)
+                BleDebugLog.i(logTag, "Api Success!!")
+                val resBody = response.data
+                val resCode = resBody.resultCode
+                val resMsg = resBody.resultMessage
+
+                when (resCode) {
+                    200 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        resResult.invoke(resCode)
+                    }
+                    -1 -> {
+                        BleDebugLog.d(logTag, resMsg)
+                        resResult.invoke(resCode)
+                    }
+                    else -> { resResult.invoke(null) }
+                }
+            }
+            is Result.ApiError -> { // ApiError<T>(val code: Int, val message: String)
+                BleDebugLog.i(logTag, "ApiError!!")
+                // response.code = 400대, response.message()
+                BleDebugLog.d(logTag, "Error Code: [${response.code}], message: ${response.message}")
+            }
+            is Result.NetworkError -> { // NetworkError<T>(val throwable: Throwable)
+                BleDebugLog.i(logTag, "NetworkError!!")
+                // throwable
+                BleDebugLog.d(logTag, "${response.throwable}")
+            }
+            else -> { }
+        }
+    }
+
     private fun toReqCmmData(email: String, vender: String?, pwd: String?,
                              currentPwd: String?, newPwd: String?): RequestCommonData {
         BleDebugLog.w(logTag, "toReqCmmData-()")

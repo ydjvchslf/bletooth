@@ -34,9 +34,21 @@ class EditInfoViewModel : ViewModel() {
         }
     }
 
-    fun editUserInfo(result: (Boolean) -> Unit) {
+    fun editUserInfo(user: UserInfoEntity, result: (Boolean) -> Unit) {
         BleDebugLog.i(logTag, "editUserInfo-()")
-        // TODO :: 회원정보 수정 api
-        result.invoke(true)
+        BleDebugLog.d(logTag, "[user]: $user")
+        viewModelScope.launch {
+            // TODO:: 정보수정 api
+            val token = App.prefs.getString("token", "no token")
+            if (token != "no token") {
+                remoteDataSource.editUser(token, user) { retCode ->
+                    if (retCode == 200) {
+                        result.invoke(true)
+                    } else {
+                        result.invoke(false)
+                    }
+                }
+            }
+        }
     }
 }

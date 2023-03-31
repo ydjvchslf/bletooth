@@ -16,6 +16,7 @@ data class UserInfoEntity(
     val weightUnit: String,
     val race: String,
     val pathology: String,
+    val diagDate: String,
     val phone: String,
     val address1: String,
     val address2: String,
@@ -38,6 +39,7 @@ data class UserInfoEntity(
                 unit = userInfo.weightUnit,
                 race = userInfo.race,
                 patho = userInfo.pathology,
+                diaDt = userInfo.diagDate,
                 telNum = userInfo.phone,
                 addr = userInfo.address1+", "+userInfo.address2+", "+userInfo.address3,
                 zipCd = userInfo.zipCode,
@@ -48,7 +50,7 @@ data class UserInfoEntity(
 
     override fun toString(): String {
         return "email: $email, name: $name, birth: $birth, gender: $gender, " +
-                "weight: $weight, weightUnit: $weightUnit, race: $race, pathology: $pathology, " +
+                "weight: $weight, weightUnit: $weightUnit, race: $race, pathology: $pathology, diagDate: $diagDate" +
                 "phone: $phone, address1: $address1, address2: $address2, address3: $address3, " +
                 "zipCode: $zipCode, country: $country, membership: $membership"
     }
