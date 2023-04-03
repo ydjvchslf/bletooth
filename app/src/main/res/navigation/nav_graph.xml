@@ -48,7 +48,13 @@
         android:id="@+id/realtimeFragment"
         android:name="com.example.bledot.realtime.RealtimeFragment"
         android:label="fragment_realtime"
-        tools:layout="@layout/fragment_realtime" />
+        tools:layout="@layout/fragment_realtime" >
+        <action
+            android:id="@+id/action_realtimeFragment_to_listFragment"
+            app:destination="@id/listFragment"
+            app:popUpTo="@id/realtimeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/configFragment"

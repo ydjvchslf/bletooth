@@ -28,7 +28,7 @@ class RealtimeViewModel: ViewModel() {
 
     private val logTag = RealtimeViewModel::class.simpleName
     private val remoteDataSource = RemoteDataSource()
-    var isWearingOption: Boolean = false
+    //var isWearingOption = false
     var isRecording = MutableLiveData(false)
     var filename = ""
     var fileFullName = ""
@@ -36,7 +36,7 @@ class RealtimeViewModel: ViewModel() {
 
     init {
         BleDebugLog.i(logTag, "init-()")
-        BleDebugLog.d(logTag, "isWearingOption: $isWearingOption")
+        //BleDebugLog.d(logTag, "isWearingOption: $isWearingOption")
         // Remove XsensDotLogger objects from list before start data logging.
         mLoggerList.value?.clear()
     }

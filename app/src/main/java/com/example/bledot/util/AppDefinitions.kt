@@ -8,6 +8,7 @@ val btScanningStatus = MutableLiveData(false)
 val appIsWorking = MutableLiveData(false)
 // A list contains mac address and XsensDotLogger object
 val mLoggerList = MutableLiveData<ArrayList<HashMap<String, Any>>>()
+val isWearingOption = MutableLiveData(false)
 
 const val KEY_ADDRESS = "KEY_ADDRESS"
 const val KEY_LOGGER = "KEY_LOGGER"

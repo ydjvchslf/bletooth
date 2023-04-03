@@ -12,13 +12,16 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import com.example.bledot.App
 import com.example.bledot.WebAppInterface
 import com.example.bledot.ble.BleViewModel
 import com.example.bledot.data.XYZData
 import com.example.bledot.databinding.FragmentRealtimeBinding
+import com.example.bledot.home.HomeFragmentDirections
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.appIsWorking
+import com.example.bledot.util.isWearingOption
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.Legend.LegendVerticalAlignment
@@ -102,11 +105,19 @@ class RealtimeFragment : Fragment() {
                 addEntry(random.toDouble(), (random-10).toDouble(), (random+10).toDouble())
             }
         }
+        // toggle 기본 세팅
+        settingWearingOption()
         // toggle btn
         binding.toggleBtn.setOnClickListener {
             val isToggleValue = binding.toggleBtn.isChecked
             BleDebugLog.d(logTag, "isToggleValue: $isToggleValue")
-            realtimeViewModel.isWearingOption = isToggleValue
+            isWearingOption.value = isToggleValue
+
+            if (isToggleValue) {
+                Navigation.findNavController(binding.root).navigate(RealtimeFragmentDirections.actionRealtimeFragmentToListFragment())
+            } else {
+                isWearingOption.value = isToggleValue
+            }
         }
         // recording start btn
         binding.start.setOnClickListener {
@@ -616,6 +627,13 @@ class RealtimeFragment : Fragment() {
                 binding.zeroing.text = "zero"
             }
         }, 2000L)
+    }
+
+    private fun settingWearingOption() {
+        BleDebugLog.i(logTag, "settingWearingOption-()")
+        if (isWearingOption.value == true) {
+            binding.toggleBtn.isChecked = true
+        }
     }
 
     override fun onDestroy() {
