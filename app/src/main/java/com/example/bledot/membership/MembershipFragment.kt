@@ -1,5 +1,6 @@
 package com.example.bledot.membership
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -34,56 +35,28 @@ class MembershipFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
-
-//        arg.userInfo.membership.let {
-//            BleDebugLog.d(logTag, "arg.membershipDate: $it")
-//            if (it == null) { // 멤버십 미등록
-//                membershipViewModel.membershipDate.value = ""
-//            } else { // 멤버십 등록
-//                membershipViewModel.membershipDate.value = it
-//                membershipViewModel.checkMembershipDate()
-//            }
-//        }
-        // 멤버십 등록/미등록 판별
-        membershipViewModel.membershipDate.observe(viewLifecycleOwner) { date ->
-            if (date.isNotEmpty()) {
-                binding.layoutExist.layout.visibility = View.VISIBLE
-                binding.layoutNotExist.layout.visibility = View.INVISIBLE
-            } else {
-                binding.layoutExist.layout.visibility = View.INVISIBLE
-                binding.layoutNotExist.layout.visibility = View.VISIBLE
-            }
-        }
-        // 유효기간 유효/만료 판별
-        membershipViewModel.isValid.observe(viewLifecycleOwner) { isValid ->
-            if (isValid == true) {
-                binding.layoutExist.editTextMembership.visibility = View.VISIBLE
-                binding.layoutExist.editTextMembership.text = membershipViewModel.membershipDate.value
-                binding.layoutExist.textViewExpired.visibility = View.INVISIBLE
-            } else {
-                binding.layoutExist.editTextMembership.visibility = View.INVISIBLE
-                binding.layoutExist.textViewExpired.visibility = View.VISIBLE
-            }
-        }
-
-        binding.backBtn.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(MembershipFragmentDirections.actionMembershipFragmentToConfigFragment())
-        }
-        // 멤버십 첫 등록
+        // 멤버십 조회
+        checkCurrentMembership()
+        // 멤버십 등록
         binding.layoutNotExist.regBtn.setOnClickListener {
             val membershipNum = binding.layoutNotExist.editTextMembership.text.toString()
             if (membershipNum.isNotEmpty()) {
-                BleDebugLog.d(logTag, "membershipNum: $membershipNum")
+                BleDebugLog.d(logTag, "사용자 입력 code: $membershipNum")
                 showDialog("Membership registration", "Would you like to register for membership?", membershipNum)
             }
         }
         // 멤버십 재등록
-        binding.layoutExist.regBtn.setOnClickListener {
-            membershipViewModel.membershipDate.value = ""
-            membershipViewModel.isValid.value = false
+        binding.layoutExist.reRegBtn.setOnClickListener {
+            binding.layoutNotExist.layout.visibility = View.VISIBLE
+            binding.layoutExist.layout.visibility = View.INVISIBLE
+        }
+        // back btn
+        binding.backBtn.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(MembershipFragmentDirections.actionMembershipFragmentToConfigFragment())
         }
     }
 
@@ -114,14 +87,39 @@ class MembershipFragment : Fragment() {
             setCancelable(false)
             setPositiveButton("Action") { _, _ ->
                 // 등록된 멤버십으로 화면 새로고침
-                refreshView()
+                checkCurrentMembership()
             }
         }
         builder.create().show()
     }
 
-    private fun refreshView() {
-        BleDebugLog.i(logTag, "refreshView-()")
-        //membershipViewModel.getUserInfo(arg.userInfo.email)
+    @SuppressLint("SetTextI18n")
+    private fun checkCurrentMembership() {
+        BleDebugLog.i(logTag, "checkCurrentMembership-()")
+
+        membershipViewModel.checkMembership { mbsEntity ->
+            when (mbsEntity?.mbsStatus) {
+                "Y" -> { // Yes
+                    binding.layoutExist.layout.visibility = View.VISIBLE
+                    binding.layoutNotExist.layout.visibility = View.INVISIBLE
+                    binding.layoutExist.editTextMembership.text = "${mbsEntity.startDate} ~ ${mbsEntity.expDate}"
+                }
+                "E" -> { // Expired
+                    binding.layoutExist.layout.visibility = View.VISIBLE
+                    binding.layoutNotExist.layout.visibility = View.INVISIBLE
+                    binding.layoutExist.editTextMembership.text = "Membership expiration"
+                }
+                "P" -> { // Pending
+                    binding.layoutExist.layout.visibility = View.VISIBLE
+                    binding.layoutNotExist.layout.visibility = View.INVISIBLE
+                    binding.layoutExist.editTextMembership.text = "Pending"
+                }
+                "N" -> { // None
+                    binding.layoutExist.layout.visibility = View.INVISIBLE
+                    binding.layoutNotExist.layout.visibility = View.VISIBLE
+                }
+                else -> { }
+            }
+        }
     }
 }

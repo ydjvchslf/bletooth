@@ -1,5 +1,6 @@
 package com.example.bledot.data.response
 
+import com.example.bledot.data.MbsEntity
 import com.example.bledot.data.UserInfoEntity
 import com.google.gson.annotations.SerializedName
 
@@ -22,6 +23,11 @@ data class RemoteDefaultData(
     @SerializedName("postcode") val zipCode: String?,
     @SerializedName("country") val country: String?,
     @SerializedName("diaDt") val diagDate: String?,
+
+    @SerializedName("memberCode") val mbsCode: String?,
+    @SerializedName("mbsStatus") val mbsStatus: String?,
+    @SerializedName("startDt") val startDate: String?,
+    @SerializedName("expDt") val expDate: String?,
 )
 
 fun RemoteDefaultData.toEntity() = UserInfoEntity (
@@ -43,4 +49,11 @@ fun RemoteDefaultData.toEntity() = UserInfoEntity (
     zipCode = zipCode.toString(),
     country = country.toString(),
     membership = null
+)
+
+fun RemoteDefaultData.toMbsEntity() = MbsEntity (
+    mbsCode = mbsCode,
+    mbsStatus = mbsStatus,
+    startDate = startDate,
+    expDate = expDate,
 )

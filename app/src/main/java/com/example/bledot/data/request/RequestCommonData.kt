@@ -5,5 +5,6 @@ data class RequestCommonData(
     val vender: String?,
     val pwd: String?,
     val currentPwd: String?,
-    val newPwd: String?
+    val newPwd: String?,
+    val mbsCode: String?
 )

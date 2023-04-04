@@ -61,4 +61,16 @@ interface RetrofitService {
         @Header("Authorization") token: String,
         @Body reqRegData: RequestCommonData
     ): Result<RemoteDefaultData>
+
+    @POST("member/getMemberInfo")
+    suspend fun getMembershipInfo(
+        @Header("Authorization") token: String,
+        @Body reqRegData: RequestCommonData
+    ): Result<RemoteDefaultData>
+
+    @POST("member/registerMember")
+    suspend fun registerMembership(
+        @Header("Authorization") token: String,
+        @Body reqRegData: RequestCommonData
+    ): Result<RemoteDefaultData>
 }
