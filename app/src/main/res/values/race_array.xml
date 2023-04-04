@@ -2,19 +2,19 @@
 <resources>
 
     <string-array name="race_array">
-        <item>Asian</item>
         <item>Hispanic</item>
         <item>American Indian or Alaska Native</item>
         <item>Black or African American</item>
         <item>White</item>
-        <item>unknown</item>
+        <item>Asian</item>
+        <item>Unknown</item>
     </string-array>
 
     <string-array name="path_array">
-        <item>Ataxia</item>
         <item>Multiple sclerosis (MS)</item>
         <item>Multiple system atrophy (MSA)</item>
         <item>Parkinson\'s disease (PD)</item>
+        <item>Spinocerebellar Ataxia</item>
         <item>Stroke</item>
         <item>Other</item>
     </string-array>

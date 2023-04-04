@@ -1,8 +1,6 @@
 package com.example.bledot.util
 
-import android.view.View
 import androidx.lifecycle.MutableLiveData
-import com.xsens.dot.android.sdk.utils.XsensDotLogger
 
 val btScanningStatus = MutableLiveData(false)
 val appIsWorking = MutableLiveData(false)
@@ -24,22 +22,22 @@ val REG = "\\d{4}/(0[1-9]|1[012])/(0[1-9]|[12][0-9]|3[01])"
 
 fun getRace(race: String): Int? {
     return when (race) {
-        "Asian" -> { 0 }
-        "Hispanic" -> { 1 }
-        "American Indian or Alaska Native" -> { 2 }
-        "Black or African American" -> { 3 }
-        "White" -> { 4 }
-        "unknown" -> { 5 }
+        "Hispanic" -> { 0 }
+        "American Indian or Alaska Native" -> { 1 }
+        "Black or African American" -> { 2 }
+        "White" -> { 3 }
+        "Asian" -> { 4 }
+        "Unknown" -> { 5 }
         else -> { null }
     }
 }
 
 fun getPathology(path: String): Int? {
     return when (path) {
-        "Ataxia" -> { 0 }
-        "Multiple sclerosis (MS)" -> { 1 }
-        "Multiple system atrophy (MSA)" -> { 2 }
-        "Parkinson\'s disease (PD)" -> { 3 }
+        "Multiple sclerosis (MS)" -> { 0 }
+        "Multiple system atrophy (MSA)" -> { 1 }
+        "Parkinson\'s disease (PD)" -> { 2 }
+        "Spinocerebellar Ataxia" -> { 3 }
         "Stroke" -> { 4 }
         "Other" -> { 5 }
         else -> { null }
