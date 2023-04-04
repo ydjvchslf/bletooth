@@ -79,10 +79,12 @@ class RealtimeFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+        // 웹뷰 스트롤 막기
+        binding.realWebView.setOnTouchListener { _, _ -> true }
         // 차트 기본 세팅
         settingRealtimeChart()
         // 기기 연결 확인
