@@ -108,6 +108,7 @@ class MembershipFragment : Fragment() {
                     binding.layoutExist.layout.visibility = View.VISIBLE
                     binding.layoutNotExist.layout.visibility = View.INVISIBLE
                     binding.layoutExist.editTextMembership.text = "Membership expiration"
+                    binding.layoutExist.reRegBtn.visibility = View.VISIBLE
                 }
                 "P" -> { // Pending
                     binding.layoutExist.layout.visibility = View.VISIBLE

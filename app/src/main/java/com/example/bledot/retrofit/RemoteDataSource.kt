@@ -27,7 +27,7 @@ class RemoteDataSource {
 
     suspend fun checkEmailDuplication(email: String, retCode: (Int?) -> Unit) {
         BleDebugLog.w(logTag, "checkEmailDuplication-()")
-        val reqData = toReqCmmData(email, null, null, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null, null, null)
 
         val response = retrofitService.checkEmail(reqData)
         return when (response) {
@@ -55,7 +55,7 @@ class RemoteDataSource {
 
     suspend fun checkAlreadyUser(email: String, result: (Boolean?) -> Unit) {
         BleDebugLog.w(logTag, "checkAlreadyUser-()")
-        val reqData = toReqCmmData(email, null, null, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null, null, null)
 
         val response = retrofitService.checkUserInfoExist(reqData)
         return when (response) {
@@ -159,7 +159,7 @@ class RemoteDataSource {
 
     suspend fun loginServer(email: String, pw: String?, retCode: (Int?, String?) -> Unit) {
         BleDebugLog.w(logTag, "login-()")
-        val reqData = toReqCmmData( email, if (isGoogleUser(email)) { "google" } else { "email" }, pw, null, null, null)
+        val reqData = toReqCmmData( email, if (isGoogleUser(email)) { "google" } else { "email" }, pw, null, null, null, null)
 
         val response = retrofitService.login(reqData)
         when (response) {
@@ -207,7 +207,7 @@ class RemoteDataSource {
 
     suspend fun getUserInfo(token: String, email: String, userCallback: (UserInfoEntity?) -> Unit) {
         BleDebugLog.w(logTag, "getUserInfo-()")
-        val reqData = toReqCmmData(email, null, null, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null, null, null)
 
         val response = retrofitService.getUser(token, reqData)
         when (response) {
@@ -286,7 +286,7 @@ class RemoteDataSource {
 
     suspend fun getMembership(token: String, email: String, result: (MbsEntity?) -> Unit) {
         BleDebugLog.w(logTag, "getMembership-()")
-        val reqData = toReqCmmData(email, null, null, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null, null, null)
 
         val response = retrofitService.getMembershipInfo(token, reqData)
         when (response) {
@@ -323,7 +323,7 @@ class RemoteDataSource {
 
     suspend fun enrollMembership(token: String, email: String, mbsCode: String, resultCallback: (Boolean) -> Unit) {
         BleDebugLog.w(logTag, "enrollMembership-()")
-        val reqData = toReqCmmData(email, null, null, null, null, mbsCode)
+        val reqData = toReqCmmData(email, null, null, null, null, mbsCode, email)
 
         val response = retrofitService.registerMembership(token, reqData)
         when (response) {
@@ -360,7 +360,7 @@ class RemoteDataSource {
 
     suspend fun withdrawAccount(token: String, email: String, result: (Boolean) -> Unit) {
         BleDebugLog.w(logTag, "withdrawAccount-()")
-        val reqData = toReqCmmData(email, null, null, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null, null, null)
 
         val response = retrofitService.deleteAccount(token, reqData)
         when (response) {
@@ -397,7 +397,7 @@ class RemoteDataSource {
 
     suspend fun findPassword(email: String, result: (Boolean) -> Unit) {
         BleDebugLog.w(logTag, "findPassword-()")
-        val reqData = toReqCmmData(email, null, null, null, null, null)
+        val reqData = toReqCmmData(email, null, null, null, null, null, null)
 
         val response = retrofitService.findPassword(reqData)
         when (response) {
@@ -438,7 +438,7 @@ class RemoteDataSource {
 
     suspend fun updatePassword(token: String, email: String, crtPw: String, newPw: String, result: (Boolean, String?) -> Unit) {
         BleDebugLog.w(logTag, "updatePassword-()")
-        val reqData = toReqCmmData(email, null, null, crtPw, newPw, null)
+        val reqData = toReqCmmData(email, null, null, crtPw, newPw, null, null)
 
         val response = retrofitService.updatePassword(token, reqData)
         when (response) {
@@ -512,7 +512,7 @@ class RemoteDataSource {
     }
 
     private fun toReqCmmData(email: String, vender: String?, pwd: String?,
-                             currentPwd: String?, newPwd: String?, mbsCode: String?): RequestCommonData {
+                             currentPwd: String?, newPwd: String?, mbsCode: String?, mbsId: String?): RequestCommonData {
         BleDebugLog.w(logTag, "toReqCmmData-()")
         return RequestCommonData(
             email = email,
@@ -520,7 +520,8 @@ class RemoteDataSource {
             pwd = pwd,
             currentPwd = currentPwd,
             newPwd = newPwd,
-            mbsCode = mbsCode
+            mbsCode = mbsCode,
+            modId = mbsId
         )
     }
 }
