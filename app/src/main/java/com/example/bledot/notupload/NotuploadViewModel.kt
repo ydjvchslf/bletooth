@@ -106,7 +106,12 @@ class NotuploadViewModel : ViewModel() {
 //                        appIsWorking.value = false
 //                        isSuccess = false
 
-                        remoteDataSource.uploadToServer("a@abc.com", file) { result ->
+                        remoteDataSource.uploadToServer(
+                            App.prefs.getString("token", "no token"),
+                            App.prefs.getString("email", "no email"),
+                            file,
+                            null
+                        ) { result ->
                             if (result) {
                                 BleDebugLog.d(logTag, "[${file.name}] 업로드 성공!")
                                 isUploading.value = false

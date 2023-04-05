@@ -13,11 +13,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.bledot.App
 import com.example.bledot.WebAppInterface
 import com.example.bledot.ble.BleViewModel
 import com.example.bledot.data.XYZData
 import com.example.bledot.databinding.FragmentRealtimeBinding
+import com.example.bledot.signup.SignupFragmentArgs
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.appIsWorking
 import com.example.bledot.util.isWearingOption
@@ -62,6 +64,9 @@ class RealtimeFragment : Fragment() {
 
     private var index = 1
 
+    // MWM 데이터
+    private val arg: RealtimeFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -83,6 +88,8 @@ class RealtimeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+        // MWM 데이터 할당
+        assignMWMData()
         // 웹뷰 스트롤 막기
         binding.realWebView.setOnTouchListener { _, _ -> true }
         // 차트 기본 세팅
@@ -282,7 +289,7 @@ class RealtimeFragment : Fragment() {
         timerTask?.cancel()
 
         time = 0
-        binding.recordTextView.text = "When you're ready to record,\npress the record button."
+        //binding.recordTextView.text = "When you're ready to record,\npress the record button."
     }
 
     private fun showDialog(title: String, subTitle: String) {
@@ -630,6 +637,14 @@ class RealtimeFragment : Fragment() {
     private fun settingWearingOption() {
         BleDebugLog.i(logTag, "settingWearingOption-()")
         if (isWearingOption.value == true) {
+            binding.toggleBtn.isChecked = true
+        }
+    }
+
+    private fun assignMWMData() {
+        BleDebugLog.i(logTag, "assignMWMData-()")
+        arg.webViewInfo?.let {
+            realtimeViewModel.webViewData = it
             binding.toggleBtn.isChecked = true
         }
     }

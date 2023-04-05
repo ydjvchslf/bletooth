@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bledot.App
 import com.example.bledot.BuildConfig
+import com.example.bledot.data.WebViewData
 import com.example.bledot.data.XYZData
 import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.*
@@ -33,6 +34,8 @@ class RealtimeViewModel: ViewModel() {
     var filename = ""
     var fileFullName = ""
     var isUploading = MutableLiveData(false)
+    // MWM arg
+    var webViewData: WebViewData? = null
 
     init {
         BleDebugLog.i(logTag, "init-()")
@@ -45,11 +48,20 @@ class RealtimeViewModel: ViewModel() {
         BleDebugLog.i(logTag, "createFile-()")
         val dir: File? = App.context().getExternalFilesDir(null)
         val filePath = dir?.absolutePath + File.separator
-        filename = SimpleDateFormat(
-                    "yyyyMMdd_HHmmss_SSS",
-                    Locale.getDefault()
-                ).format(Date()) +
-                ".csv"
+
+        filename = if (webViewData == null) {
+            SimpleDateFormat(
+                "yyyyMMdd_HHmmss_SSS",
+                Locale.getDefault()
+            ).format(Date()) +
+                    ".csv"
+        } else {
+            SimpleDateFormat(
+                "yyyyMMdd_HHmmss_SSS",
+                Locale.getDefault()
+            ).format(Date()) + "_${webViewData?.meaId}-${webViewData?.daId}-${webViewData?.spId}.csv"
+        }
+
         fileFullName = filePath + filename
         File(fileFullName).createNewFile()
         BleDebugLog.d(logTag, "파일 [$filename] 생성 완료")
@@ -164,7 +176,11 @@ class RealtimeViewModel: ViewModel() {
             directory.let {
                 // TODO :: 서버 업로드 api
                 // userId, file 넣어서 Post 호출
-                remoteDataSource.uploadToServer("abcd@naver.com", it) { result ->
+                remoteDataSource.uploadToServer(
+                    App.prefs.getString("token", "no token"),
+                    App.prefs.getString("email", "no email"),
+                    it,
+                    webViewData) { result ->
                     if (result) {
                         BleDebugLog.d(logTag, "[${it.name}] 업로드 성공!")
                         isUploading.value = false

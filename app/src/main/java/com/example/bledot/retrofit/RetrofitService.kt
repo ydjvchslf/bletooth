@@ -43,9 +43,13 @@ interface RetrofitService {
     @Multipart
     @POST("data/send")
     suspend fun uploadData(
+        @Header("Authorization") token: String,
         @Part email: MultipartBody.Part,
-        @Part file: MultipartBody.Part
-    ): Result<RequestFileData>
+        @Part file: MultipartBody.Part,
+        @Part meaId: MultipartBody.Part?,
+        @Part daId: MultipartBody.Part?,
+        @Part spId: MultipartBody.Part?,
+    ): Result<RemoteDefaultData>
 
     @POST("member/withdrawal")
     suspend fun deleteAccount(

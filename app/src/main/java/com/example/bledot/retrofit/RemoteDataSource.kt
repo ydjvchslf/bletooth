@@ -3,7 +3,10 @@ package com.example.bledot.retrofit
 import com.example.bledot.data.MbsEntity
 import com.example.bledot.data.Product
 import com.example.bledot.data.UserInfoEntity
+import com.example.bledot.data.WebViewData
 import com.example.bledot.data.request.RequestCommonData
+import com.example.bledot.data.request.RequestFileData
+import com.example.bledot.data.response.RemoteDefaultData
 import com.example.bledot.data.response.toEntity
 import com.example.bledot.data.response.toMbsEntity
 import com.example.bledot.util.BleDebugLog
@@ -240,16 +243,22 @@ class RemoteDataSource {
 
     }
 
-    suspend fun uploadToServer(email: String, file: File, resultCallback: (Boolean) -> Unit) {
+    suspend fun uploadToServer(token: String, email: String, file: File, spData: WebViewData?, resultCallback: (Boolean) -> Unit) {
         BleDebugLog.w(logTag, "uploadToServer-()")
-
         // multipart 작업
         val formId = MultipartBody.Part.createFormData("email", email)
 
         val requestBody = RequestBody.create("text/csv".toMediaTypeOrNull(), file)
         val multipartBody = MultipartBody.Part.createFormData("file", file.name, requestBody)
 
-        val response = retrofitService.uploadData(formId, multipartBody)
+        val response = spData?.let {
+            val meaId = MultipartBody.Part.createFormData("meaId", it.meaId)
+            val daId = MultipartBody.Part.createFormData("daId", it.daId)
+            val spId = MultipartBody.Part.createFormData("spId", it.spId)
+            retrofitService.uploadData(token, formId, multipartBody, meaId, daId, spId)
+        } ?: run {
+            retrofitService.uploadData(token, formId, multipartBody, null, null, null)
+        }
 
         when (response) {
             is Result.Success -> { // Success<T>(val code: Int, val data: T)

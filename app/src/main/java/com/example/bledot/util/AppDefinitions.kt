@@ -1,12 +1,14 @@
 package com.example.bledot.util
 
 import androidx.lifecycle.MutableLiveData
+import com.example.bledot.data.WebViewData
 
 val btScanningStatus = MutableLiveData(false)
 val appIsWorking = MutableLiveData(false)
 // A list contains mac address and XsensDotLogger object
 val mLoggerList = MutableLiveData<ArrayList<HashMap<String, Any>>>()
 val isWearingOption = MutableLiveData(false)
+val myWebViewData = MutableLiveData<WebViewData>(null)
 
 const val KEY_ADDRESS = "KEY_ADDRESS"
 const val KEY_LOGGER = "KEY_LOGGER"
@@ -15,6 +17,7 @@ const val KEY_DATA = "KEY_DATA"
 
 //const val BASE_URL = "http://www.propriologics.com:8888"
 const val BASE_URL = "http://192.168.1.53:8080"
+//const val BASE_URL = "http://192.168.1.20:8080"
 
 var LIMIT_PERCENTAGE = 0.05
 

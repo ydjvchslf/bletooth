@@ -9,12 +9,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import com.example.bledot.R
 import com.example.bledot.databinding.FragmentListBinding
 import com.example.bledot.mydata.MydataFragment
 import com.example.bledot.notupload.NotuploadFragment
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.myWebViewData
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
@@ -76,5 +79,13 @@ class ListFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+
+        myWebViewData.observe(viewLifecycleOwner) { webViewData ->
+            BleDebugLog.d(logTag, "MWM 생성 이벤트 클릭: $webViewData")
+            webViewData?.let {
+                Navigation.findNavController(binding.root).navigate(ListFragmentDirections.actionListFragmentToRealtimeFragment(webViewData))
+                //activity?.supportFragmentManager?.popBackStackImmediate()
+            }
+        }
     }
 }

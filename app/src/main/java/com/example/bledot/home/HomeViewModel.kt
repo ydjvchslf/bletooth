@@ -83,7 +83,12 @@ class HomeViewModel : ViewModel() {
             files?.forEach {
                 // TODO :: 서버 업로드 api
                 // userId, file 넣어서 Post 호출
-                remoteDataSource.uploadToServer("abc@naver.com", it) { result ->
+                remoteDataSource.uploadToServer(
+                    App.prefs.getString("token", "no token"),
+                    App.prefs.getString("email", "no email"),
+                    it,
+                    null
+                ) { result ->
                     if (result) {
                         BleDebugLog.d(logTag, "[${it.name}] 업로드 성공!")
                         // 업로드 성공 후 데이터 지우기
