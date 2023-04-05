@@ -65,4 +65,9 @@ class MydataFragment: Fragment() {
             webViewClient = WebViewClient()
         }
     }
+
+    override fun onDestroyView() {
+        BleDebugLog.i(logTag, "onDestroyView-()")
+        super.onDestroyView()
+    }
 }

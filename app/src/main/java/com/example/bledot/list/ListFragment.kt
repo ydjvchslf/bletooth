@@ -83,6 +83,7 @@ class ListFragment : Fragment() {
         myWebViewData.observe(viewLifecycleOwner) { webViewData ->
             BleDebugLog.d(logTag, "MWM 생성 이벤트 클릭: $webViewData")
             webViewData?.let {
+                //onDestroyView()
                 Navigation.findNavController(binding.root).navigate(ListFragmentDirections.actionListFragmentToRealtimeFragment(webViewData))
             }
         }
@@ -90,6 +91,12 @@ class ListFragment : Fragment() {
 
     override fun onDestroyView() {
         BleDebugLog.i(logTag, "onDestroyView-()")
+
+        val currentFragment = activity?.supportFragmentManager?.findFragmentById(R.id.container)
+
+        currentFragment?.let {
+            activity?.supportFragmentManager?.beginTransaction()?.remove(it)?.commit()
+        }
         super.onDestroyView()
     }
 }

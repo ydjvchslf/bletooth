@@ -23,6 +23,7 @@ import com.example.bledot.signup.SignupFragmentArgs
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.appIsWorking
 import com.example.bledot.util.isWearingOption
+import com.example.bledot.util.myWebViewData
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -645,6 +646,7 @@ class RealtimeFragment : Fragment() {
         BleDebugLog.i(logTag, "assignMWMData-()")
         arg.webViewInfo?.let {
             realtimeViewModel.webViewData = it
+            myWebViewData.value = null
             binding.toggleBtn.isChecked = true
         }
     }

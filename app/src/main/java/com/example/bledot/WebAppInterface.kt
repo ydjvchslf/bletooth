@@ -24,5 +24,6 @@ class WebAppInterface(private val mContext: Context) {
         val myData = Gson().fromJson(data, WebViewData::class.java)
         BleDebugLog.d(logTag, "myData: ${myData.meaId}, ${myData.daId}, ${myData.spId}")
         myWebViewData.postValue(myData)
+
     }
 }
