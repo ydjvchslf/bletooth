@@ -40,7 +40,7 @@
         <action
             android:id="@+id/action_listFragment_to_realtimeFragment"
             app:destination="@id/realtimeFragment"
-            app:popUpTo="@id/realtimeFragment"
+            app:popUpTo="@id/listFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -63,7 +63,7 @@
         <action
             android:id="@+id/action_realtimeFragment_to_listFragment"
             app:destination="@id/listFragment"
-            app:popUpTo="@id/listFragment"
+            app:popUpTo="@id/realtimeFragment"
             app:popUpToInclusive="true" />
     </fragment>
 

@@ -650,7 +650,7 @@ class RealtimeFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        BleDebugLog.i(logTag, "resetTimer-()")
+        BleDebugLog.i(logTag, "onDestroy-()")
         stopTimer()
         resetTimer()
         super.onDestroy()

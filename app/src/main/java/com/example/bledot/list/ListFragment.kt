@@ -84,8 +84,12 @@ class ListFragment : Fragment() {
             BleDebugLog.d(logTag, "MWM 생성 이벤트 클릭: $webViewData")
             webViewData?.let {
                 Navigation.findNavController(binding.root).navigate(ListFragmentDirections.actionListFragmentToRealtimeFragment(webViewData))
-                //activity?.supportFragmentManager?.popBackStackImmediate()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        BleDebugLog.i(logTag, "onDestroyView-()")
+        super.onDestroyView()
     }
 }

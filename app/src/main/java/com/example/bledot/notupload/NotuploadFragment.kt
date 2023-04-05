@@ -138,6 +138,7 @@ class NotuploadFragment: Fragment() {
     }
 
     override fun onDestroyView() {
+        BleDebugLog.i(logTag, "onDestroyView-()")
         super.onDestroyView()
         viewModelStore.clear()
     }
