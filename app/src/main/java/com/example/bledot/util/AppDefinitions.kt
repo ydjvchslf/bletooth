@@ -15,8 +15,8 @@ const val KEY_LOGGER = "KEY_LOGGER"
 const val KEY_TAG = "KEY_TAG"
 const val KEY_DATA = "KEY_DATA"
 
-//const val BASE_URL = "http://www.propriologics.com:8888"
-const val BASE_URL = "http://192.168.1.53:8080"
+const val BASE_URL = "http://www.propriologics.com"
+//const val BASE_URL = "http://192.168.1.53:8080"
 //const val BASE_URL = "http://192.168.1.20:8080"
 
 var LIMIT_PERCENTAGE = 0.05
