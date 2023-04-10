@@ -1,11 +1,11 @@
 package com.example.bledot.login
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import java.util.regex.Pattern
 
 
 class LoginFragment : Fragment() {
@@ -34,6 +35,7 @@ class LoginFragment : Fragment() {
     private val loginViewModel: LoginViewModel by activityViewModels()
 
     private var mGoogleSignInClient : GoogleSignInClient? = null
+    private var pattern: Pattern = Patterns.EMAIL_ADDRESS
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,6 +89,11 @@ class LoginFragment : Fragment() {
         BleDebugLog.d(logTag, "inputEmail: $inputEmail, inputPw: $inputPw")
 
         if (inputEmail.isNotEmpty() && inputPw.isNotEmpty()) {
+            if (!pattern.matcher(inputEmail).matches()) {
+                Toast.makeText(context, "이메일 형식이 맞지 않습니다.", Toast.LENGTH_SHORT).show()
+                return
+            }
+
             loginViewModel.normalLogin(inputEmail, inputPw) {
                 if (it) {
                     // 일반 로그인 성공 후 Preference 저장
@@ -138,7 +145,7 @@ class LoginFragment : Fragment() {
 
     private fun isCheckedUserInfo(email: String) {
         loginViewModel.checkUserInfo(email) { isExist ->
-            if (isExist) { // 유저 정보 O -> 로그인 api
+            if (isExist == true) { // 유저 정보 O -> 로그인 api
                 // 구글(소셜) 로그인 api
                 loginViewModel.googleLogin(email) { result ->
                     if (result) {
@@ -148,9 +155,14 @@ class LoginFragment : Fragment() {
                         // TODO:: 계정은 있는데, 구글 로그인 실패. 다시 시도 요청?
                     }
                 }
-            } else { // 유저 정보 X -> 회원가입 화면으로 이동
+            }
+            if (isExist == false) { // 유저 정보 X -> 회원가입 화면으로 이동
                 val navAction = LoginFragmentDirections.actionLoginFragmentToSignUpFragment(email)
                 Navigation.findNavController(binding.root).navigate(navAction)
+            }
+            if (isExist == null) { // 탈퇴한 회원일 시
+                Toast.makeText(context, "계정을 이용할 수 없습니다", Toast.LENGTH_SHORT).show()
+                deleteGoogleHistory()
             }
         }
     }
@@ -174,5 +186,17 @@ class LoginFragment : Fragment() {
             setPositiveButton("Action") { _, _ -> }
         }
         builder.create().show()
+    }
+
+    @SuppressLint("CommitPrefEdits", "ApplySharedPref")
+    private fun deleteGoogleHistory() {
+        BleDebugLog.i(logTag, "googleLogout-()")
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        val mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        mGoogleSignInClient.signOut()
     }
 }

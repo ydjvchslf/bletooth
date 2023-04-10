@@ -1,11 +1,17 @@
 package com.example.bledot.login
 
+import android.content.Intent
+import android.provider.Settings.System.getString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bledot.App
+import com.example.bledot.R
+import com.example.bledot.activity.before.BeforeActivity
 import com.example.bledot.data.UserInfoEntity
 import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.BleDebugLog
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.coroutines.launch
 
 class LoginViewModel: ViewModel() {
@@ -49,12 +55,12 @@ class LoginViewModel: ViewModel() {
         }
     }
 
-    fun checkUserInfo(email: String, isExist: (Boolean) -> Unit) {
+    fun checkUserInfo(email: String, isExist: (Boolean?) -> Unit) {
         BleDebugLog.i(logTag, "checkUserInfo-()")
         viewModelScope.launch {
             remoteDataSource.checkAlreadyUser(email) { result ->
-                result ?: return@checkAlreadyUser
-                result.let {
+                result ?: isExist.invoke(null)
+                result?.let {
                     if (it) { // 이미 가입 회원
                         isExist.invoke(true)
                     } else { // 미가입 회원
