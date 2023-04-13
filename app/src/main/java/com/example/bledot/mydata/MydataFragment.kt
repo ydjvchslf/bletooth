@@ -60,7 +60,7 @@ class MydataFragment: Fragment() {
             settings.supportZoom()
             settings.displayZoomControls = false
             addJavascriptInterface(WebAppInterface(context), "Android")
-            loadUrl("$BASE_URL/test/activityListWebView", headers)
+            loadUrl("$BASE_URL/data/activityListWebView", headers)
             WebView.setWebContentsDebuggingEnabled(true)
             webViewClient = WebViewClient()
         }
