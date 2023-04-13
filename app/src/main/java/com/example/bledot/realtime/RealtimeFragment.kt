@@ -298,7 +298,7 @@ class RealtimeFragment : Fragment() {
             setTitle(title)
             setMessage(subTitle)
             setCancelable(false)
-            setPositiveButton("Action") { _, _ ->
+            setPositiveButton("Upload") { _, _ ->
                 resetTimer()
                 //showCompleteDialog("Complete", "The data uploaded to the server.")
                 // TODO:: 서버 업로드
@@ -310,7 +310,7 @@ class RealtimeFragment : Fragment() {
                     }
                 }
             }
-            setNegativeButton("Cancel") { _, _ ->
+            setNegativeButton("Save") { _, _ ->
                 resetTimer()
                 // 초기화
                 binding.realWebView.loadUrl("javascript:clearChart()")
@@ -529,7 +529,7 @@ class RealtimeFragment : Fragment() {
     }
 
     private fun createSet(): LineDataSet {
-        val set = LineDataSet(null, "X") // X Roll
+        val set = LineDataSet(null, "lateral") // X lateral
         set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(243,101,75)
@@ -541,7 +541,7 @@ class RealtimeFragment : Fragment() {
     }
 
     private fun createSet2(): LineDataSet {
-        val set = LineDataSet(null, "Y") // Y Pitch
+        val set = LineDataSet(null, "anteroposterior") // Y anteroposterior
         set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(91,209,178)
@@ -553,7 +553,7 @@ class RealtimeFragment : Fragment() {
     }
 
     private fun createSet3(): LineDataSet {
-        val set = LineDataSet(null, "Z") // Z Yaw
+        val set = LineDataSet(null, "direction") // Z direction
         set.lineWidth = 1.2f
         set.setDrawValues(false)
         set.valueTextColor = Color.rgb(23,145,253)

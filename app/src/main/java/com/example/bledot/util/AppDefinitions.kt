@@ -9,6 +9,7 @@ val appIsWorking = MutableLiveData(false)
 val mLoggerList = MutableLiveData<ArrayList<HashMap<String, Any>>>()
 val isWearingOption = MutableLiveData(false)
 val myWebViewData = MutableLiveData<WebViewData>(null)
+var userName = MutableLiveData("")
 
 const val KEY_ADDRESS = "KEY_ADDRESS"
 const val KEY_LOGGER = "KEY_LOGGER"

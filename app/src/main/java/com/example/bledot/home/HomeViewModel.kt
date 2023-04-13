@@ -21,16 +21,23 @@ class HomeViewModel : ViewModel() {
 
     init {
         BleDebugLog.i(logTag, "init-()")
-        getMyInfo()
     }
 
-    private fun getMyInfo() {
-        BleDebugLog.i(logTag, "getMyInfo-()")
-        viewModelScope.launch  {
-
+    fun getMyInfo(result: (UserInfoEntity?) -> Unit) {
+        BleDebugLog.i(logTag, "getUserInfo-()")
+        viewModelScope.launch {
+            // TODO:: 유저 정보 조회 api
+            val token = App.prefs.getString("token", "no token")
+            val email = App.prefs.getString("email", "no email")
+            if (token != "no token" && email != "no email") {
+                remoteDataSource.getUserInfo(token, email) { userEntity ->
+                    userEntity?.let {
+                        result.invoke(it)
+                    }
+                }
+            }
         }
     }
-
 
     // 미전송 데이터 존재 확인
     fun isExistData(unloaded: (Int) -> Unit) {

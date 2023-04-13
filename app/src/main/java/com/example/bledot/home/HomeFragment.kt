@@ -1,5 +1,6 @@
 package com.example.bledot.home
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -19,6 +20,7 @@ import com.example.bledot.activity.before.BeforeActivity
 import com.example.bledot.databinding.FragmentHomeBinding
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.appIsWorking
+import com.example.bledot.util.userName
 
 
 class HomeFragment : Fragment() {
@@ -41,6 +43,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
@@ -58,6 +61,15 @@ class HomeFragment : Fragment() {
         }
         binding.settingBtn.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(HomeFragmentDirections.actionHomeFragmentToConfigFragment())
+        }
+
+        // 유저 정보 불러오기
+        homeViewModel.getMyInfo { userInfo ->
+            BleDebugLog.d(logTag, "정상적으로 userInfo 가져왔음")
+            userInfo?.let {
+                binding.infoTextView.text = "Hello, ${it.name}!\nWear a safe vest today, too :)"
+                userName.value = it.name
+            }
         }
 
         // 미전송 데이터 확인

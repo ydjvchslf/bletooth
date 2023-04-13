@@ -25,6 +25,7 @@ import com.example.bledot.activity.main.MainActivity
 import com.example.bledot.databinding.FragmentConfigBinding
 import com.example.bledot.membership.MembershipFragmentDirections
 import com.example.bledot.util.BleDebugLog
+import com.example.bledot.util.userName
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
@@ -52,12 +53,8 @@ class ConfigFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
-        // 내 정보 보기
-        configViewModel.getMyInfo {
-            BleDebugLog.d(logTag, "userInfo: $it")
-            binding.infoNameTextView.text = it.name
-            binding.infoEmailTextView.text = it.email
-        }
+        // 이름, 이메일 세팅
+        setMyInfo()
         // edit info 버튼
         binding.editInfoBtn.setOnClickListener {
             //val crtUserInfo = configViewModel.crnUserInfo
@@ -80,6 +77,12 @@ class ConfigFragment : Fragment() {
         binding.logoutBtn.setOnClickListener {
             showDialog("Logout", "Are you sure to logout?")
         }
+    }
+
+    private fun setMyInfo() {
+        BleDebugLog.i(logTag, "setMyInfo-()")
+        binding.infoNameTextView.text = userName.value
+        binding.infoEmailTextView.text = prefs.getString("email", "no email")
     }
 
     private fun showDialog(title: String, subTitle: String) {
