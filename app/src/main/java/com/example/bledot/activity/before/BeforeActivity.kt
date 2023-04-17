@@ -36,19 +36,25 @@ class BeforeActivity : AppCompatActivity() {
     }
 
     // 권한
-    @RequiresApi(Build.VERSION_CODES.S)
-    private val requiredPermissionArray = arrayOf(
-//        Manifest.permission.READ_EXTERNAL_STORAGE,
-//        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.BLUETOOTH,
-        Manifest.permission.BLUETOOTH_ADMIN,
-        Manifest.permission.BLUETOOTH_CONNECT,
-        Manifest.permission.BLUETOOTH_SCAN
-    )
+    private val requiredPermissionArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+            // Android 12+ 필요
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_SCAN
+        )
+    } else {
+        arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+        )
+    }
 
-    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
             setKeepOnScreenCondition { beforeViewModel.isLoading.value }
@@ -61,7 +67,7 @@ class BeforeActivity : AppCompatActivity() {
         navController = Navigation.findNavController(this, R.id.before_nav_host)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         // 권한
-        checkPermissions(requiredPermissionArray)
+        checkPermissions(requiredPermissionArray) // 12 이하일때는 권한 체크 안하도록 했지만 스캔부터 안됨
     }
 
     private fun checkPermissions(permissions: Array<String>){
