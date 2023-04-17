@@ -1,9 +1,10 @@
 package com.example.bledot.config
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bledot.App
-import com.example.bledot.data.UserInfoEntity
+import com.example.bledot.BuildConfig
 import com.example.bledot.retrofit.RemoteDataSource
 import com.example.bledot.util.BleDebugLog
 import com.example.bledot.util.isGoogleUser
@@ -13,16 +14,15 @@ class ConfigViewModel : ViewModel() {
 
     private val logTag = ConfigViewModel::class.simpleName
     private val remoteDataSource = RemoteDataSource()
+    var versionNum = MutableLiveData("")
 
     init {
         BleDebugLog.i(logTag, "init-()")
+        getVersionNum()
     }
 
-    fun getMyInfo(userInfo: (UserInfoEntity) -> Unit) {
-        BleDebugLog.i(logTag, "getMyInfo-()")
-        viewModelScope.launch  {
-            // TODO :: 내 정보 보기 api
-        }
+    private fun getVersionNum() {
+        versionNum.value = BuildConfig.VERSION_NAME
     }
 
    fun getProductList(serverRetCode: (Int) -> Unit) {

@@ -53,6 +53,8 @@ class ConfigFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         BleDebugLog.i(logTag, "onViewCreated-()")
+        // 버전 세팅
+        binding.verNum.text =  configViewModel.versionNum.value
         // 이름, 이메일 세팅
         setMyInfo()
         // edit info 버튼
